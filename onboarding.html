@@ -394,6 +394,15 @@ body{
   vertical-align:middle;
 }
 
+/* ── VALIDATION STATES ── */
+.input.v-valid,.textarea.v-valid{border-color:var(--green)!important;background:#F0FDF4}
+.input.v-valid:focus,.textarea.v-valid:focus{border-color:var(--green)!important;box-shadow:0 0 0 3px rgba(16,185,129,.1)!important}
+.input.v-error,.textarea.v-error{border-color:var(--red)!important}
+.input.v-error:focus,.textarea.v-error:focus{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(239,68,68,.1)!important}
+.field-ok{font-size:.75rem;color:var(--green);margin-top:5px;display:none;font-weight:600}
+.field-ok.show{display:block}
+.upload-zone.v-error{border-color:var(--red)!important}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .form-nav-logo img{height:38px}
@@ -505,6 +514,7 @@ body{
         </label>
         <textarea class="textarea" id="social_links" name="social_links" rows="3"
           placeholder="https://yoursite.co.il&#10;https://instagram.com/yourpage"></textarea>
+        <span class="field-error" id="err-social_links"></span>
       </div>
     </div>
 
@@ -597,7 +607,8 @@ body{
           <span class="badge-optional">אופציונלי</span>
         </label>
         <input class="input" type="url" id="booking_link" name="booking_link"
-          placeholder="https://calendly.com/yourname">
+          placeholder="https://calendly.com/yourname" maxlength="200" autocomplete="off">
+        <span class="field-error" id="err-booking_link"></span>
         <p class="field-hint">Calendly, SimplyBook, Acuity, מערכת תורים פנימית</p>
       </div>
 
@@ -643,7 +654,8 @@ body{
           <span class="badge-optional">אופציונלי</span>
         </label>
         <input class="input" type="text" id="brand_colors" name="brand_colors"
-          placeholder="לדוגמה: #1B3D6F וצבע לבן / כתום וחום / אין — תבחרו בשבילי">
+          placeholder="לדוגמה: #1B3D6F וצבע לבן / כתום וחום / אין — תבחרו בשבילי" maxlength="100" autocomplete="off">
+        <span class="field-error" id="err-brand_colors"></span>
       </div>
 
       <div class="field">
@@ -725,6 +737,7 @@ body{
           <p class="upload-formats">JPG · PNG · HEIC · WEBP — עד 20MB לתמונה</p>
           <div class="upload-preview" id="preview-images"></div>
         </div>
+        <span class="field-error" id="err-images"></span>
         <p class="field-hint">אין תמונות? לא בעיה — נשתמש בתמונות מאגר מקצועיות</p>
       </div>
 
@@ -741,6 +754,7 @@ body{
           <p class="upload-formats">MP4 · MOV — עד 300MB</p>
           <div class="upload-preview" id="preview-video"></div>
         </div>
+        <span class="field-error" id="err-video_file"></span>
       </div>
 
       <div class="field">
@@ -749,7 +763,8 @@ body{
           <span class="badge-optional">אופציונלי</span>
         </label>
         <input class="input" type="url" id="video_link" name="video_link"
-          placeholder="https://youtube.com/... או https://drive.google.com/...">
+          placeholder="https://youtube.com/... או https://drive.google.com/..." maxlength="300" autocomplete="off">
+        <span class="field-error" id="err-video_link"></span>
       </div>
 
       <div class="field-divider"></div>
@@ -852,9 +867,330 @@ body{
 </div><!-- /form-outer -->
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
-const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
+// ════════════════════════════════════════════════
+// VALIDATION LIBRARY
+// ════════════════════════════════════════════════
+const V = {
+
+  _injection: /<script|javascript:|on\w+\s*=|<iframe|<object|<embed|<form|expression\s*\(/i,
+
+  hasInjection(v){ return this._injection.test(v); },
+
+  name(val){
+    const v = String(val||'').trim();
+    if(!v) return 'שדה חובה';
+    if(v.length < 2)  return 'מינימום 2 תווים';
+    if(v.length > 100) return 'מקסימום 100 תווים';
+    if(/^\d+$/.test(v)) return 'שם לא יכול להכיל ספרות בלבד';
+    if(this.hasInjection(v)) return 'תוכן לא חוקי';
+    // Hebrew letters, Latin letters, spaces, hyphens, apostrophes, dots
+    if(!/^[֐-׿‏‎a-zA-ZÀ-ÿ\s\-'.]+$/.test(v))
+      return 'אותיות, רווחים ומקפים בלבד';
+    return null;
+  },
+
+  email(val){
+    const v = String(val||'').trim();
+    if(!v) return 'שדה חובה';
+    if(v.length > 254) return 'כתובת מייל ארוכה מדי';
+    const lower = v.toLowerCase();
+    if(!/^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(lower))
+      return 'כתובת מייל לא תקינה';
+    // Only one @ sign
+    if((lower.match(/@/g)||[]).length !== 1) return 'כתובת מייל לא תקינה';
+    return null;
+  },
+
+  phone(val){
+    const v = String(val||'').trim();
+    if(!v) return 'שדה חובה';
+    const stripped = v.replace(/[\s\-\(\)\.]/g,'');
+    const digits   = stripped.startsWith('+') ? stripped.slice(1) : stripped;
+    if(!/^\d+$/.test(digits)) return 'ספרות בלבד (אפשר +, רווחים, מקפים)';
+    if(digits.length < 7)  return 'מספר קצר מדי (מינימום 7 ספרות)';
+    if(digits.length > 15) return 'מספר ארוך מדי (מקסימום 15 ספרות)';
+    if(/^(.)\1{6,}$/.test(digits)) return 'מספר טלפון לא תקין';
+    return null;
+  },
+
+  url(val, required = false){
+    const v = String(val||'').trim();
+    if(!v) return required ? 'שדה חובה' : null;
+    if(this.hasInjection(v)) return 'כתובת URL לא תקינה';
+    const withProto = /^https?:\/\//i.test(v) ? v : `https://${v}`;
+    try {
+      const u = new URL(withProto);
+      if(!['http:','https:'].includes(u.protocol)) return 'כתובת URL לא תקינה';
+      if(!u.hostname.includes('.')) return 'כתובת URL לא תקינה';
+      return null;
+    } catch { return 'כתובת URL לא תקינה'; }
+  },
+
+  text(val, {min=0, max=1000, required=false} = {}){
+    const v = String(val||'').trim();
+    if(!v) return required ? 'שדה חובה' : null;
+    if(v.length < min) return `מינימום ${min} תווים (יש ${v.length})`;
+    if(v.length > max) return `מקסימום ${max} תווים (יש ${v.length})`;
+    if(this.hasInjection(v)) return 'תוכן לא חוקי';
+    return null;
+  },
+
+  socialLinks(val){
+    if(!val || !val.trim()) return null;
+    for(const line of val.trim().split('\n')){
+      const l = line.trim();
+      if(!l) continue;
+      const err = this.url(l);
+      if(err) return `קישור לא תקין: "${l.slice(0,40)}"`;
+    }
+    return null;
+  },
+
+  files(fileList, rules){
+    if(!fileList || !fileList.length) return rules.required ? 'נדרש לפחות קובץ אחד' : null;
+    const BAD_EXT = ['exe','sh','bat','cmd','php','py','rb','pl','msi','vbs','ps1','jar','dll','so'];
+    for(const f of Array.from(fileList)){
+      const ext = f.name.split('.').pop().toLowerCase();
+      if(BAD_EXT.includes(ext)) return `קובץ מסוכן: ${f.name}`;
+      if(rules.allowed && !rules.allowed.includes(f.type))
+        return `סוג קובץ לא מותר: ${f.name} (${f.type||'unknown'})`;
+      if(rules.maxMB && f.size > rules.maxMB * 1024 * 1024)
+        return `${f.name} גדול מדי (מקסימום ${rules.maxMB}MB)`;
+    }
+    return null;
+  },
+};
+
+// ════════════════════════════════════════════════
+// FIELD STATE UI
+// ════════════════════════════════════════════════
+function setFieldState(id, error){
+  const input  = document.getElementById(id);
+  const errEl  = document.getElementById('err-' + id);
+  const okEl   = document.getElementById('ok-'  + id);
+  if(!input) return !error;
+  if(error){
+    input.classList.add('v-error');
+    input.classList.remove('v-valid');
+    if(errEl){ errEl.textContent = error; errEl.classList.add('show'); }
+    if(okEl)  okEl.classList.remove('show');
+  } else {
+    input.classList.remove('v-error');
+    input.classList.add('v-valid');
+    if(errEl) errEl.classList.remove('show');
+    if(okEl)  okEl.classList.add('show');
+  }
+  return !error;
+}
+
+function setZoneState(zoneId, errId, error){
+  const zone  = document.getElementById(zoneId);
+  const errEl = document.getElementById(errId);
+  if(zone)  zone.classList.toggle('v-error', !!error);
+  if(errEl){ errEl.textContent = error||''; errEl.classList.toggle('show', !!error); }
+  return !error;
+}
+
+function setGroupState(errId, error){
+  const errEl = document.getElementById(errId);
+  if(errEl){ errEl.textContent = error||''; errEl.classList.toggle('show', !!error); }
+  return !error;
+}
+
+// Inject ok-spans next to each error span once
+function initOkSpans(){
+  ['business_name','contact_name','phone','email',
+   'promoted_service','business_description','page_contact','example_sites'].forEach(id => {
+    if(document.getElementById('ok-'+id)) return;
+    const errEl = document.getElementById('err-'+id);
+    if(!errEl) return;
+    const ok = document.createElement('span');
+    ok.id = 'ok-' + id;
+    ok.className = 'field-ok';
+    ok.textContent = '✓ נראה טוב';
+    errEl.after(ok);
+  });
+}
+
+// ════════════════════════════════════════════════
+// REAL-TIME VALIDATION
+// ════════════════════════════════════════════════
+function initRealtimeValidation(){
+  function watch(id, validatorFn){
+    const el = document.getElementById(id);
+    if(!el) return;
+    let touched = false;
+    el.addEventListener('blur', () => {
+      touched = true;
+      setFieldState(id, validatorFn(el.value));
+    });
+    el.addEventListener('input', () => {
+      if(touched) setFieldState(id, validatorFn(el.value));
+    });
+  }
+
+  watch('business_name',        v => V.name(v));
+  watch('contact_name',         v => V.name(v));
+  watch('phone',                v => V.phone(v));
+  watch('email',                v => V.email(v));
+  watch('social_links',         v => V.socialLinks(v));
+  watch('promoted_service',     v => V.text(v, {min:3,  max:300, required:true}));
+  watch('business_description', v => V.text(v, {min:20, max:500, required:true}));
+  watch('page_contact',         v => V.text(v, {min:5,  max:500, required:true}));
+  watch('booking_link',         v => V.url(v, false));
+  watch('example_sites',        v => V.text(v, {min:10, max:500, required:true}));
+  watch('video_link',           v => V.url(v, false));
+  watch('special_notes',        v => V.text(v, {max:1000}));
+  watch('brand_colors',         v => V.text(v, {max:100}));
+
+  // Auto-lowercase email on blur
+  const emailEl = document.getElementById('email');
+  if(emailEl) emailEl.addEventListener('blur', () => {
+    emailEl.value = emailEl.value.toLowerCase();
+  });
+
+  // Auto-prefix https:// on URL fields
+  ['booking_link','video_link'].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('blur', () => {
+      const v = el.value.trim();
+      if(v && !/^https?:\/\//i.test(v)) el.value = `https://${v}`;
+    });
+  });
+}
+
+// ════════════════════════════════════════════════
+// STEP NAVIGATION
+// ════════════════════════════════════════════════
 const TOTAL_STEPS = 6;
+let currentStep = 1;
+
+function goToStep(n){
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep = n;
+  document.getElementById(`step-${currentStep}`).classList.add('active');
+  updateProgress(); updateNavButtons();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function nextStep(){ if(validateStep(currentStep) && currentStep < TOTAL_STEPS) goToStep(currentStep+1); }
+function prevStep(){ if(currentStep > 1) goToStep(currentStep-1); }
+
+function updateProgress(){
+  document.querySelectorAll('.progress-step').forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.toggle('done',   s < currentStep);
+    el.classList.toggle('active', s === currentStep);
+  });
+  document.getElementById('step-counter').textContent = `שלב ${currentStep} מתוך ${TOTAL_STEPS}`;
+}
+function updateNavButtons(){
+  const back   = document.getElementById('btn-back');
+  const next   = document.getElementById('btn-next');
+  const submit = document.getElementById('btn-submit');
+  back.disabled = currentStep === 1;
+  if(currentStep === TOTAL_STEPS){ next.style.display='none';  submit.style.display='flex'; }
+  else                           { next.style.display='flex';  submit.style.display='none'; }
+}
+
+// ════════════════════════════════════════════════
+// PER-STEP VALIDATION
+// ════════════════════════════════════════════════
+function validateStep(step){
+  let ok = true;
+  function chk(id, err){ if(!setFieldState(id, err)) ok = false; }
+
+  if(step === 1){
+    chk('business_name', V.name(document.getElementById('business_name').value));
+    chk('contact_name',  V.name(document.getElementById('contact_name').value));
+    chk('phone',         V.phone(document.getElementById('phone').value));
+    chk('email',         V.email(document.getElementById('email').value));
+
+    // Social links: optional but valid if filled
+    const sl    = document.getElementById('social_links');
+    const slErr = V.socialLinks(sl.value);
+    sl.classList.toggle('v-error', !!slErr);
+    sl.classList.toggle('v-valid', !slErr && !!sl.value.trim());
+    const slEl = document.getElementById('err-social_links');
+    if(slEl){ slEl.textContent = slErr||''; slEl.classList.toggle('show', !!slErr); }
+    if(slErr) ok = false;
+  }
+
+  if(step === 2){
+    const goal    = document.querySelector('input[name="goal"]:checked');
+    const svcVal  = document.getElementById('promoted_service').value;
+    if(!setGroupState('err-goal', goal ? null : 'נא לבחור מטרה')) ok = false;
+    chk('promoted_service', V.text(svcVal, {min:3, max:300, required:true}));
+  }
+
+  if(step === 3){
+    chk('business_description', V.text(document.getElementById('business_description').value, {min:20, max:500, required:true}));
+    chk('page_contact',         V.text(document.getElementById('page_contact').value,         {min:5,  max:500, required:true}));
+
+    const bl = document.getElementById('booking_link');
+    if(bl.value.trim()){
+      const err = V.url(bl.value);
+      bl.classList.toggle('v-error', !!err);
+      bl.classList.toggle('v-valid', !err);
+      const e = document.getElementById('err-booking_link');
+      if(e){ e.textContent=err||''; e.classList.toggle('show',!!err); }
+      if(err) ok = false;
+    }
+  }
+
+  if(step === 4){
+    const logo    = document.getElementById('logo');
+    const logoErr = V.files(logo.files, UPLOAD_RULES.logo);
+    if(!setZoneState('zone-logo', 'err-logo', logoErr)) ok = false;
+
+    const style = document.querySelector('input[name="design_style"]:checked');
+    if(!setGroupState('err-design_style', style ? null : 'נא לבחור סגנון')) ok = false;
+
+    chk('example_sites', V.text(document.getElementById('example_sites').value, {min:10, max:500, required:true}));
+  }
+
+  if(step === 5){
+    const images  = document.getElementById('images');
+    const imgErr  = V.files(images.files, UPLOAD_RULES.images);
+    if(imgErr && !setZoneState('zone-images','err-images', imgErr)) ok = false;
+
+    const video   = document.getElementById('video_file');
+    const vidErr  = V.files(video.files, UPLOAD_RULES.video);
+    if(vidErr && !setZoneState('zone-video','err-video_file', vidErr)) ok = false;
+
+    const vl = document.getElementById('video_link');
+    if(vl && vl.value.trim()){
+      const err = V.url(vl.value);
+      vl.classList.toggle('v-error', !!err);
+      vl.classList.toggle('v-valid', !err);
+      const e = document.getElementById('err-video_link');
+      if(e){ e.textContent=err||''; e.classList.toggle('show',!!err); }
+      if(err) ok = false;
+    }
+  }
+
+  if(step === 6){
+    const terms = document.getElementById('terms_agreed');
+    if(!setGroupState('err-terms', terms.checked ? null : 'נא לאשר לפני שליחה')) ok = false;
+  }
+
+  // Focus first invalid field for accessibility
+  if(!ok){
+    const firstErr = document.querySelector(`#step-${step} .v-error`);
+    if(firstErr) setTimeout(()=>firstErr.focus(), 50);
+  }
+  return ok;
+}
+
+// ════════════════════════════════════════════════
+// UPLOAD RULES
+// ════════════════════════════════════════════════
+const UPLOAD_RULES = {
+  logo:    { maxMB:10,  required:true,  allowed:['image/png','image/jpeg','image/webp','application/pdf'] },
+  images:  { maxMB:20,  required:false, allowed:['image/png','image/jpeg','image/webp','image/heic','image/heif'] },
+  video:   { maxMB:300, required:false, allowed:['video/mp4','video/quicktime'] },
+  reviews: { maxMB:20,  required:false, allowed:['image/png','image/jpeg','image/webp'] },
+};
 
 // ─── FILE UPLOAD RULES ────────────────────────────────────
 const UPLOAD_RULES = {
@@ -984,25 +1320,25 @@ function validateStep(step) {
   return valid;
 }
 
-// ─── GOAL BUTTONS ─────────────────────────────────────────
+// ════════════════════════════════════════════════
+// CLICK HANDLERS
+// ════════════════════════════════════════════════
 document.querySelectorAll('.goal-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    document.getElementById('err-goal').classList.remove('show');
+    setGroupState('err-goal', null);
   });
 });
 
-// ─── STYLE CARDS ──────────────────────────────────────────
 document.querySelectorAll('.style-card').forEach(card => {
   card.addEventListener('click', () => {
     document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
-    document.getElementById('err-design_style').classList.remove('show');
+    setGroupState('err-design_style', null);
   });
 });
 
-// ─── TIMELINE BUTTONS ─────────────────────────────────────
 document.querySelectorAll('.timeline-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.timeline-btn').forEach(b => b.classList.remove('selected'));
@@ -1010,225 +1346,169 @@ document.querySelectorAll('.timeline-btn').forEach(btn => {
   });
 });
 
-// ─── CHECKBOX ─────────────────────────────────────────────
-document.getElementById('terms-wrap').addEventListener('click', function() {
+document.getElementById('terms-wrap').addEventListener('click', function(){
   const cb = document.getElementById('terms_agreed');
   cb.checked = !cb.checked;
   this.classList.toggle('checked', cb.checked);
-  if (cb.checked) document.getElementById('err-terms').classList.remove('show');
+  if(cb.checked) setGroupState('err-terms', null);
 });
 
-// ─── CHAR COUNT ───────────────────────────────────────────
+// ════════════════════════════════════════════════
+// CHAR COUNT
+// ════════════════════════════════════════════════
 const descEl = document.getElementById('business_description');
-const ccEl = document.getElementById('cc-description');
+const ccEl   = document.getElementById('cc-description');
 descEl.addEventListener('input', () => {
-  const len = descEl.value.length;
-  const max = parseInt(descEl.getAttribute('maxlength'));
+  const len = descEl.value.length, max = 500;
   ccEl.textContent = `${len} / ${max} תווים`;
-  ccEl.className = 'char-count' + (len > max * 0.9 ? (len >= max ? ' over' : ' near') : '');
+  ccEl.className = 'char-count' + (len > max*.9 ? (len >= max ? ' over' : ' near') : '');
 });
 
-// ─── FILE UPLOAD ZONES ────────────────────────────────────
-function setupUploadZone(zoneId, inputId, previewId, opts = {}) {
-  const zone = document.getElementById(zoneId);
-  const input = document.getElementById(inputId);
-  const preview = document.getElementById(previewId);
-  if (!zone || !input) return;
-
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('drag-over');
-    if (e.dataTransfer.files.length) {
-      const dt = new DataTransfer();
-      Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
-      input.files = dt.files;
-      renderPreviews(input.files, preview, opts);
-    }
-  });
-  input.addEventListener('change', () => renderPreviews(input.files, preview, opts));
-}
-
-function renderPreviews(files, previewEl, opts = {}) {
-  previewEl.innerHTML = '';
-  if (!files || !files.length) return;
-
-  // Server-side MIME + size validation (client-side enforcement)
-  if (opts.rules) {
-    const errors = validateFiles(files, opts.rules);
-    if (errors.length) {
-      errors.forEach(msg => {
-        const p = document.createElement('p');
-        p.style.cssText = 'color:#EF4444;font-size:.78rem;margin-top:6px';
-        p.textContent = msg;
-        previewEl.appendChild(p);
-      });
-      return;
-    }
-  }
-
-  const limit = opts.maxFiles || 20;
-  Array.from(files).slice(0, limit).forEach(file => {
-    // Never render SVG as image — it can contain scripts
-    if (file.type.startsWith('image/') && file.type !== 'image/svg+xml') {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const wrap = document.createElement('div');
-        wrap.className = 'preview-item';
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'preview-thumb';
-        img.alt = '';
-        wrap.appendChild(img);
-        previewEl.appendChild(wrap);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      // Safe DOM construction — no innerHTML with user data
-      const wrap = document.createElement('div');
-      wrap.className = 'preview-file';
-      const iconSpan = document.createElement('span');
-      iconSpan.className = 'preview-file-icon';
-      iconSpan.textContent = getFileIcon(file.name);
-      const nameSpan = document.createElement('span');
-      nameSpan.className = 'preview-file-name';
-      nameSpan.textContent = file.name; // textContent never executes HTML
-      wrap.appendChild(iconSpan);
-      wrap.appendChild(nameSpan);
-      previewEl.appendChild(wrap);
-    }
-  });
-
-  if (files.length > limit) {
-    const more = document.createElement('div');
-    more.className = 'preview-file';
-    const moreIcon = document.createElement('span');
-    moreIcon.className = 'preview-file-icon';
-    moreIcon.textContent = '📦';
-    const moreText = document.createElement('span');
-    moreText.className = 'preview-file-name';
-    moreText.textContent = `+${files.length - limit} קבצים נוספים`;
-    more.appendChild(moreIcon);
-    more.appendChild(moreText);
-    previewEl.appendChild(more);
-  }
-
-  if (previewEl.id === 'preview-logo') {
-    document.getElementById('err-logo').classList.remove('show');
-    document.getElementById('logo').classList.remove('error');
-  }
-}
-
-function getFileIcon(name) {
+// ════════════════════════════════════════════════
+// FILE UPLOAD ZONES
+// ════════════════════════════════════════════════
+function getFileIcon(name){
   const ext = name.split('.').pop().toLowerCase();
-  const map = {mp4:'🎬',mov:'🎬',avi:'🎬',pdf:'📄',doc:'📄',docx:'📄',
-                svg:'🎨',ai:'🎨',eps:'🎨',psd:'🎨',zip:'📦',rar:'📦'};
+  const map = {mp4:'🎬',mov:'🎬',pdf:'📄',doc:'📄',docx:'📄',zip:'📦',rar:'📦'};
   return map[ext] || '📎';
 }
 
-setupUploadZone('zone-logo',    'logo',               'preview-logo',    { rules: UPLOAD_RULES.logo });
-setupUploadZone('zone-images',  'images',             'preview-images',  { rules: UPLOAD_RULES.images,  maxFiles: 20 });
-setupUploadZone('zone-video',   'video_file',         'preview-video',   { rules: UPLOAD_RULES.video });
-setupUploadZone('zone-reviews', 'review_screenshots', 'preview-reviews', { rules: UPLOAD_RULES.reviews, maxFiles: 10 });
+function renderPreviews(files, previewEl, opts = {}){
+  previewEl.innerHTML = '';
+  if(!files || !files.length) return;
+  if(opts.rules){
+    const err = V.files(files, opts.rules);
+    if(err){ const p=document.createElement('p'); p.style.cssText='color:#EF4444;font-size:.78rem;margin-top:6px'; p.textContent=err; previewEl.appendChild(p); return; }
+  }
+  const limit = opts.maxFiles || 20;
+  Array.from(files).slice(0, limit).forEach(file => {
+    if(file.type.startsWith('image/') && file.type !== 'image/svg+xml'){
+      const reader = new FileReader();
+      reader.onload = e => {
+        const wrap=document.createElement('div'); wrap.className='preview-item';
+        const img=document.createElement('img'); img.src=e.target.result; img.className='preview-thumb'; img.alt='';
+        wrap.appendChild(img); previewEl.appendChild(wrap);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      const wrap=document.createElement('div'); wrap.className='preview-file';
+      const icon=document.createElement('span'); icon.className='preview-file-icon'; icon.textContent=getFileIcon(file.name);
+      const name=document.createElement('span'); name.className='preview-file-name'; name.textContent=file.name;
+      wrap.appendChild(icon); wrap.appendChild(name); previewEl.appendChild(wrap);
+    }
+  });
+  if(files.length > limit){
+    const more=document.createElement('div'); more.className='preview-file';
+    const i=document.createElement('span'); i.className='preview-file-icon'; i.textContent='📦';
+    const t=document.createElement('span'); t.className='preview-file-name'; t.textContent=`+${files.length-limit} קבצים נוספים`;
+    more.appendChild(i); more.appendChild(t); previewEl.appendChild(more);
+  }
+  if(previewEl.id==='preview-logo') setZoneState('zone-logo','err-logo',null);
+}
 
-// ─── INLINE ERROR (no alert()) ────────────────────────────
-function showInlineError(msg) {
+function setupUploadZone(zoneId, inputId, previewId, opts = {}){
+  const zone=document.getElementById(zoneId), input=document.getElementById(inputId), preview=document.getElementById(previewId);
+  if(!zone||!input) return;
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e=>{
+    e.preventDefault(); zone.classList.remove('drag-over');
+    if(e.dataTransfer.files.length){
+      const dt=new DataTransfer(); Array.from(e.dataTransfer.files).forEach(f=>dt.items.add(f));
+      input.files=dt.files; renderPreviews(input.files,preview,opts);
+    }
+  });
+  input.addEventListener('change',()=>renderPreviews(input.files,preview,opts));
+}
+
+setupUploadZone('zone-logo',    'logo',               'preview-logo',    {rules:UPLOAD_RULES.logo});
+setupUploadZone('zone-images',  'images',             'preview-images',  {rules:UPLOAD_RULES.images,  maxFiles:20});
+setupUploadZone('zone-video',   'video_file',         'preview-video',   {rules:UPLOAD_RULES.video});
+setupUploadZone('zone-reviews', 'review_screenshots', 'preview-reviews', {rules:UPLOAD_RULES.reviews, maxFiles:10});
+
+// ════════════════════════════════════════════════
+// INLINE ERROR DISPLAY
+// ════════════════════════════════════════════════
+function showInlineError(msg){
   let el = document.getElementById('submit-error');
-  if (!el) {
-    el = document.createElement('p');
-    el.id = 'submit-error';
-    el.style.cssText = 'color:#EF4444;font-size:.85rem;margin-top:12px;text-align:center;font-weight:600;';
+  if(!el){
+    el=document.createElement('p'); el.id='submit-error';
+    el.style.cssText='color:#EF4444;font-size:.85rem;margin-top:12px;text-align:center;font-weight:600;';
     document.getElementById('nav-btns').after(el);
   }
   el.textContent = msg;
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
-function clearInlineError() {
-  const el = document.getElementById('submit-error');
-  if (el) el.textContent = '';
-}
+function clearInlineError(){ const el=document.getElementById('submit-error'); if(el) el.textContent=''; }
 
-// ─── FORM SUBMISSION ──────────────────────────────────────
+// ════════════════════════════════════════════════
+// FORM SUBMISSION
+// ════════════════════════════════════════════════
 let _lastSubmit = 0;
 
-async function handleSubmit() {
-  // Honeypot — bots fill hidden fields, humans don't
-  if (document.querySelector('input[name="_gotcha"]').value) return;
+async function handleSubmit(){
+  if(document.querySelector('input[name="_gotcha"]').value) return;
 
-  // Client-side rate limit (backup — server enforces too)
   const now = Date.now();
-  if (now - _lastSubmit < 60000 && _lastSubmit !== 0) {
-    showInlineError('נא להמתין דקה לפני שליחה נוספת.');
-    return;
+  if(now - _lastSubmit < 60000 && _lastSubmit !== 0){
+    showInlineError('נא להמתין דקה לפני שליחה נוספת.'); return;
   }
-
-  if (!validateStep(6)) return;
+  if(!validateStep(6)) return;
   clearInlineError();
   _lastSubmit = now;
 
-  const submitBtn = document.getElementById('btn-submit');
+  const submitBtn  = document.getElementById('btn-submit');
   const submitText = document.getElementById('submit-text');
-  submitBtn.classList.add('loading');
-  submitText.textContent = '⏳ שולח...';
+  submitBtn.classList.add('loading'); submitText.textContent='⏳ שולח...';
 
   try {
-    // Build text payload for server-side validation + rate limiting
     const payload = {
       _gotcha:              document.querySelector('input[name="_gotcha"]').value,
-      business_name:        document.getElementById('business_name').value,
-      contact_name:         document.getElementById('contact_name').value,
-      phone:                document.getElementById('phone').value,
-      email:                document.getElementById('email').value,
-      goal:                 document.querySelector('input[name="goal"]:checked')?.value || '',
-      promoted_service:     document.getElementById('promoted_service').value,
-      business_description: document.getElementById('business_description').value,
-      page_contact:         document.getElementById('page_contact').value,
-      design_style:         document.querySelector('input[name="design_style"]:checked')?.value || '',
-      social_links:         document.getElementById('social_links').value,
-      booking_link:         document.getElementById('booking_link')?.value || '',
-      testimonials_text:    document.getElementById('testimonials_text')?.value || '',
-      brand_colors:         document.getElementById('brand_colors')?.value || '',
-      example_sites:        document.getElementById('example_sites').value,
-      video_link:           document.getElementById('video_link')?.value || '',
-      special_notes:        document.getElementById('special_notes')?.value || '',
-      timeline:             document.querySelector('input[name="timeline"]:checked')?.value || '',
+      business_name:        document.getElementById('business_name').value.trim(),
+      contact_name:         document.getElementById('contact_name').value.trim(),
+      phone:                document.getElementById('phone').value.trim(),
+      email:                document.getElementById('email').value.trim().toLowerCase(),
+      goal:                 document.querySelector('input[name="goal"]:checked')?.value||'',
+      promoted_service:     document.getElementById('promoted_service').value.trim(),
+      business_description: document.getElementById('business_description').value.trim(),
+      page_contact:         document.getElementById('page_contact').value.trim(),
+      design_style:         document.querySelector('input[name="design_style"]:checked')?.value||'',
+      social_links:         document.getElementById('social_links').value.trim(),
+      booking_link:         document.getElementById('booking_link')?.value.trim()||'',
+      testimonials_text:    document.getElementById('testimonials_text')?.value.trim()||'',
+      brand_colors:         document.getElementById('brand_colors')?.value.trim()||'',
+      example_sites:        document.getElementById('example_sites').value.trim(),
+      video_link:           document.getElementById('video_link')?.value.trim()||'',
+      special_notes:        document.getElementById('special_notes')?.value.trim()||'',
+      timeline:             document.querySelector('input[name="timeline"]:checked')?.value||'',
     };
 
-    // POST to server-side endpoint (validation + rate limiting + webhook)
-    const res = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    const json = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      throw new Error(json.error || 'שגיאה בשליחה');
-    }
-
+    const res  = await fetch('/api/submit', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const json = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(json.error||'שגיאה בשליחה');
     showSuccess();
-  } catch (e) {
-    submitBtn.classList.remove('loading');
-    submitText.textContent = 'שליחה ←';
-    showInlineError(e.message || 'אירעה שגיאה. נסו שנית או פנו אלינו ב-WhatsApp.');
+  } catch(e){
+    submitBtn.classList.remove('loading'); submitText.textContent='שליחה ←';
+    showInlineError(e.message||'אירעה שגיאה. נסו שנית או פנו אלינו ב-WhatsApp.');
   }
 }
 
-function showSuccess() {
-  document.getElementById('onboarding-form').style.display = 'none';
-  document.getElementById('nav-btns').style.display = 'none';
-  document.querySelectorAll('.progress-step').forEach(el => el.classList.add('done'));
-  const ss = document.getElementById('success-screen');
-  ss.style.display = 'block';
-  ss.classList.add('show');
-  window.scrollTo({top:0, behavior:'smooth'});
+function showSuccess(){
+  document.getElementById('onboarding-form').style.display='none';
+  document.getElementById('nav-btns').style.display='none';
+  document.querySelectorAll('.progress-step').forEach(el=>el.classList.add('done'));
+  const ss=document.getElementById('success-screen');
+  ss.style.display='block'; ss.classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ─── INIT ─────────────────────────────────────────────────
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
 updateProgress();
 updateNavButtons();
+initOkSpans();
+initRealtimeValidation();
 </script>
 </body>
 </html>

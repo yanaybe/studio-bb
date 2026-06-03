@@ -1408,14 +1408,101 @@ document.querySelectorAll('.faq-q').forEach(btn => {
   });
 });
 
-// ── Contact form ─────────────────────────
+// ── Contact form validation & submission ──
 (function(){
   const form = document.getElementById('cform');
   if(!form) return;
+
+  const INJECTION = /<script|javascript:|on\w+\s*=|<iframe|<object/i;
+
+  function validateName(v){
+    const s = String(v||'').trim();
+    if(!s) return 'שדה חובה';
+    if(s.length < 2)   return 'מינימום 2 תווים';
+    if(s.length > 100) return 'מקסימום 100 תווים';
+    if(/^\d+$/.test(s)) return 'שם לא יכול להכיל ספרות בלבד';
+    if(INJECTION.test(s)) return 'תוכן לא חוקי';
+    if(!/^[֐-׿‏‎a-zA-ZÀ-ÿ\s\-'.]+$/.test(s)) return 'אותיות, רווחים ומקפים בלבד';
+    return null;
+  }
+  function validatePhone(v){
+    const s = String(v||'').trim();
+    if(!s) return 'שדה חובה';
+    const d = s.replace(/[\s\-\(\)\.]/g,'');
+    const digits = d.startsWith('+') ? d.slice(1) : d;
+    if(!/^\d+$/.test(digits)) return 'ספרות בלבד';
+    if(digits.length < 7)  return 'מספר קצר מדי';
+    if(digits.length > 15) return 'מספר ארוך מדי';
+    if(/^(.)\1{6,}$/.test(digits)) return 'מספר לא תקין';
+    return null;
+  }
+  function validateMsg(v){
+    const s = String(v||'').trim();
+    if(!s) return null; // optional
+    if(s.length > 1000) return `מקסימום 1000 תווים (יש ${s.length})`;
+    if(INJECTION.test(s)) return 'תוכן לא חוקי';
+    return null;
+  }
+
+  // Inline field state helpers
+  function fieldErr(input, msg){
+    input.style.borderColor = msg ? '#EF4444' : '#10B981';
+    input.style.boxShadow   = msg ? '0 0 0 3px rgba(239,68,68,.1)' : '0 0 0 3px rgba(16,185,129,.1)';
+    let hint = input.nextElementSibling;
+    if(!hint || !hint.classList.contains('cf-err')){
+      hint = document.createElement('p');
+      hint.className = 'cf-err';
+      hint.style.cssText = 'font-size:.75rem;margin-top:4px;';
+      input.after(hint);
+    }
+    hint.textContent = msg || '';
+    hint.style.color = msg ? '#EF4444' : '#10B981';
+    hint.textContent = msg || (input.value.trim() ? '✓' : '');
+  }
+
+  // Real-time listeners
+  const fn = form.querySelector('#fn');
+  const fp = form.querySelector('#fp');
+  const fm = form.querySelector('#fm');
+
+  function watchField(el, validator){
+    if(!el) return;
+    let touched = false;
+    el.addEventListener('blur',  () => { touched=true; fieldErr(el, validator(el.value)); });
+    el.addEventListener('input', () => { if(touched) fieldErr(el, validator(el.value)); });
+  }
+  watchField(fn, validateName);
+  watchField(fp, validatePhone);
+  watchField(fm, validateMsg);
+
+  // Submission
+  let lastSubmit = 0;
   form.addEventListener('submit', e => {
     e.preventDefault();
+
+    // Honeypot
+    if(form.querySelector('input[name="_gotcha"]')?.value) return;
+
+    // Rate limit
+    const now = Date.now();
+    if(now - lastSubmit < 30000){
+      const btn = form.querySelector('.btn-form');
+      btn.textContent = 'נא להמתין...'; setTimeout(()=>btn.textContent='שלחו — נחזור אליכם ←', 2000); return;
+    }
+
+    // Validate all
+    const nameErr  = validateName(fn?.value);
+    const phoneErr = validatePhone(fp?.value);
+    const msgErr   = validateMsg(fm?.value);
+    if(fn) fieldErr(fn, nameErr);
+    if(fp) fieldErr(fp, phoneErr);
+    if(fm) fieldErr(fm, msgErr);
+    if(nameErr || phoneErr || msgErr) return;
+
+    lastSubmit = now;
     const btn = form.querySelector('.btn-form');
-    btn.textContent = 'שולח...'; btn.style.opacity = '.7'; btn.disabled = true;
+    btn.textContent = 'שולח...'; btn.style.opacity='.7'; btn.disabled=true;
+
     fetch('https://formsubmit.co/ajax/yanayberdah@gmail.com', {
       method:'POST', headers:{'Accept':'application/json'}, body: new FormData(form)
     })
@@ -1424,7 +1511,10 @@ document.querySelectorAll('.faq-q').forEach(btn => {
       document.getElementById('form-body').style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
     })
-    .catch(() => { btn.textContent='שלחו — נחזור אליכם ←'; btn.style.opacity='1'; btn.disabled=false; form.submit(); });
+    .catch(() => {
+      btn.textContent='שלחו — נחזור אליכם ←'; btn.style.opacity='1'; btn.disabled=false;
+      form.submit();
+    });
   });
 })();
 
