@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>שאלון לקוח — Studio BB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05050D;
+  --bg2:#0A0A1A;
+  --surface:rgba(255,255,255,0.04);
+  --surface-hover:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);
+  --border-strong:rgba(255,255,255,0.16);
+  --text:#FFFFFF;
+  --text-2:rgba(255,255,255,0.65);
+  --text-3:rgba(255,255,255,0.35);
+  --accent:#6C63FF;
+  --accent-2:#00C9FF;
+  --green:#00E5A0;
+  --red:#FF6B8A;
+  --gold:#FFB800;
+  --grad:linear-gradient(135deg,#6C63FF,#00C9FF);
+  --r:16px;
+  --r-sm:10px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Heebo',sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ── NAV ── */
+.form-nav{
+  position:fixed;top:0;right:0;left:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 5%;
+  background:rgba(5,5,13,.8);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.form-nav-logo{
+  font-size:1.4rem;font-weight:900;letter-spacing:-.03em;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;
+}
+.form-nav-label{font-size:.8rem;color:var(--text-3);font-weight:500}
+
+/* ── PROGRESS ── */
+.progress-wrap{
+  position:fixed;top:65px;right:0;left:0;z-index:99;
+  background:rgba(5,5,13,.9);
+  backdrop-filter:blur(10px);
+  padding:16px 5%;
+  border-bottom:1px solid var(--border);
+}
+.progress-steps{
+  display:flex;align-items:center;gap:0;
+  max-width:680px;margin:0 auto;
+}
+.progress-step{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  position:relative;cursor:default;
+}
+.progress-step:not(:last-child)::before{
+  content:'';position:absolute;top:14px;
+  right:50%;left:-50%;
+  height:1px;background:var(--border-strong);
+  transition:background .4s;
+}
+.progress-step.done:not(:last-child)::before,
+.progress-step.active:not(:last-child)::before{
+  background:var(--accent);
+}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;
+  border:1.5px solid var(--border-strong);
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;color:var(--text-3);
+  position:relative;z-index:2;
+  transition:all .3s;
+}
+.progress-step.done .step-dot{
+  background:var(--accent);border-color:var(--accent);color:#fff;
+}
+.progress-step.active .step-dot{
+  background:var(--grad);border-color:transparent;color:#fff;
+  box-shadow:0 0 16px rgba(108,99,255,.5);
+}
+.step-label{font-size:.68rem;color:var(--text-3);font-weight:500;white-space:nowrap;transition:color .3s}
+.progress-step.active .step-label{color:var(--text-2)}
+.progress-step.done .step-label{color:var(--accent)}
+
+/* ── MAIN LAYOUT ── */
+.form-outer{
+  max-width:680px;margin:0 auto;
+  padding:160px 24px 80px;
+  min-height:100vh;
+}
+
+/* ── STEP CONTAINER ── */
+.step{display:none;animation:stepIn .35s ease both}
+.step.active{display:block}
+@keyframes stepIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── STEP HEADER ── */
+.step-header{margin-bottom:36px}
+.step-eyebrow{
+  font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;display:block;
+}
+.step-title{
+  font-size:clamp(1.6rem,4vw,2.2rem);font-weight:900;
+  line-height:1.15;letter-spacing:-.03em;margin-bottom:10px;
+}
+.step-sub{font-size:.9rem;color:var(--text-2);line-height:1.6}
+
+/* ── FORM ELEMENTS ── */
+.field{margin-bottom:20px}
+.field-label{
+  display:block;font-size:.8rem;font-weight:700;
+  color:var(--text-2);margin-bottom:8px;letter-spacing:.02em;
+}
+.field-label .req{color:var(--accent);margin-right:2px}
+.field-hint{font-size:.75rem;color:var(--text-3);margin-top:5px;line-height:1.5}
+
+.input,.textarea{
+  width:100%;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:13px 16px;
+  color:var(--text);
+  font-family:'Heebo',sans-serif;
+  font-size:.95rem;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+  -webkit-appearance:none;
+}
+.input:focus,.textarea:focus{
+  border-color:rgba(108,99,255,.7);
+  box-shadow:0 0 0 3px rgba(108,99,255,.12);
+  background:rgba(108,99,255,.04);
+}
+.input::placeholder,.textarea::placeholder{color:var(--text-3)}
+.textarea{resize:vertical;min-height:100px;line-height:1.6}
+.input.error,.textarea.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,107,138,.1)}
+.char-count{font-size:.72rem;color:var(--text-3);text-align:left;margin-top:4px}
+.char-count.near{color:var(--gold)}
+.char-count.over{color:var(--red)}
+
+/* ── TWO COL ── */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.field-row{grid-template-columns:1fr}}
+
+/* ── GOAL BUTTONS ── */
+.goal-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+@media(max-width:480px){.goal-grid{grid-template-columns:1fr 1fr}}
+.goal-btn{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:20px 10px;border-radius:var(--r);
+  border:1.5px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;transition:all .2s;text-align:center;
+  -webkit-user-select:none;user-select:none;
+}
+.goal-btn:hover{border-color:var(--border-strong);background:var(--surface-hover)}
+.goal-btn.selected{
+  border-color:var(--accent);
+  background:rgba(108,99,255,.1);
+  box-shadow:0 0 20px rgba(108,99,255,.15);
+}
+.goal-btn input{display:none}
+.goal-icon{font-size:1.6rem;line-height:1}
+.goal-text{font-size:.8rem;font-weight:700;color:var(--text-2);line-height:1.3}
+.goal-btn.selected .goal-text{color:var(--text)}
+
+/* ── STYLE CARDS ── */
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.style-card{
+  border:1.5px solid var(--border);border-radius:var(--r);
+  overflow:hidden;cursor:pointer;transition:all .2s;
+}
+.style-card:hover{border-color:var(--border-strong)}
+.style-card.selected{border-color:var(--accent);box-shadow:0 0 20px rgba(108,99,255,.18)}
+.style-card input{display:none}
+.style-preview{
+  height:80px;display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;position:relative;overflow:hidden;
+}
+.sp-dark{background:linear-gradient(135deg,#05050D,#1a1a3e)}
+.sp-light{background:linear-gradient(135deg,#f8f9fa,#e9ecef)}
+.sp-warm{background:linear-gradient(135deg,#2D1B10,#6B3A2A)}
+.sp-bold{background:linear-gradient(135deg,#1a0533,#6C63FF,#00C9FF)}
+.sp-formal{background:linear-gradient(135deg,#0a1628,#1B3D6F)}
+.style-info{padding:12px 14px;background:var(--surface)}
+.style-name{font-size:.85rem;font-weight:700;margin-bottom:3px}
+.style-desc{font-size:.73rem;color:var(--text-3)}
+.style-card.selected .style-info{background:rgba(108,99,255,.08)}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{
+  border:2px dashed var(--border-strong);
+  border-radius:var(--r);
+  padding:32px 20px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .25s;
+  background:var(--surface);
+  position:relative;
+}
+.upload-zone:hover,.upload-zone.drag-over{
+  border-color:var(--accent);
+  background:rgba(108,99,255,.06);
+}
+.upload-zone input[type="file"]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.upload-icon{font-size:2rem;margin-bottom:10px;display:block}
+.upload-title{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.upload-sub{font-size:.78rem;color:var(--text-3);margin-bottom:6px}
+.upload-formats{
+  font-size:.72rem;color:var(--text-3);
+  background:rgba(255,255,255,.04);border-radius:50px;
+  display:inline-block;padding:4px 12px;
+}
+.upload-preview{
+  margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+}
+.preview-item{
+  position:relative;border-radius:8px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.preview-thumb{width:56px;height:56px;object-fit:cover;display:block}
+.preview-file{
+  width:auto;max-width:180px;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;background:rgba(108,99,255,.1);
+  border-radius:8px;border:1px solid rgba(108,99,255,.2);
+}
+.preview-file-icon{font-size:1.2rem}
+.preview-file-name{font-size:.75rem;color:var(--text-2);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── TIMELINE ── */
+.timeline-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:420px){.timeline-grid{grid-template-columns:1fr}}
+.timeline-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border);background:var(--surface);
+  cursor:pointer;transition:all .2s;
+}
+.timeline-btn:hover{border-color:var(--border-strong)}
+.timeline-btn.selected{border-color:var(--accent);background:rgba(108,99,255,.09)}
+.timeline-btn input{display:none}
+.tl-icon{font-size:1.2rem}
+.tl-label{font-size:.85rem;font-weight:600}
+
+/* ── CHECKBOX ── */
+.check-wrap{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:16px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border);background:var(--surface);
+  cursor:pointer;transition:border-color .2s;
+}
+.check-wrap:hover{border-color:var(--border-strong)}
+.check-wrap.checked{border-color:var(--green)}
+.custom-check{
+  width:20px;height:20px;border-radius:5px;flex-shrink:0;
+  border:1.5px solid var(--border-strong);
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;transition:all .2s;
+}
+.check-wrap.checked .custom-check{background:var(--green);border-color:var(--green)}
+.check-icon{font-size:.75rem;display:none}
+.check-wrap.checked .check-icon{display:block}
+.check-wrap input{display:none}
+.check-text{font-size:.85rem;color:var(--text-2);line-height:1.5}
+
+/* ── NAVIGATION ── */
+.form-nav-btns{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:40px;padding-top:28px;
+  border-top:1px solid var(--border);
+  gap:12px;
+}
+.btn-back{
+  display:flex;align-items:center;gap:8px;
+  background:none;border:1.5px solid var(--border-strong);
+  color:var(--text-2);border-radius:50px;
+  padding:13px 24px;font-family:'Heebo',sans-serif;font-size:.9rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-back:hover{border-color:rgba(255,255,255,.3);color:var(--text)}
+.btn-back:disabled{opacity:.3;cursor:not-allowed}
+.btn-next{
+  display:flex;align-items:center;gap:8px;
+  background:var(--grad);border:none;
+  color:#fff;border-radius:50px;
+  padding:13px 32px;font-family:'Heebo',sans-serif;font-size:.9rem;font-weight:700;
+  cursor:pointer;transition:opacity .2s,transform .2s,box-shadow .2s;
+  box-shadow:0 0 24px rgba(108,99,255,.3);
+  margin-right:auto;
+}
+.btn-next:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 0 36px rgba(108,99,255,.45)}
+.btn-next:active{transform:translateY(0)}
+.btn-submit{
+  display:flex;align-items:center;gap:8px;
+  background:var(--grad);border:none;
+  color:#fff;border-radius:50px;
+  padding:15px 36px;font-family:'Heebo',sans-serif;font-size:1rem;font-weight:800;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 0 30px rgba(108,99,255,.35);
+  margin-right:auto;
+}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-submit.loading{opacity:.7;pointer-events:none}
+.step-counter{font-size:.8rem;color:var(--text-3);font-weight:500;white-space:nowrap}
+
+/* ── ERROR MESSAGE ── */
+.field-error{
+  font-size:.75rem;color:var(--red);margin-top:5px;
+  display:none;
+}
+.field-error.show{display:block}
+
+/* ── DIVIDER ── */
+.field-divider{
+  height:1px;background:var(--border);
+  margin:28px 0;
+}
+
+/* ── SUCCESS ── */
+#success-screen{
+  display:none;
+  text-align:center;padding:80px 24px;
+  max-width:500px;margin:0 auto;
+  animation:stepIn .5s ease both;
+}
+#success-screen.show{display:block}
+.success-icon-wrap{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(0,229,160,.2),rgba(0,229,160,.05));
+  border:1.5px solid rgba(0,229,160,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;margin:0 auto 28px;
+  box-shadow:0 0 40px rgba(0,229,160,.15);
+}
+.success-title{font-size:2rem;font-weight:900;letter-spacing:-.03em;margin-bottom:14px}
+.success-sub{font-size:.95rem;color:var(--text-2);line-height:1.7;margin-bottom:36px}
+.success-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;text-align:right;
+  margin-bottom:28px;
+}
+.success-card p{font-size:.88rem;color:var(--text-2);line-height:1.7}
+.success-card strong{color:var(--text)}
+.btn-home{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--border-strong);
+  background:none;color:var(--text-2);
+  border-radius:50px;padding:12px 28px;
+  text-decoration:none;font-family:'Heebo',sans-serif;
+  font-size:.9rem;font-weight:600;
+  transition:all .2s;
+}
+.btn-home:hover{border-color:rgba(255,255,255,.3);color:var(--text)}
+
+/* ── OPTIONAL BADGE ── */
+.badge-optional{
+  font-size:.68rem;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:50px;padding:2px 8px;
+  color:var(--text-3);margin-right:8px;
+  vertical-align:middle;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .form-outer{padding-top:150px}
+  .progress-wrap{padding:12px 4%}
+  .step-label{display:none}
+  .goal-grid{grid-template-columns:repeat(2,1fr)}
+  .style-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="form-nav">
+  <a href="index.html" class="form-nav-logo">BB</a>
+  <span class="form-nav-label">שאלון לקוח — Studio BB</span>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-steps">
+    <div class="progress-step active" data-step="1">
+      <div class="step-dot">1</div>
+      <span class="step-label">העסק</span>
+    </div>
+    <div class="progress-step" data-step="2">
+      <div class="step-dot">2</div>
+      <span class="step-label">מטרה</span>
+    </div>
+    <div class="progress-step" data-step="3">
+      <div class="step-dot">3</div>
+      <span class="step-label">תוכן</span>
+    </div>
+    <div class="progress-step" data-step="4">
+      <div class="step-dot">4</div>
+      <span class="step-label">עיצוב</span>
+    </div>
+    <div class="progress-step" data-step="5">
+      <div class="step-dot">5</div>
+      <span class="step-label">קבצים</span>
+    </div>
+    <div class="progress-step" data-step="6">
+      <div class="step-dot">6</div>
+      <span class="step-label">סיום</span>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-outer">
+  <form id="onboarding-form" novalidate>
+
+    <!-- ═══════════════════════════════ STEP 1 ═══ -->
+    <div class="step active" id="step-1">
+      <div class="step-header">
+        <span class="step-eyebrow">01 / 06 — פרטי העסק</span>
+        <h1 class="step-title">נתחיל בהיכרות קצרה</h1>
+        <p class="step-sub">המידע הבסיסי שנצטרך כדי ליצור קשר ולהתאים את הפרויקט אליכם.</p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="business_name">
+            <span class="req">*</span>שם העסק
+          </label>
+          <input class="input" type="text" id="business_name" name="business_name"
+            placeholder="לדוגמה: מרפאת ד״ר לוי" required>
+          <span class="field-error" id="err-business_name">נא למלא שם עסק</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="contact_name">
+            <span class="req">*</span>שם מלא
+          </label>
+          <input class="input" type="text" id="contact_name" name="contact_name"
+            placeholder="ישראל ישראלי" required>
+          <span class="field-error" id="err-contact_name">נא למלא שם</span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="phone">
+            <span class="req">*</span>טלפון
+          </label>
+          <input class="input" type="tel" id="phone" name="phone"
+            placeholder="050-0000000" required>
+          <span class="field-error" id="err-phone">נא למלא מספר טלפון</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="email">
+            <span class="req">*</span>דוא״ל
+          </label>
+          <input class="input" type="email" id="email" name="email"
+            placeholder="you@business.co.il" required>
+          <span class="field-error" id="err-email">נא למלא כתובת דוא״ל תקינה</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="social_links">
+          אתר / אינסטגרם / פייסבוק / LinkedIn
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <textarea class="textarea" id="social_links" name="social_links" rows="3"
+          placeholder="https://yoursite.co.il&#10;https://instagram.com/yourpage"></textarea>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ STEP 2 ═══ -->
+    <div class="step" id="step-2">
+      <div class="step-header">
+        <span class="step-eyebrow">02 / 06 — מטרת הדף</span>
+        <h1 class="step-title">מה הדף הזה צריך להשיג?</h1>
+        <p class="step-sub">בחרו את הפעולה העיקרית שתרצו שהמבקר יבצע.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label"><span class="req">*</span>מטרה עיקרית</label>
+        <div class="goal-grid" id="goal-grid">
+          <label class="goal-btn">
+            <input type="radio" name="goal" value="whatsapp">
+            <span class="goal-icon">📱</span>
+            <span class="goal-text">פנייה<br>ב-WhatsApp</span>
+          </label>
+          <label class="goal-btn">
+            <input type="radio" name="goal" value="phone">
+            <span class="goal-icon">📞</span>
+            <span class="goal-text">שיחת<br>טלפון</span>
+          </label>
+          <label class="goal-btn">
+            <input type="radio" name="goal" value="lead_form">
+            <span class="goal-icon">📋</span>
+            <span class="goal-text">השארת<br>פרטים</span>
+          </label>
+          <label class="goal-btn">
+            <input type="radio" name="goal" value="booking">
+            <span class="goal-icon">📅</span>
+            <span class="goal-text">קביעת<br>פגישה / תור</span>
+          </label>
+          <label class="goal-btn">
+            <input type="radio" name="goal" value="purchase">
+            <span class="goal-icon">🛒</span>
+            <span class="goal-text">רכישה<br>ישירה</span>
+          </label>
+          <label class="goal-btn">
+            <input type="radio" name="goal" value="signup">
+            <span class="goal-icon">📩</span>
+            <span class="goal-text">הרשמה /<br>ניוזלטר</span>
+          </label>
+        </div>
+        <span class="field-error" id="err-goal">נא לבחור מטרה</span>
+      </div>
+
+      <div class="field" style="margin-top:28px">
+        <label class="field-label" for="promoted_service">
+          <span class="req">*</span>מה השירות / המוצר שהדף מקדם?
+        </label>
+        <input class="input" type="text" id="promoted_service" name="promoted_service"
+          placeholder="לדוגמה: ייעוץ ראשוני חינם, טיפול בוטוקס, קורס אונליין...">
+        <span class="field-error" id="err-promoted_service">נא למלא את השירות</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ STEP 3 ═══ -->
+    <div class="step" id="step-3">
+      <div class="step-header">
+        <span class="step-eyebrow">03 / 06 — תוכן הדף</span>
+        <h1 class="step-title">החומר שממנו נבנה הדף</h1>
+        <p class="step-sub">הטקסטים האלה הם הבסיס לכל מה שנכתוב. היו ספציפיים — זה הופך ישר לקופי.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="business_description">
+          <span class="req">*</span>תיאור העסק
+        </label>
+        <textarea class="textarea" id="business_description" name="business_description"
+          rows="4" maxlength="500"
+          placeholder="מה אתם עושים, למי, ומה מיוחד בכם. לדוגמה: מרפאה לרפואה אסתטית עם 10 שנות ניסיון. מתמחים בבוטוקס ופילרים. מציעים ייעוץ חינם לכל לקוח חדש..."></textarea>
+        <div class="char-count" id="cc-description">0 / 500 תווים</div>
+        <span class="field-error" id="err-business_description">נא לתאר את העסק</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="page_contact">
+          <span class="req">*</span>פרטי יצירת קשר להצגה בדף
+        </label>
+        <textarea class="textarea" id="page_contact" name="page_contact" rows="4"
+          placeholder="WhatsApp: 050-0000000&#10;טלפון: 03-0000000&#10;מייל: info@business.co.il&#10;כתובת: רחוב הרצל 1, תל אביב"></textarea>
+        <span class="field-error" id="err-page_contact">נא למלא פרטי קשר</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="booking_link">
+          קישור לקביעת פגישה / תור
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <input class="input" type="url" id="booking_link" name="booking_link"
+          placeholder="https://calendly.com/yourname">
+        <p class="field-hint">Calendly, SimplyBook, Acuity, מערכת תורים פנימית</p>
+      </div>
+
+      <div class="field-divider"></div>
+
+      <div class="field">
+        <label class="field-label" for="testimonials_text">
+          עדויות מלקוחות
+          <span class="badge-optional">אופציונלי — אבל ממש ממליצים</span>
+        </label>
+        <textarea class="textarea" id="testimonials_text" name="testimonials_text" rows="5"
+          placeholder='"ציטוט של לקוח — שם הלקוח, תפקיד / עסק"&#10;---&#10;"עוד ציטוט — שם הלקוח"&#10;&#10;אפשר גם להעתיק ישירות מגוגל / פייסבוק'></textarea>
+        <p class="field-hint">שמות, ציטוטים, ביקורות גוגל, WhatsApp — הכל עוזר</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ STEP 4 ═══ -->
+    <div class="step" id="step-4">
+      <div class="step-header">
+        <span class="step-eyebrow">04 / 06 — מיתוג ועיצוב</span>
+        <h1 class="step-title">איך הדף יראה?</h1>
+        <p class="step-sub">העלו לוגו, בחרו סגנון והראו לנו אתרים שאתם אוהבים.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          <span class="req">*</span>לוגו
+        </label>
+        <div class="upload-zone" id="zone-logo">
+          <input type="file" id="logo" name="logo" accept=".png,.svg,.jpg,.jpeg,.pdf,.ai,.eps">
+          <span class="upload-icon">🖼️</span>
+          <p class="upload-title">גררו את הלוגו לכאן</p>
+          <p class="upload-sub">או לחצו לבחירת קובץ</p>
+          <p class="upload-formats">PNG · SVG · JPG · PDF — עד 20MB</p>
+          <div class="upload-preview" id="preview-logo"></div>
+        </div>
+        <span class="field-error" id="err-logo">נא להעלות לוגו</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="brand_colors">
+          צבעי המותג
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <input class="input" type="text" id="brand_colors" name="brand_colors"
+          placeholder="לדוגמה: #1B3D6F וצבע לבן / כתום וחום / אין — תבחרו בשבילי">
+      </div>
+
+      <div class="field">
+        <label class="field-label"><span class="req">*</span>סגנון כללי</label>
+        <div class="style-grid" id="style-grid">
+          <label class="style-card">
+            <input type="radio" name="design_style" value="dark">
+            <div class="style-preview sp-dark">🌑</div>
+            <div class="style-info">
+              <div class="style-name">כהה ומודרני</div>
+              <div class="style-desc">רקע שחור, אנרגטי, טכנולוגי</div>
+            </div>
+          </label>
+          <label class="style-card">
+            <input type="radio" name="design_style" value="light">
+            <div class="style-preview sp-light">☀️</div>
+            <div class="style-info">
+              <div class="style-name">בהיר ונקי</div>
+              <div class="style-desc">רקע לבן, אוורירי, ברור</div>
+            </div>
+          </label>
+          <label class="style-card">
+            <input type="radio" name="design_style" value="warm">
+            <div class="style-preview sp-warm">🌿</div>
+            <div class="style-info">
+              <div class="style-name">חם ואורגני</div>
+              <div class="style-desc">גוונים ארציים, אנושי, מזמין</div>
+            </div>
+          </label>
+          <label class="style-card">
+            <input type="radio" name="design_style" value="bold">
+            <div class="style-preview sp-bold">💜</div>
+            <div class="style-info">
+              <div class="style-name">צבעוני ועז</div>
+              <div class="style-desc">גרדיינטים, בולד, בולט</div>
+            </div>
+          </label>
+          <label class="style-card">
+            <input type="radio" name="design_style" value="formal">
+            <div class="style-preview sp-formal">💼</div>
+            <div class="style-info">
+              <div class="style-name">פורמלי ומקצועי</div>
+              <div class="style-desc">כחול / אפור, ייצוגי, רציני</div>
+            </div>
+          </label>
+        </div>
+        <span class="field-error" id="err-design_style">נא לבחור סגנון</span>
+      </div>
+
+      <div class="field" style="margin-top:8px">
+        <label class="field-label" for="example_sites">
+          <span class="req">*</span>אתרים שאתם אוהבים
+        </label>
+        <textarea class="textarea" id="example_sites" name="example_sites" rows="4"
+          placeholder="https://example.com — אוהב את הנקיון ואת הצבעים&#10;https://example2.com — אוהב את האנימציות&#10;https://example3.com — הסגנון הכהה שלו"></textarea>
+        <p class="field-hint">2–3 קישורים + מה ספציפית מוצא חן בכם בכל אחד</p>
+        <span class="field-error" id="err-example_sites">נא לציין לפחות אתר אחד לדוגמה</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ STEP 5 ═══ -->
+    <div class="step" id="step-5">
+      <div class="step-header">
+        <span class="step-eyebrow">05 / 06 — קבצים ונכסים</span>
+        <h1 class="step-title">כל מה שיש לכם</h1>
+        <p class="step-sub">תמונות, סרטונים, ביקורות — העלו הכל. כל קובץ עוזר.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          תמונות
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <div class="upload-zone" id="zone-images">
+          <input type="file" id="images" name="images" accept="image/*" multiple>
+          <span class="upload-icon">📸</span>
+          <p class="upload-title">תמונות של הצוות, העסק, השירות, לפני/אחרי</p>
+          <p class="upload-sub">גררו או לחצו לבחירה — ניתן לבחור כמה תמונות יחד</p>
+          <p class="upload-formats">JPG · PNG · HEIC · WEBP — עד 20MB לתמונה</p>
+          <div class="upload-preview" id="preview-images"></div>
+        </div>
+        <p class="field-hint">אין תמונות? לא בעיה — נשתמש בתמונות מאגר מקצועיות</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          סרטון
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <div class="upload-zone" id="zone-video">
+          <input type="file" id="video_file" name="video_file" accept="video/*">
+          <span class="upload-icon">🎬</span>
+          <p class="upload-title">העלו סרטון — עדות לקוח, הסבר, סיור בעסק</p>
+          <p class="upload-sub">גררו או לחצו</p>
+          <p class="upload-formats">MP4 · MOV — עד 300MB</p>
+          <div class="upload-preview" id="preview-video"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="video_link">
+          או קישור לסרטון
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <input class="input" type="url" id="video_link" name="video_link"
+          placeholder="https://youtube.com/... או https://drive.google.com/...">
+      </div>
+
+      <div class="field-divider"></div>
+
+      <div class="field">
+        <label class="field-label">
+          צילומי מסך של ביקורות
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <div class="upload-zone" id="zone-reviews">
+          <input type="file" id="review_screenshots" name="review_screenshots" accept="image/*" multiple>
+          <span class="upload-icon">⭐</span>
+          <p class="upload-title">ביקורות גוגל, WhatsApp, פייסבוק</p>
+          <p class="upload-sub">צילומי מסך — עד 10 קבצים</p>
+          <p class="upload-formats">JPG · PNG</p>
+          <div class="upload-preview" id="preview-reviews"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ STEP 6 ═══ -->
+    <div class="step" id="step-6">
+      <div class="step-header">
+        <span class="step-eyebrow">06 / 06 — סיום</span>
+        <h1 class="step-title">כמעט סיימנו 🎉</h1>
+        <p class="step-sub">עוד שתי שאלות קצרות ואנחנו מוכנים להתחיל לבנות.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label">מתי צריכים שהדף יהיה מוכר?</label>
+        <div class="timeline-grid" id="timeline-grid">
+          <label class="timeline-btn">
+            <input type="radio" name="timeline" value="asap">
+            <span class="tl-icon">🔥</span>
+            <span class="tl-label">בהקדם האפשרי</span>
+          </label>
+          <label class="timeline-btn">
+            <input type="radio" name="timeline" value="month">
+            <span class="tl-icon">📅</span>
+            <span class="tl-label">תוך חודש</span>
+          </label>
+          <label class="timeline-btn">
+            <input type="radio" name="timeline" value="two_months">
+            <span class="tl-icon">🗓️</span>
+            <span class="tl-label">תוך חודשיים</span>
+          </label>
+          <label class="timeline-btn">
+            <input type="radio" name="timeline" value="flexible">
+            <span class="tl-icon">🌿</span>
+            <span class="tl-label">גמיש — עדיפות לאיכות</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="special_notes">
+          הערות מיוחדות / בקשות ספציפיות
+          <span class="badge-optional">אופציונלי</span>
+        </label>
+        <textarea class="textarea" id="special_notes" name="special_notes" rows="4"
+          placeholder="משהו שחשוב לכם שנדע. רגישויות, בקשות מיוחדות, דברים שאתם בטוח לא רוצים, אינטגרציות נדרשות..."></textarea>
+      </div>
+
+      <div class="field">
+        <label class="check-wrap" id="terms-wrap">
+          <input type="checkbox" id="terms_agreed" name="terms_agreed">
+          <div class="custom-check"><span class="check-icon">✓</span></div>
+          <span class="check-text">המידע שמסרתי מדויק ואני מאשר/ת שניתן להשתמש בו לצורך בניית הפרויקט</span>
+        </label>
+        <span class="field-error" id="err-terms">נא לאשר לפני שליחה</span>
+      </div>
+    </div>
+
+  </form><!-- /form -->
+
+  <!-- ═══ SUCCESS SCREEN ═══ -->
+  <div id="success-screen">
+    <div class="success-icon-wrap">✅</div>
+    <h2 class="success-title">קיבלנו! תודה רבה</h2>
+    <p class="success-sub">עברנו על הפרטים ונחזור אליכם תוך <strong>24 שעות</strong> עם עדכון על התקדמות הפרויקט.</p>
+    <div class="success-card">
+      <p>
+        <strong>הצעד הבא:</strong> נשלח אליכם הצצה ראשונה לעיצוב תוך 3–5 ימי עבודה.<br><br>
+        בינתיים, אם קמה שאלה — אנחנו תמיד זמינים ב-WhatsApp.
+      </p>
+    </div>
+    <a href="index.html" class="btn-home">← חזרה לאתר</a>
+  </div>
+
+  <!-- NAV BUTTONS (outside form, positioned after it) -->
+  <div class="form-nav-btns" id="nav-btns">
+    <button class="btn-back" id="btn-back" disabled onclick="prevStep()">→ הקודם</button>
+    <span class="step-counter" id="step-counter">שלב 1 מתוך 6</span>
+    <button class="btn-next" id="btn-next" onclick="nextStep()">הבא ←</button>
+    <button class="btn-submit" id="btn-submit" style="display:none" onclick="handleSubmit()">
+      <span id="submit-text">שליחה ←</span>
+    </button>
+  </div>
+
+</div><!-- /form-outer -->
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+// Replace with your Make.com webhook / Formspree URL / n8n endpoint
+const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
+const TOTAL_STEPS = 6;
+
+// ─── STATE ────────────────────────────────────────────────
+let currentStep = 1;
+
+// ─── STEP NAVIGATION ──────────────────────────────────────
+function goToStep(n) {
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep = n;
+  document.getElementById(`step-${currentStep}`).classList.add('active');
+  updateProgress();
+  updateNavButtons();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function nextStep() {
+  if (!validateStep(currentStep)) return;
+  if (currentStep < TOTAL_STEPS) goToStep(currentStep + 1);
+}
+
+function prevStep() {
+  if (currentStep > 1) goToStep(currentStep - 1);
+}
+
+function updateProgress() {
+  document.querySelectorAll('.progress-step').forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.toggle('done', s < currentStep);
+    el.classList.toggle('active', s === currentStep);
+  });
+  document.getElementById('step-counter').textContent =
+    `שלב ${currentStep} מתוך ${TOTAL_STEPS}`;
+}
+
+function updateNavButtons() {
+  const back = document.getElementById('btn-back');
+  const next = document.getElementById('btn-next');
+  const submit = document.getElementById('btn-submit');
+  back.disabled = currentStep === 1;
+  if (currentStep === TOTAL_STEPS) {
+    next.style.display = 'none';
+    submit.style.display = 'flex';
+  } else {
+    next.style.display = 'flex';
+    submit.style.display = 'none';
+  }
+}
+
+// ─── VALIDATION ───────────────────────────────────────────
+function validateStep(step) {
+  let valid = true;
+
+  function showErr(id) {
+    const el = document.getElementById('err-' + id);
+    const input = document.getElementById(id);
+    if (el) { el.classList.add('show'); }
+    if (input) { input.classList.add('error'); }
+    valid = false;
+  }
+  function clearErr(id) {
+    const el = document.getElementById('err-' + id);
+    const input = document.getElementById(id);
+    if (el) el.classList.remove('show');
+    if (input) input.classList.remove('error');
+  }
+
+  if (step === 1) {
+    ['business_name','contact_name','phone','email'].forEach(id => {
+      const el = document.getElementById(id);
+      const val = el ? el.value.trim() : '';
+      if (!val) { showErr(id); }
+      else {
+        if (id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { showErr(id); }
+        else clearErr(id);
+      }
+    });
+  }
+
+  if (step === 2) {
+    const goal = document.querySelector('input[name="goal"]:checked');
+    if (!goal) showErr('goal'); else clearErr('goal');
+    const svc = document.getElementById('promoted_service');
+    if (!svc.value.trim()) showErr('promoted_service'); else clearErr('promoted_service');
+  }
+
+  if (step === 3) {
+    const desc = document.getElementById('business_description');
+    if (!desc.value.trim()) showErr('business_description'); else clearErr('business_description');
+    const contact = document.getElementById('page_contact');
+    if (!contact.value.trim()) showErr('page_contact'); else clearErr('page_contact');
+  }
+
+  if (step === 4) {
+    const logo = document.getElementById('logo');
+    if (!logo.files || !logo.files.length) showErr('logo'); else clearErr('logo');
+    const style = document.querySelector('input[name="design_style"]:checked');
+    if (!style) showErr('design_style'); else clearErr('design_style');
+    const sites = document.getElementById('example_sites');
+    if (!sites.value.trim()) showErr('example_sites'); else clearErr('example_sites');
+  }
+
+  if (step === 6) {
+    const terms = document.getElementById('terms_agreed');
+    if (!terms.checked) showErr('terms'); else clearErr('terms');
+  }
+
+  return valid;
+}
+
+// ─── GOAL BUTTONS ─────────────────────────────────────────
+document.querySelectorAll('.goal-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('err-goal').classList.remove('show');
+  });
+});
+
+// ─── STYLE CARDS ──────────────────────────────────────────
+document.querySelectorAll('.style-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('err-design_style').classList.remove('show');
+  });
+});
+
+// ─── TIMELINE BUTTONS ─────────────────────────────────────
+document.querySelectorAll('.timeline-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.timeline-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
+
+// ─── CHECKBOX ─────────────────────────────────────────────
+document.getElementById('terms-wrap').addEventListener('click', function() {
+  const cb = document.getElementById('terms_agreed');
+  cb.checked = !cb.checked;
+  this.classList.toggle('checked', cb.checked);
+  if (cb.checked) document.getElementById('err-terms').classList.remove('show');
+});
+
+// ─── CHAR COUNT ───────────────────────────────────────────
+const descEl = document.getElementById('business_description');
+const ccEl = document.getElementById('cc-description');
+descEl.addEventListener('input', () => {
+  const len = descEl.value.length;
+  const max = parseInt(descEl.getAttribute('maxlength'));
+  ccEl.textContent = `${len} / ${max} תווים`;
+  ccEl.className = 'char-count' + (len > max * 0.9 ? (len >= max ? ' over' : ' near') : '');
+});
+
+// ─── FILE UPLOAD ZONES ────────────────────────────────────
+function setupUploadZone(zoneId, inputId, previewId, opts = {}) {
+  const zone = document.getElementById(zoneId);
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if (!zone || !input) return;
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    if (e.dataTransfer.files.length) {
+      const dt = new DataTransfer();
+      Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+      input.files = dt.files;
+      renderPreviews(input.files, preview, opts);
+    }
+  });
+  input.addEventListener('change', () => renderPreviews(input.files, preview, opts));
+}
+
+function renderPreviews(files, previewEl, opts = {}) {
+  previewEl.innerHTML = '';
+  if (!files || !files.length) return;
+  const limit = opts.maxFiles || 20;
+  Array.from(files).slice(0, limit).forEach(file => {
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const wrap = document.createElement('div');
+        wrap.className = 'preview-item';
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'preview-thumb';
+        wrap.appendChild(img);
+        previewEl.appendChild(wrap);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'preview-file';
+      wrap.innerHTML = `<span class="preview-file-icon">${getFileIcon(file.name)}</span>
+                        <span class="preview-file-name">${file.name}</span>`;
+      previewEl.appendChild(wrap);
+    }
+  });
+  if (files.length > limit) {
+    const more = document.createElement('div');
+    more.className = 'preview-file';
+    more.innerHTML = `<span class="preview-file-icon">📦</span>
+                      <span class="preview-file-name">+${files.length - limit} קבצים נוספים</span>`;
+    previewEl.appendChild(more);
+  }
+  // clear logo error if file selected
+  if (previewEl.id === 'preview-logo') {
+    document.getElementById('err-logo').classList.remove('show');
+    document.getElementById('logo').classList.remove('error');
+  }
+}
+
+function getFileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const map = {mp4:'🎬',mov:'🎬',avi:'🎬',pdf:'📄',doc:'📄',docx:'📄',
+                svg:'🎨',ai:'🎨',eps:'🎨',psd:'🎨',zip:'📦',rar:'📦'};
+  return map[ext] || '📎';
+}
+
+setupUploadZone('zone-logo',    'logo',               'preview-logo');
+setupUploadZone('zone-images',  'images',             'preview-images', {maxFiles:20});
+setupUploadZone('zone-video',   'video_file',         'preview-video');
+setupUploadZone('zone-reviews', 'review_screenshots', 'preview-reviews', {maxFiles:10});
+
+// ─── FORM SUBMISSION ──────────────────────────────────────
+async function handleSubmit() {
+  if (!validateStep(6)) return;
+
+  const submitBtn = document.getElementById('btn-submit');
+  const submitText = document.getElementById('submit-text');
+  submitBtn.classList.add('loading');
+  submitText.textContent = '⏳ שולח...';
+
+  try {
+    if (!WEBHOOK_URL || WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
+      // Demo mode — no webhook configured
+      await new Promise(r => setTimeout(r, 1200));
+      showSuccess();
+      return;
+    }
+
+    const formData = new FormData(document.getElementById('onboarding-form'));
+    formData.append('submitted_at', new Date().toISOString());
+
+    const res = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
+    if (!res.ok) throw new Error('Server error');
+    showSuccess();
+  } catch (e) {
+    submitBtn.classList.remove('loading');
+    submitText.textContent = 'שליחה ←';
+    alert('אירעה שגיאה בשליחה. אנא נסו שנית או פנו אלינו ב-WhatsApp.');
+  }
+}
+
+function showSuccess() {
+  document.getElementById('onboarding-form').style.display = 'none';
+  document.getElementById('nav-btns').style.display = 'none';
+  document.querySelectorAll('.progress-step').forEach(el => el.classList.add('done'));
+  const ss = document.getElementById('success-screen');
+  ss.style.display = 'block';
+  ss.classList.add('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+updateProgress();
+updateNavButtons();
+</script>
+</body>
+</html>
