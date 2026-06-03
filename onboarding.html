@@ -466,7 +466,7 @@ body{
             <span class="req">*</span>שם העסק
           </label>
           <input class="input" type="text" id="business_name" name="business_name"
-            placeholder="לדוגמה: מרפאת ד״ר לוי" required>
+            placeholder="לדוגמה: מרפאת ד״ר לוי" required maxlength="200" autocomplete="organization">
           <span class="field-error" id="err-business_name">נא למלא שם עסק</span>
         </div>
         <div class="field">
@@ -474,7 +474,7 @@ body{
             <span class="req">*</span>שם מלא
           </label>
           <input class="input" type="text" id="contact_name" name="contact_name"
-            placeholder="ישראל ישראלי" required>
+            placeholder="ישראל ישראלי" required maxlength="100" autocomplete="name">
           <span class="field-error" id="err-contact_name">נא למלא שם</span>
         </div>
       </div>
@@ -485,7 +485,7 @@ body{
             <span class="req">*</span>טלפון
           </label>
           <input class="input" type="tel" id="phone" name="phone"
-            placeholder="050-0000000" required>
+            placeholder="050-0000000" required maxlength="20" autocomplete="tel">
           <span class="field-error" id="err-phone">נא למלא מספר טלפון</span>
         </div>
         <div class="field">
@@ -493,7 +493,7 @@ body{
             <span class="req">*</span>דוא״ל
           </label>
           <input class="input" type="email" id="email" name="email"
-            placeholder="you@business.co.il" required>
+            placeholder="you@business.co.il" required maxlength="200" autocomplete="email">
           <span class="field-error" id="err-email">נא למלא כתובת דוא״ל תקינה</span>
         </div>
       </div>
@@ -1132,6 +1132,23 @@ setupUploadZone('zone-images',  'images',             'preview-images',  { rules
 setupUploadZone('zone-video',   'video_file',         'preview-video',   { rules: UPLOAD_RULES.video });
 setupUploadZone('zone-reviews', 'review_screenshots', 'preview-reviews', { rules: UPLOAD_RULES.reviews, maxFiles: 10 });
 
+// ─── INLINE ERROR (no alert()) ────────────────────────────
+function showInlineError(msg) {
+  let el = document.getElementById('submit-error');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'submit-error';
+    el.style.cssText = 'color:#EF4444;font-size:.85rem;margin-top:12px;text-align:center;font-weight:600;';
+    document.getElementById('nav-btns').after(el);
+  }
+  el.textContent = msg;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function clearInlineError() {
+  const el = document.getElementById('submit-error');
+  if (el) el.textContent = '';
+}
+
 // ─── FORM SUBMISSION ──────────────────────────────────────
 let _lastSubmit = 0;
 
@@ -1139,14 +1156,15 @@ async function handleSubmit() {
   // Honeypot — bots fill hidden fields, humans don't
   if (document.querySelector('input[name="_gotcha"]').value) return;
 
-  // Rate limit — max one submission per 60 seconds
+  // Client-side rate limit (backup — server enforces too)
   const now = Date.now();
   if (now - _lastSubmit < 60000 && _lastSubmit !== 0) {
-    alert('נא להמתין דקה לפני שליחה נוספת.');
+    showInlineError('נא להמתין דקה לפני שליחה נוספת.');
     return;
   }
 
   if (!validateStep(6)) return;
+  clearInlineError();
   _lastSubmit = now;
 
   const submitBtn = document.getElementById('btn-submit');
@@ -1155,23 +1173,46 @@ async function handleSubmit() {
   submitText.textContent = '⏳ שולח...';
 
   try {
-    if (!WEBHOOK_URL || WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
-      // Demo mode — no webhook configured
-      await new Promise(r => setTimeout(r, 1200));
-      showSuccess();
-      return;
+    // Build text payload for server-side validation + rate limiting
+    const payload = {
+      _gotcha:              document.querySelector('input[name="_gotcha"]').value,
+      business_name:        document.getElementById('business_name').value,
+      contact_name:         document.getElementById('contact_name').value,
+      phone:                document.getElementById('phone').value,
+      email:                document.getElementById('email').value,
+      goal:                 document.querySelector('input[name="goal"]:checked')?.value || '',
+      promoted_service:     document.getElementById('promoted_service').value,
+      business_description: document.getElementById('business_description').value,
+      page_contact:         document.getElementById('page_contact').value,
+      design_style:         document.querySelector('input[name="design_style"]:checked')?.value || '',
+      social_links:         document.getElementById('social_links').value,
+      booking_link:         document.getElementById('booking_link')?.value || '',
+      testimonials_text:    document.getElementById('testimonials_text')?.value || '',
+      brand_colors:         document.getElementById('brand_colors')?.value || '',
+      example_sites:        document.getElementById('example_sites').value,
+      video_link:           document.getElementById('video_link')?.value || '',
+      special_notes:        document.getElementById('special_notes')?.value || '',
+      timeline:             document.querySelector('input[name="timeline"]:checked')?.value || '',
+    };
+
+    // POST to server-side endpoint (validation + rate limiting + webhook)
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      throw new Error(json.error || 'שגיאה בשליחה');
     }
 
-    const formData = new FormData(document.getElementById('onboarding-form'));
-    formData.append('submitted_at', new Date().toISOString());
-
-    const res = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
-    if (!res.ok) throw new Error('Server error');
     showSuccess();
   } catch (e) {
     submitBtn.classList.remove('loading');
     submitText.textContent = 'שליחה ←';
-    alert('אירעה שגיאה בשליחה. אנא נסו שנית או פנו אלינו ב-WhatsApp.');
+    showInlineError(e.message || 'אירעה שגיאה. נסו שנית או פנו אלינו ב-WhatsApp.');
   }
 }
 
