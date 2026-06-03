@@ -436,9 +436,10 @@ nav.light .nav-ham span{background:var(--text)}
 .faq-chevron svg{width:13px;height:13px;stroke:var(--text-2);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .faq-item.open .faq-chevron{transform:rotate(180deg);background:var(--blue-l)}
 .faq-item.open .faq-chevron svg{stroke:var(--blue)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;padding:0 22px}
-.faq-item.open .faq-a{padding:0 22px 20px}
-.faq-a p{font-size:.9rem;color:var(--text-2);line-height:1.75}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.4,0,.2,1);padding:0 22px}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a p{overflow:hidden;font-size:.9rem;color:var(--text-2);line-height:1.75;padding-bottom:0;transition:padding-bottom .28s cubic-bezier(.4,0,.2,1)}
+.faq-item.open .faq-a p{padding-bottom:20px}
 
 /* ── CONTACT ── */
 #contact{
@@ -1390,16 +1391,9 @@ document.querySelectorAll('.wcard').forEach(c => {
 document.querySelectorAll('.faq-q').forEach(btn => {
   btn.addEventListener('click', () => {
     const item = btn.parentElement;
-    const answer = item.querySelector('.faq-a');
     const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.faq-a').style.maxHeight = '0';
-    });
-    if(!isOpen){
-      item.classList.add('open');
-      answer.style.maxHeight = answer.scrollHeight + 32 + 'px';
-    }
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
   });
 });
 
