@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>שאלון לקוח — Studio BB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════ */
+:root {
+  --bg:       #070713;
+  --bg2:      #0C0C1E;
+  --card:     rgba(255,255,255,0.035);
+  --card-h:   rgba(255,255,255,0.06);
+  --border:   rgba(255,255,255,0.07);
+  --border-s: rgba(255,255,255,0.14);
+  --t1:  #FFFFFF;
+  --t2:  rgba(255,255,255,0.6);
+  --t3:  rgba(255,255,255,0.3);
+  --p:   #7C74FF;
+  --p2:  #00D4FF;
+  --grn: #00E5A0;
+  --red: #FF6076;
+  --gld: #FFB800;
+  --grad:      linear-gradient(135deg,#7C74FF,#00D4FF);
+  --grad-warm: linear-gradient(135deg,#FF6B8A,#FFB800);
+  --r: 18px;
+  --rsm: 11px;
+  --shadow: 0 24px 64px rgba(0,0,0,.45);
+}
+
+/* ══════════════════════════════════════════════════════
+   RESET
+══════════════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+html { scroll-behavior:smooth; font-size:16px }
+body {
+  background: var(--bg);
+  color: var(--t1);
+  font-family: 'Heebo', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════════════════════
+   AMBIENT BACKGROUND
+══════════════════════════════════════════════════════ */
+.bg-orb {
+  position: fixed; pointer-events: none; z-index: 0;
+  border-radius: 50%; filter: blur(120px);
+}
+.bg-orb-1 {
+  width: 700px; height: 700px;
+  top: -200px; right: -200px;
+  background: radial-gradient(circle, rgba(124,116,255,.09) 0%, transparent 70%);
+  animation: orbDrift 20s ease-in-out infinite;
+}
+.bg-orb-2 {
+  width: 500px; height: 500px;
+  bottom: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(0,212,255,.07) 0%, transparent 70%);
+  animation: orbDrift 28s ease-in-out infinite reverse;
+}
+@keyframes orbDrift {
+  0%,100% { transform: translate(0,0) scale(1) }
+  33% { transform: translate(40px,-60px) scale(1.08) }
+  66% { transform: translate(-30px,40px) scale(.94) }
+}
+
+/* ══════════════════════════════════════════════════════
+   TOP PROGRESS LINE
+══════════════════════════════════════════════════════ */
+.top-bar {
+  position: fixed; top: 0; right: 0; left: 0; z-index: 200;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+}
+.top-bar-fill {
+  height: 100%;
+  background: var(--grad);
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 0 12px rgba(124,116,255,.7);
+}
+
+/* ══════════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════════ */
+.form-nav {
+  position: fixed; top: 3px; right: 0; left: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(20px, 5%, 60px);
+  height: 64px;
+  background: rgba(7,7,19,.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-size: 1.45rem; font-weight: 900; letter-spacing: -.04em;
+  background: var(--grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-decoration: none;
+}
+.nav-meta { display: flex; align-items: center; gap: 14px }
+.nav-step-badge {
+  font-size: .72rem; font-weight: 700;
+  padding: 5px 13px; border-radius: 50px;
+  background: rgba(124,116,255,.12);
+  border: 1px solid rgba(124,116,255,.22);
+  color: var(--p);
+  transition: all .3s;
+}
+.nav-step-name {
+  font-size: .78rem; color: var(--t3); font-weight: 500;
+}
+@media(max-width:480px){ .nav-step-name { display:none } }
+
+/* ══════════════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════════════ */
+.outer {
+  position: relative; z-index: 1;
+  max-width: 660px; margin: 0 auto;
+  padding: 100px clamp(16px,4%,32px) 100px;
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════════════
+   STEP WRAPPER
+══════════════════════════════════════════════════════ */
+.step { display: none }
+.step.active {
+  display: block;
+  animation: stepReveal .4s cubic-bezier(.2,0,0,1) both;
+}
+@keyframes stepReveal {
+  from { opacity:0; transform:translateY(22px) }
+  to   { opacity:1; transform:translateY(0) }
+}
+
+/* ══════════════════════════════════════════════════════
+   STEP HEADER
+══════════════════════════════════════════════════════ */
+.step-head {
+  position: relative; overflow: hidden;
+  margin-bottom: 40px; padding: 36px 36px 32px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.step-head-bg {
+  position: absolute; top: -14px; left: -10px;
+  font-size: 9rem; font-weight: 900; line-height: 1;
+  color: rgba(255,255,255,.028); user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+.step-eye {
+  font-size: .7rem; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--p);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.step-eye::before {
+  content: '';
+  width: 20px; height: 1.5px;
+  background: var(--grad);
+  display: block;
+}
+.step-title {
+  font-size: clamp(1.7rem,4vw,2.3rem);
+  font-weight: 900; line-height: 1.12; letter-spacing: -.04em;
+  margin-bottom: 10px;
+}
+.step-sub {
+  font-size: .9rem; color: var(--t2); line-height: 1.65;
+}
+.grad { background: var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
+
+/* ══════════════════════════════════════════════════════
+   CARD SECTION
+══════════════════════════════════════════════════════ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 28px;
+  margin-bottom: 16px;
+  transition: border-color .2s;
+}
+.card:focus-within { border-color: rgba(124,116,255,.3) }
+
+/* ══════════════════════════════════════════════════════
+   FIELDS
+══════════════════════════════════════════════════════ */
+.field { margin-bottom: 20px }
+.field:last-child { margin-bottom: 0 }
+.label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .78rem; font-weight: 700;
+  color: var(--t2); margin-bottom: 8px;
+  letter-spacing: .02em;
+}
+.label .req { color: var(--p); font-size: .85em }
+.badge-opt {
+  font-size: .64rem; font-weight: 600;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border-s);
+  color: var(--t3); border-radius: 50px;
+  padding: 1px 8px;
+}
+.hint { font-size: .73rem; color: var(--t3); margin-top: 6px; line-height: 1.55 }
+
+.inp, .ta {
+  width: 100%;
+  background: rgba(255,255,255,.03);
+  border: 1.5px solid var(--border);
+  border-radius: var(--rsm);
+  padding: 12px 16px;
+  color: var(--t1);
+  font-family: 'Heebo', sans-serif;
+  font-size: .94rem; line-height: 1.5;
+  outline: none;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  -webkit-appearance: none;
+}
+.inp:hover, .ta:hover { border-color: var(--border-s) }
+.inp:focus, .ta:focus {
+  border-color: rgba(124,116,255,.6);
+  background: rgba(124,116,255,.04);
+  box-shadow: 0 0 0 3px rgba(124,116,255,.1);
+}
+.inp::placeholder, .ta::placeholder { color: var(--t3) }
+.ta { resize: vertical; min-height: 104px }
+.inp.err, .ta.err {
+  border-color: rgba(255,96,118,.5);
+  box-shadow: 0 0 0 3px rgba(255,96,118,.08);
+}
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px }
+@media(max-width:500px){ .row2 { grid-template-columns:1fr } }
+
+.ferr {
+  font-size: .73rem; color: var(--red);
+  margin-top: 5px; display: none;
+  animation: errIn .2s ease;
+}
+.ferr.show { display: block }
+@keyframes errIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+.ccount {
+  font-size: .7rem; color: var(--t3);
+  text-align: left; margin-top: 4px;
+  transition: color .2s;
+}
+.ccount.warn { color: var(--gld) }
+.ccount.over { color: var(--red) }
+
+/* ══════════════════════════════════════════════════════
+   GOAL SELECTOR
+══════════════════════════════════════════════════════ */
+.goal-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px }
+@media(max-width:520px){ .goal-grid { grid-template-columns:1fr 1fr } }
+
+.goal-opt {
+  position: relative;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; padding: 20px 12px;
+  background: rgba(255,255,255,.025);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center; user-select: none;
+  -webkit-user-select: none;
+}
+.goal-opt:hover {
+  border-color: rgba(124,116,255,.35);
+  background: rgba(124,116,255,.06);
+  transform: translateY(-2px);
+}
+.goal-opt.sel {
+  border-color: var(--p);
+  background: rgba(124,116,255,.1);
+  box-shadow: 0 0 0 1px rgba(124,116,255,.2), 0 8px 24px rgba(124,116,255,.12);
+}
+.goal-opt input { display: none }
+.goal-check {
+  position: absolute; top: 10px; left: 10px;
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid var(--border-s);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.goal-opt.sel .goal-check {
+  background: var(--grad); border-color: transparent;
+}
+.goal-check-inner {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #fff; opacity: 0; transform: scale(0);
+  transition: all .15s;
+}
+.goal-opt.sel .goal-check-inner { opacity: 1; transform: scale(1) }
+.goal-icon { font-size: 1.8rem; line-height: 1 }
+.goal-label { font-size: .78rem; font-weight: 700; color: var(--t2); line-height: 1.3 }
+.goal-opt.sel .goal-label { color: var(--t1) }
+
+/* ══════════════════════════════════════════════════════
+   STYLE SELECTOR
+══════════════════════════════════════════════════════ */
+.style-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+
+.style-opt {
+  border: 1.5px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  cursor: pointer; transition: all .2s;
+  user-select: none; -webkit-user-select: none;
+}
+.style-opt:hover { border-color: rgba(124,116,255,.35); transform: translateY(-2px) }
+.style-opt.sel {
+  border-color: var(--p);
+  box-shadow: 0 0 0 1px rgba(124,116,255,.2), 0 8px 24px rgba(124,116,255,.14);
+}
+.style-opt input { display: none }
+
+/* Mini UI previews */
+.style-preview {
+  height: 90px; position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  gap: 5px; padding: 12px;
+}
+.sp-dark  { background: linear-gradient(135deg,#05050D,#1a1a3e) }
+.sp-light { background: linear-gradient(135deg,#f0f2ff,#e8ecff) }
+.sp-warm  { background: linear-gradient(135deg,#1a0c05,#3d1a08) }
+.sp-bold  { background: linear-gradient(135deg,#150830,#7C74FF 60%,#00D4FF) }
+.sp-corp  { background: linear-gradient(135deg,#04101f,#0a2240) }
+
+.sp-line { height: 6px; border-radius: 3px; opacity: .6 }
+.sp-line.w70 { width: 70% }
+.sp-line.w50 { width: 50% }
+.sp-line.w35 { width: 35% }
+.sp-btn {
+  display: inline-flex; height: 14px; width: 52px;
+  border-radius: 7px; margin-top: 4px;
+}
+
+.sp-dark  .sp-line { background: rgba(255,255,255,.25) }
+.sp-dark  .sp-btn  { background: linear-gradient(90deg,#7C74FF,#00D4FF) }
+.sp-light .sp-line { background: rgba(30,30,80,.3) }
+.sp-light .sp-btn  { background: linear-gradient(90deg,#7C74FF,#00D4FF) }
+.sp-warm  .sp-line { background: rgba(255,200,150,.35) }
+.sp-warm  .sp-btn  { background: linear-gradient(90deg,#FF8C42,#FFB800) }
+.sp-bold  .sp-line { background: rgba(255,255,255,.45) }
+.sp-bold  .sp-btn  { background: #fff }
+.sp-corp  .sp-line { background: rgba(100,180,255,.35) }
+.sp-corp  .sp-btn  { background: linear-gradient(90deg,#1B6FD8,#00C4FF) }
+
+.style-meta {
+  padding: 12px 14px;
+  background: rgba(0,0,0,.25);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.style-name { font-size: .8rem; font-weight: 700 }
+.style-sub  { font-size: .68rem; color: var(--t3) }
+.style-tick {
+  width: 17px; height: 17px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid var(--border-s);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; color: transparent;
+  transition: all .2s;
+}
+.style-opt.sel .style-tick {
+  background: var(--grad); border-color: transparent; color: #fff;
+}
+
+/* ══════════════════════════════════════════════════════
+   UPLOAD ZONES
+══════════════════════════════════════════════════════ */
+.upload-zone {
+  position: relative;
+  padding: 30px 20px; border-radius: var(--r);
+  background: rgba(255,255,255,.02);
+  cursor: pointer; text-align: center;
+  transition: all .25s;
+  overflow: hidden;
+}
+.upload-zone::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: var(--r);
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(124,116,255,.2), rgba(0,212,255,.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity .2s;
+}
+.upload-zone:hover::before,
+.upload-zone.drag {
+  background: linear-gradient(135deg, rgba(124,116,255,.7), rgba(0,212,255,.7));
+}
+.upload-zone.drag { background: rgba(124,116,255,.07) }
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.uz-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: rgba(124,116,255,.1);
+  border: 1px solid rgba(124,116,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin: 0 auto 14px;
+}
+.uz-title { font-size: .9rem; font-weight: 700; margin-bottom: 4px }
+.uz-sub   { font-size: .76rem; color: var(--t2); margin-bottom: 8px }
+.uz-fmt   {
+  display: inline-block; font-size: .68rem; color: var(--t3);
+  background: rgba(255,255,255,.04); border-radius: 50px;
+  padding: 3px 12px; border: 1px solid var(--border);
+}
+.uz-preview {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-top: 14px;
+}
+.pv-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border) }
+.pv-file {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 12px; border-radius: 8px;
+  background: rgba(124,116,255,.1); border: 1px solid rgba(124,116,255,.2);
+}
+.pv-file-ico { font-size: 1rem }
+.pv-file-name { font-size: .72rem; color: var(--t2); max-width: 140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+
+/* ══════════════════════════════════════════════════════
+   TIMELINE
+══════════════════════════════════════════════════════ */
+.tl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+@media(max-width:420px){ .tl-grid { grid-template-columns:1fr } }
+
+.tl-opt {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px; border-radius: var(--rsm);
+  border: 1.5px solid var(--border);
+  background: rgba(255,255,255,.025);
+  cursor: pointer; transition: all .2s;
+  user-select: none; -webkit-user-select: none;
+}
+.tl-opt:hover { border-color: var(--border-s) }
+.tl-opt.sel {
+  border-color: var(--p);
+  background: rgba(124,116,255,.09);
+}
+.tl-opt input { display: none }
+.tl-ico { font-size: 1.2rem }
+.tl-lbl { font-size: .83rem; font-weight: 600 }
+.tl-dot {
+  margin-right: auto; width: 14px; height: 14px; border-radius: 50%;
+  border: 1.5px solid var(--border-s); transition: all .2s; flex-shrink: 0;
+}
+.tl-opt.sel .tl-dot { background: var(--grad); border-color: transparent }
+
+/* ══════════════════════════════════════════════════════
+   CHECKBOX
+══════════════════════════════════════════════════════ */
+.chk-wrap {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 18px; border-radius: var(--rsm);
+  border: 1.5px solid var(--border);
+  background: rgba(255,255,255,.025);
+  cursor: pointer; transition: border-color .2s;
+  user-select: none; -webkit-user-select: none;
+}
+.chk-wrap:hover { border-color: var(--border-s) }
+.chk-wrap.chk-on { border-color: rgba(0,229,160,.45); background: rgba(0,229,160,.04) }
+.chk-wrap input { display: none }
+.chk-box {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1.5px solid var(--border-s);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; color: transparent; margin-top: 1px;
+  transition: all .2s;
+}
+.chk-wrap.chk-on .chk-box { background: var(--grn); border-color: var(--grn); color: var(--bg) }
+.chk-text { font-size: .85rem; color: var(--t2); line-height: 1.6 }
+
+/* ══════════════════════════════════════════════════════
+   NAV BUTTONS
+══════════════════════════════════════════════════════ */
+.nav-btns {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 36px; padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.btn-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 12px 22px; border-radius: 50px;
+  border: 1.5px solid var(--border-s); background: none;
+  color: var(--t2); font-family: 'Heebo', sans-serif;
+  font-size: .88rem; font-weight: 600; cursor: pointer;
+  transition: all .2s;
+}
+.btn-back:hover { border-color: rgba(255,255,255,.3); color: var(--t1) }
+.btn-back:disabled { opacity: .28; cursor: not-allowed }
+
+.btn-next, .btn-send {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 30px; border-radius: 50px; border: none;
+  background: var(--grad); color: #fff;
+  font-family: 'Heebo', sans-serif;
+  font-size: .9rem; font-weight: 700;
+  cursor: pointer; transition: all .2s;
+  box-shadow: 0 4px 20px rgba(124,116,255,.3);
+  margin-right: auto;
+}
+.btn-send { padding: 14px 36px; font-size: .95rem; font-weight: 800 }
+.btn-next:hover, .btn-send:hover {
+  opacity: .9; transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(124,116,255,.45);
+}
+.btn-next:active, .btn-send:active { transform: translateY(0) }
+.btn-send.loading { opacity: .65; pointer-events: none }
+.step-ctr { font-size: .76rem; color: var(--t3); white-space: nowrap }
+
+/* ══════════════════════════════════════════════════════
+   SUCCESS
+══════════════════════════════════════════════════════ */
+#success {
+  display: none; text-align: center;
+  padding: 60px 0;
+  animation: stepReveal .5s ease both;
+}
+#success.on { display: block }
+
+.success-rings {
+  position: relative; width: 100px; height: 100px;
+  margin: 0 auto 32px;
+}
+.success-rings::before, .success-rings::after {
+  content: ''; position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(0,229,160,.25);
+}
+.success-rings::before { inset: -12px; animation: ringPulse 2s ease infinite }
+.success-rings::after  { inset: -24px; animation: ringPulse 2s ease .4s infinite }
+.success-icon {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg,rgba(0,229,160,.15),rgba(0,229,160,.05));
+  border: 1.5px solid rgba(0,229,160,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.4rem;
+  box-shadow: 0 0 48px rgba(0,229,160,.18);
+}
+@keyframes ringPulse {
+  0%  { opacity:.7; transform:scale(1) }
+  50% { opacity:.3; transform:scale(1.08) }
+  100%{ opacity:.7; transform:scale(1) }
+}
+.success-title { font-size: 2rem; font-weight: 900; letter-spacing: -.04em; margin-bottom: 14px }
+.success-sub   { font-size: .95rem; color: var(--t2); line-height: 1.75; margin-bottom: 36px }
+
+.success-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 24px 28px;
+  text-align: right; margin-bottom: 28px;
+}
+.success-card-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.success-card-row:last-child { border: none }
+.scr-ico { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px }
+.scr-text { font-size: .85rem; color: var(--t2); line-height: 1.55 }
+.scr-text strong { color: var(--t1) }
+
+.btn-home {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--t2);
+  border: 1.5px solid var(--border-s); border-radius: 50px;
+  padding: 12px 26px; font-family: 'Heebo', sans-serif;
+  font-size: .88rem; font-weight: 600; transition: all .2s;
+}
+.btn-home:hover { border-color: rgba(255,255,255,.3); color: var(--t1) }
+
+/* ══════════════════════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════════════════════ */
+.div { height: 1px; background: var(--border); margin: 24px 0 }
+</style>
+</head>
+<body>
+
+<!-- AMBIENT -->
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<!-- TOP PROGRESS -->
+<div class="top-bar"><div class="top-bar-fill" id="top-fill" style="width:16.6%"></div></div>
+
+<!-- NAV -->
+<nav class="form-nav">
+  <a href="../index.html" class="logo">BB</a>
+  <div class="nav-meta">
+    <span class="nav-step-name" id="nav-step-name">פרטי העסק</span>
+    <span class="nav-step-badge" id="nav-badge">01 / 06</span>
+  </div>
+</nav>
+
+<!-- ══════════════ OUTER ══════════════ -->
+<div class="outer">
+<form id="form" novalidate>
+
+<!-- ══════════ STEP 1 — פרטי העסק ══════════ -->
+<div class="step active" id="s1">
+  <div class="step-head">
+    <span class="step-head-bg">01</span>
+    <div class="step-eye">01 / 06 &nbsp;—&nbsp; פרטי העסק</div>
+    <h1 class="step-title">נתחיל<br><span class="grad">בהיכרות קצרה.</span></h1>
+    <p class="step-sub">הפרטים הבסיסיים שנצטרך כדי לכוון את הפרויקט ולחזור אליכם בצורה הכי נוחה.</p>
+  </div>
+
+  <div class="card">
+    <div class="row2">
+      <div class="field">
+        <label class="label" for="biz"><span class="req">*</span>שם העסק</label>
+        <input class="inp" type="text" id="biz" name="business_name"
+          placeholder='כהן ושות׳ / Studio Glow' required>
+        <div class="ferr" id="e-biz">נא למלא שם עסק</div>
+      </div>
+      <div class="field">
+        <label class="label" for="cname"><span class="req">*</span>שם מלא</label>
+        <input class="inp" type="text" id="cname" name="contact_name"
+          placeholder="ישראל ישראלי" required>
+        <div class="ferr" id="e-cname">נא למלא שם</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label class="label" for="ph"><span class="req">*</span>טלפון</label>
+        <input class="inp" type="tel" id="ph" name="phone"
+          placeholder="050-0000000" required>
+        <div class="ferr" id="e-ph">נא למלא טלפון</div>
+      </div>
+      <div class="field">
+        <label class="label" for="em"><span class="req">*</span>דוא״ל</label>
+        <input class="inp" type="email" id="em" name="email"
+          placeholder="you@business.co.il" required>
+        <div class="ferr" id="e-em">נא למלא דוא״ל תקין</div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="socials">
+        אתר / אינסטגרם / פייסבוק
+        <span class="badge-opt">אופציונלי</span>
+      </label>
+      <textarea class="ta" id="socials" name="social_links" rows="2"
+        placeholder="https://yoursite.co.il&#10;https://instagram.com/yourpage"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STEP 2 — מטרת הדף ══════════ -->
+<div class="step" id="s2">
+  <div class="step-head">
+    <span class="step-head-bg">02</span>
+    <div class="step-eye">02 / 06 &nbsp;—&nbsp; מטרת הדף</div>
+    <h1 class="step-title">מה הדף הזה<br><span class="grad">צריך להשיג?</span></h1>
+    <p class="step-sub">בחרו את הפעולה העיקרית שאתם רוצים שהמבקר יבצע.</p>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label"><span class="req">*</span>מטרה עיקרית</label>
+      <div class="goal-grid" id="goal-grid">
+        <label class="goal-opt"><input type="radio" name="goal" value="whatsapp">
+          <div class="goal-check"><div class="goal-check-inner"></div></div>
+          <span class="goal-icon">📱</span>
+          <span class="goal-label">פנייה<br>ב-WhatsApp</span>
+        </label>
+        <label class="goal-opt"><input type="radio" name="goal" value="phone">
+          <div class="goal-check"><div class="goal-check-inner"></div></div>
+          <span class="goal-icon">📞</span>
+          <span class="goal-label">שיחת<br>טלפון</span>
+        </label>
+        <label class="goal-opt"><input type="radio" name="goal" value="lead">
+          <div class="goal-check"><div class="goal-check-inner"></div></div>
+          <span class="goal-icon">📋</span>
+          <span class="goal-label">השארת<br>פרטים</span>
+        </label>
+        <label class="goal-opt"><input type="radio" name="goal" value="booking">
+          <div class="goal-check"><div class="goal-check-inner"></div></div>
+          <span class="goal-icon">📅</span>
+          <span class="goal-label">קביעת<br>פגישה / תור</span>
+        </label>
+        <label class="goal-opt"><input type="radio" name="goal" value="purchase">
+          <div class="goal-check"><div class="goal-check-inner"></div></div>
+          <span class="goal-icon">🛒</span>
+          <span class="goal-label">רכישה<br>ישירה</span>
+        </label>
+        <label class="goal-opt"><input type="radio" name="goal" value="signup">
+          <div class="goal-check"><div class="goal-check-inner"></div></div>
+          <span class="goal-icon">📩</span>
+          <span class="goal-label">הרשמה /<br>ניוזלטר</span>
+        </label>
+      </div>
+      <div class="ferr" id="e-goal">נא לבחור מטרה</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label" for="svc"><span class="req">*</span>מה הדף מקדם?</label>
+      <input class="inp" type="text" id="svc" name="promoted_service"
+        placeholder="לדוגמה: ייעוץ ראשוני חינם, טיפול בוטוקס, קורס אונליין...">
+      <div class="ferr" id="e-svc">נא למלא את השירות / המוצר</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STEP 3 — תוכן ══════════ -->
+<div class="step" id="s3">
+  <div class="step-head">
+    <span class="step-head-bg">03</span>
+    <div class="step-eye">03 / 06 &nbsp;—&nbsp; תוכן הדף</div>
+    <h1 class="step-title">החומר שממנו<br><span class="grad">נבנה הדף.</span></h1>
+    <p class="step-sub">ככל שתהיו ספציפיים — הקופי שנכתוב יהיה חד ומדויק יותר.</p>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label" for="desc"><span class="req">*</span>תיאור העסק</label>
+      <textarea class="ta" id="desc" name="business_description" rows="4"
+        maxlength="500"
+        placeholder="מה אתם עושים, למי, ומה מיוחד בכם. לדוגמה: מרפאה לרפואה אסתטית עם 10 שנות ניסיון. מתמחים בבוטוקס ופילרים. מציעים ייעוץ חינם לכל לקוח חדש."></textarea>
+      <div class="ccount" id="cc-desc">0 / 500</div>
+      <div class="ferr" id="e-desc">נא לתאר את העסק</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label" for="cinfo"><span class="req">*</span>פרטי קשר להצגה בדף</label>
+      <textarea class="ta" id="cinfo" name="page_contact" rows="4"
+        placeholder="WhatsApp: 050-0000000&#10;טלפון: 03-0000000&#10;מייל: info@business.co.il&#10;כתובת: רחוב הרצל 1, תל אביב"></textarea>
+      <div class="ferr" id="e-cinfo">נא למלא פרטי קשר</div>
+    </div>
+    <div class="field">
+      <label class="label" for="booking">
+        קישור לקביעת פגישה / תור
+        <span class="badge-opt">אופציונלי</span>
+      </label>
+      <input class="inp" type="url" id="booking" name="booking_link"
+        placeholder="https://calendly.com/yourname">
+      <p class="hint">Calendly · SimplyBook · Cal.com · מערכת פנימית</p>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label" for="testi">
+        עדויות מלקוחות
+        <span class="badge-opt">ממליצים מאוד</span>
+      </label>
+      <textarea class="ta" id="testi" name="testimonials" rows="5"
+        placeholder='"ציטוט של לקוח — שם הלקוח, תפקיד"&#10;---&#10;"עוד ציטוט — שם הלקוח"&#10;&#10;אפשר גם להעתיק ישירות מגוגל / פייסבוק / WhatsApp'></textarea>
+      <p class="hint">שמות + ציטוטים אמיתיים = הנשק הכי חזק בדף נחיתה</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STEP 4 — עיצוב ══════════ -->
+<div class="step" id="s4">
+  <div class="step-head">
+    <span class="step-head-bg">04</span>
+    <div class="step-eye">04 / 06 &nbsp;—&nbsp; מיתוג ועיצוב</div>
+    <h1 class="step-title">איך הדף<br><span class="grad">יראה?</span></h1>
+    <p class="step-sub">לוגו, סגנון, ואתרים שאתם אוהבים. נשתמש בזה כ"מצפן" לעיצוב.</p>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label"><span class="req">*</span>לוגו</label>
+      <div class="upload-zone" id="z-logo">
+        <input type="file" id="logo" name="logo" accept=".png,.svg,.jpg,.jpeg,.pdf,.ai,.eps">
+        <div class="uz-icon">🖼️</div>
+        <p class="uz-title">גררו את הלוגו לכאן</p>
+        <p class="uz-sub">או לחצו לבחירת קובץ</p>
+        <p class="uz-fmt">PNG · SVG · JPG · PDF — עד 20MB</p>
+        <div class="uz-preview" id="pv-logo"></div>
+      </div>
+      <div class="ferr" id="e-logo">נא להעלות לוגו</div>
+    </div>
+    <div class="field" style="margin-top:20px">
+      <label class="label" for="colors">
+        צבעי מותג
+        <span class="badge-opt">אופציונלי</span>
+      </label>
+      <input class="inp" type="text" id="colors" name="brand_colors"
+        placeholder="#1B3D6F וצבע לבן / כתום וחום / אין — תבחרו בשבילי">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label"><span class="req">*</span>סגנון כללי</label>
+      <div class="style-grid" id="style-grid">
+        <label class="style-opt"><input type="radio" name="design_style" value="dark">
+          <div class="style-preview sp-dark">
+            <div class="sp-line w70"></div>
+            <div class="sp-line w50"></div>
+            <div class="sp-btn"></div>
+          </div>
+          <div class="style-meta">
+            <div><div class="style-name">כהה ומודרני</div><div class="style-sub">שחור · טכנולוגי · אנרגטי</div></div>
+            <div class="style-tick">✓</div>
+          </div>
+        </label>
+        <label class="style-opt"><input type="radio" name="design_style" value="light">
+          <div class="style-preview sp-light">
+            <div class="sp-line w70"></div>
+            <div class="sp-line w50"></div>
+            <div class="sp-btn"></div>
+          </div>
+          <div class="style-meta">
+            <div><div class="style-name">בהיר ונקי</div><div class="style-sub">לבן · אוורירי · ברור</div></div>
+            <div class="style-tick">✓</div>
+          </div>
+        </label>
+        <label class="style-opt"><input type="radio" name="design_style" value="warm">
+          <div class="style-preview sp-warm">
+            <div class="sp-line w70"></div>
+            <div class="sp-line w50"></div>
+            <div class="sp-btn"></div>
+          </div>
+          <div class="style-meta">
+            <div><div class="style-name">חם ואורגני</div><div class="style-sub">ארצי · אנושי · מזמין</div></div>
+            <div class="style-tick">✓</div>
+          </div>
+        </label>
+        <label class="style-opt"><input type="radio" name="design_style" value="bold">
+          <div class="style-preview sp-bold">
+            <div class="sp-line w70"></div>
+            <div class="sp-line w50"></div>
+            <div class="sp-btn"></div>
+          </div>
+          <div class="style-meta">
+            <div><div class="style-name">צבעוני ועז</div><div class="style-sub">גרדיינט · בולד · בולט</div></div>
+            <div class="style-tick">✓</div>
+          </div>
+        </label>
+        <label class="style-opt"><input type="radio" name="design_style" value="corporate">
+          <div class="style-preview sp-corp">
+            <div class="sp-line w70"></div>
+            <div class="sp-line w50"></div>
+            <div class="sp-btn"></div>
+          </div>
+          <div class="style-meta">
+            <div><div class="style-name">פורמלי ומקצועי</div><div class="style-sub">כחול · ייצוגי · רציני</div></div>
+            <div class="style-tick">✓</div>
+          </div>
+        </label>
+      </div>
+      <div class="ferr" id="e-style">נא לבחור סגנון</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label" for="inspo"><span class="req">*</span>אתרים שאתם אוהבים</label>
+      <textarea class="ta" id="inspo" name="example_sites" rows="4"
+        placeholder="https://example.com — אוהב את הנקיון ואת הצבעים&#10;https://example2.com — אוהב את האנימציות&#10;https://example3.com — הסגנון הכהה שלו"></textarea>
+      <p class="hint">2–3 קישורים + מה ספציפית אתם אוהבים בכל אחד</p>
+      <div class="ferr" id="e-inspo">נא לציין לפחות אתר אחד</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STEP 5 — קבצים ══════════ -->
+<div class="step" id="s5">
+  <div class="step-head">
+    <span class="step-head-bg">05</span>
+    <div class="step-eye">05 / 06 &nbsp;—&nbsp; קבצים ונכסים</div>
+    <h1 class="step-title">כל מה<br><span class="grad">שיש לכם.</span></h1>
+    <p class="step-sub">תמונות, סרטונים, ביקורות — העלו הכל. כל קובץ הופך לחומר גלם לדף.</p>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label">תמונות <span class="badge-opt">אופציונלי</span></label>
+      <div class="upload-zone" id="z-imgs">
+        <input type="file" id="imgs" name="images" accept="image/*" multiple>
+        <div class="uz-icon">📸</div>
+        <p class="uz-title">תמונות של הצוות, העסק, השירות, לפני/אחרי</p>
+        <p class="uz-sub">גררו או לחצו — ניתן לבחור כמה תמונות יחד</p>
+        <p class="uz-fmt">JPG · PNG · HEIC · WEBP — עד 20MB לתמונה</p>
+        <div class="uz-preview" id="pv-imgs"></div>
+      </div>
+      <p class="hint">אין תמונות? לא בעיה — נשתמש בתמונות מאגר מקצועיות</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label">סרטון <span class="badge-opt">אופציונלי</span></label>
+      <div class="upload-zone" id="z-vid">
+        <input type="file" id="vid" name="video_file" accept="video/*">
+        <div class="uz-icon">🎬</div>
+        <p class="uz-title">עדות לקוח, הסבר על השירות, סיור בעסק</p>
+        <p class="uz-sub">גררו או לחצו</p>
+        <p class="uz-fmt">MP4 · MOV — עד 300MB</p>
+        <div class="uz-preview" id="pv-vid"></div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:16px">
+      <label class="label" for="vlink">
+        או קישור לסרטון <span class="badge-opt">אופציונלי</span>
+      </label>
+      <input class="inp" type="url" id="vlink" name="video_link"
+        placeholder="https://youtube.com/... או https://drive.google.com/...">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label">צילומי מסך של ביקורות <span class="badge-opt">אופציונלי</span></label>
+      <div class="upload-zone" id="z-revs">
+        <input type="file" id="revs" name="review_screenshots" accept="image/*" multiple>
+        <div class="uz-icon">⭐</div>
+        <p class="uz-title">ביקורות גוגל, WhatsApp, פייסבוק</p>
+        <p class="uz-sub">עד 10 קבצים</p>
+        <p class="uz-fmt">JPG · PNG</p>
+        <div class="uz-preview" id="pv-revs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ STEP 6 — סיום ══════════ -->
+<div class="step" id="s6">
+  <div class="step-head">
+    <span class="step-head-bg">06</span>
+    <div class="step-eye">06 / 06 &nbsp;—&nbsp; סיום</div>
+    <h1 class="step-title">כמעט<br><span class="grad">סיימנו 🎉</span></h1>
+    <p class="step-sub">עוד שתי שאלות קצרות — ואנחנו מוכנים להתחיל לבנות.</p>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label">לוח זמנים <span class="badge-opt">אופציונלי</span></label>
+      <div class="tl-grid" id="tl-grid">
+        <label class="tl-opt"><input type="radio" name="timeline" value="asap">
+          <span class="tl-ico">🔥</span>
+          <span class="tl-lbl">בהקדם האפשרי</span>
+          <span class="tl-dot"></span>
+        </label>
+        <label class="tl-opt"><input type="radio" name="timeline" value="month">
+          <span class="tl-ico">📅</span>
+          <span class="tl-lbl">תוך חודש</span>
+          <span class="tl-dot"></span>
+        </label>
+        <label class="tl-opt"><input type="radio" name="timeline" value="two_months">
+          <span class="tl-ico">🗓️</span>
+          <span class="tl-lbl">תוך חודשיים</span>
+          <span class="tl-dot"></span>
+        </label>
+        <label class="tl-opt"><input type="radio" name="timeline" value="flexible">
+          <span class="tl-ico">🌿</span>
+          <span class="tl-lbl">גמיש — עדיפות לאיכות</span>
+          <span class="tl-dot"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label class="label" for="notes">
+        הערות מיוחדות <span class="badge-opt">אופציונלי</span>
+      </label>
+      <textarea class="ta" id="notes" name="special_notes" rows="4"
+        placeholder="משהו שחשוב לכם שנדע: רגישויות, בקשות מיוחדות, דברים שבטוח לא רוצים, אינטגרציות נדרשות..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <label class="chk-wrap" id="chk-wrap">
+      <input type="checkbox" id="terms" name="terms_agreed">
+      <div class="chk-box">✓</div>
+      <span class="chk-text">המידע שמסרתי מדויק ואני מאשר/ת שניתן להשתמש בו לצורך בניית הפרויקט.</span>
+    </label>
+    <div class="ferr" id="e-terms">נא לאשר לפני שליחה</div>
+  </div>
+</div>
+
+</form><!-- /form -->
+
+<!-- ══════════ SUCCESS ══════════ -->
+<div id="success">
+  <div class="success-rings">
+    <div class="success-icon">✅</div>
+  </div>
+  <h2 class="success-title">קיבלנו! תודה רבה 🙏</h2>
+  <p class="success-sub">
+    עברנו על הפרטים ונחזור אליכם תוך <strong>24 שעות</strong><br>
+    עם עדכון על התקדמות הפרויקט.
+  </p>
+  <div class="success-card">
+    <div class="success-card-row">
+      <span class="scr-ico">🎨</span>
+      <span class="scr-text"><strong>הצעד הבא:</strong> נשלח אליכם הצצה ראשונה לעיצוב תוך 3–5 ימי עבודה.</span>
+    </div>
+    <div class="success-card-row">
+      <span class="scr-ico">💬</span>
+      <span class="scr-text"><strong>שאלות?</strong> אנחנו תמיד זמינים ב-WhatsApp — מגיבים תוך שעה.</span>
+    </div>
+    <div class="success-card-row">
+      <span class="scr-ico">🔒</span>
+      <span class="scr-text">כל המידע שמסרתם שמור בצורה מאובטחת ולא יועבר לצד שלישי.</span>
+    </div>
+  </div>
+  <a href="../index.html" class="btn-home">← חזרה לאתר Studio BB</a>
+</div>
+
+<!-- ══════════ NAV BUTTONS ══════════ -->
+<div class="nav-btns" id="nav-btns">
+  <button class="btn-back" id="btn-back" disabled onclick="prev()">→ הקודם</button>
+  <span class="step-ctr" id="step-ctr">שלב 1 מתוך 6</span>
+  <button class="btn-next" id="btn-next" onclick="next()">הבא ←</button>
+  <button class="btn-send" id="btn-send" style="display:none" onclick="submit()">שליחה ←</button>
+</div>
+
+</div><!-- /outer -->
+
+<script>
+// ── CONFIG ────────────────────────────────────────
+const WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';   // Make.com / Formspree / n8n
+const STEPS   = 6;
+const NAMES   = ['פרטי העסק','מטרת הדף','תוכן הדף','מיתוג ועיצוב','קבצים','סיום'];
+
+// ── STATE ─────────────────────────────────────────
+let cur = 1;
+
+// ── NAVIGATION ────────────────────────────────────
+function go(n) {
+  document.getElementById('s' + cur).classList.remove('active');
+  cur = n;
+  document.getElementById('s' + cur).classList.add('active');
+  sync(); window.scrollTo({top:0, behavior:'smooth'});
+}
+function next() { if (valid(cur)) go(cur + 1) }
+function prev() { if (cur > 1) go(cur - 1) }
+
+function sync() {
+  const pct = (cur / STEPS * 100).toFixed(1);
+  document.getElementById('top-fill').style.width = pct + '%';
+  document.getElementById('nav-badge').textContent   = String(cur).padStart(2,'0') + ' / ' + String(STEPS).padStart(2,'0');
+  document.getElementById('nav-step-name').textContent = NAMES[cur - 1];
+  document.getElementById('step-ctr').textContent    = 'שלב ' + cur + ' מתוך ' + STEPS;
+  document.getElementById('btn-back').disabled = cur === 1;
+  document.getElementById('btn-next').style.display = cur < STEPS ? 'inline-flex' : 'none';
+  document.getElementById('btn-send').style.display = cur === STEPS ? 'inline-flex' : 'none';
+}
+
+// ── VALIDATION ────────────────────────────────────
+function valid(s) {
+  let ok = true;
+  const clr = id => { document.getElementById('e-'+id)?.classList.remove('show'); document.getElementById(id)?.classList.remove('err') };
+  const err = id => { document.getElementById('e-'+id)?.classList.add('show'); document.getElementById(id)?.classList.add('err'); ok = false };
+
+  if (s === 1) {
+    ['biz','cname','ph'].forEach(id => document.getElementById(id).value.trim() ? clr(id) : err(id));
+    const em = document.getElementById('em');
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim()) ? clr('em') : err('em');
+  }
+  if (s === 2) {
+    document.querySelector('[name=goal]:checked') ? clr('goal') : err('goal');
+    document.getElementById('svc').value.trim() ? clr('svc') : err('svc');
+  }
+  if (s === 3) {
+    document.getElementById('desc').value.trim()  ? clr('desc')  : err('desc');
+    document.getElementById('cinfo').value.trim() ? clr('cinfo') : err('cinfo');
+  }
+  if (s === 4) {
+    document.getElementById('logo').files?.length ? clr('logo')  : err('logo');
+    document.querySelector('[name=design_style]:checked') ? clr('style') : err('style');
+    document.getElementById('inspo').value.trim() ? clr('inspo') : err('inspo');
+  }
+  if (s === 6) {
+    document.getElementById('terms').checked ? clr('terms') : err('terms');
+  }
+  return ok;
+}
+
+// ── GOAL SELECTOR ─────────────────────────────────
+document.querySelectorAll('.goal-opt').forEach(el =>
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.goal-opt').forEach(g => g.classList.remove('sel'));
+    el.classList.add('sel');
+    document.getElementById('e-goal')?.classList.remove('show');
+  })
+);
+
+// ── STYLE SELECTOR ────────────────────────────────
+document.querySelectorAll('.style-opt').forEach(el =>
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.style-opt').forEach(s => s.classList.remove('sel'));
+    el.classList.add('sel');
+    document.getElementById('e-style')?.classList.remove('show');
+  })
+);
+
+// ── TIMELINE ──────────────────────────────────────
+document.querySelectorAll('.tl-opt').forEach(el =>
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.tl-opt').forEach(t => t.classList.remove('sel'));
+    el.classList.add('sel');
+  })
+);
+
+// ── CHECKBOX ──────────────────────────────────────
+document.getElementById('chk-wrap').addEventListener('click', function() {
+  const cb = document.getElementById('terms');
+  cb.checked = !cb.checked;
+  this.classList.toggle('chk-on', cb.checked);
+  if (cb.checked) document.getElementById('e-terms')?.classList.remove('show');
+});
+
+// ── CHAR COUNTER ──────────────────────────────────
+const descTa = document.getElementById('desc');
+const ccEl   = document.getElementById('cc-desc');
+descTa.addEventListener('input', () => {
+  const l = descTa.value.length, m = +descTa.maxLength;
+  ccEl.textContent = l + ' / ' + m;
+  ccEl.className = 'ccount' + (l >= m ? ' over' : l > m * .85 ? ' warn' : '');
+});
+
+// ── FILE ZONES ────────────────────────────────────
+function zone(zId, iId, pvId, multi) {
+  const z = document.getElementById(zId);
+  const inp = document.getElementById(iId);
+  const pv  = document.getElementById(pvId);
+  if (!z || !inp) return;
+  z.addEventListener('dragover',  e => { e.preventDefault(); z.classList.add('drag') });
+  z.addEventListener('dragleave', ()  => z.classList.remove('drag'));
+  z.addEventListener('drop', e => {
+    e.preventDefault(); z.classList.remove('drag');
+    const dt = new DataTransfer();
+    [...e.dataTransfer.files].forEach(f => dt.items.add(f));
+    inp.files = dt.files; render(inp.files, pv, iId);
+  });
+  inp.addEventListener('change', () => render(inp.files, pv, iId));
+}
+
+function render(files, pv, id) {
+  pv.innerHTML = '';
+  if (!files?.length) return;
+  [...files].slice(0, 20).forEach(f => {
+    if (f.type.startsWith('image/')) {
+      const r = new FileReader();
+      r.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result; img.className = 'pv-img';
+        pv.appendChild(img);
+      };
+      r.readAsDataURL(f);
+    } else {
+      const d = document.createElement('div'); d.className = 'pv-file';
+      d.innerHTML = '<span class="pv-file-ico">' + ico(f.name) + '</span>'
+                  + '<span class="pv-file-name">' + f.name + '</span>';
+      pv.appendChild(d);
+    }
+  });
+  if (id === 'logo') { document.getElementById('e-logo')?.classList.remove('show'); document.getElementById('logo')?.classList.remove('err') }
+}
+
+function ico(name) {
+  const e = name.split('.').pop().toLowerCase();
+  return {mp4:'🎬',mov:'🎬',pdf:'📄',svg:'🎨',ai:'🎨',eps:'🎨'}[e] ?? '📎';
+}
+
+zone('z-logo', 'logo', 'pv-logo');
+zone('z-imgs', 'imgs', 'pv-imgs', true);
+zone('z-vid',  'vid',  'pv-vid');
+zone('z-revs', 'revs', 'pv-revs', true);
+
+// ── SUBMIT ────────────────────────────────────────
+async function submit() {
+  if (!valid(6)) return;
+  const btn = document.getElementById('btn-send');
+  btn.classList.add('loading'); btn.textContent = '⏳ שולח...';
+
+  try {
+    if (!WEBHOOK || WEBHOOK === 'YOUR_WEBHOOK_URL_HERE') {
+      await new Promise(r => setTimeout(r, 1100));
+    } else {
+      const fd = new FormData(document.getElementById('form'));
+      fd.append('submitted_at', new Date().toISOString());
+      const res = await fetch(WEBHOOK, { method: 'POST', body: fd });
+      if (!res.ok) throw new Error('server');
+    }
+    document.getElementById('form').style.display  = 'none';
+    document.getElementById('nav-btns').style.display = 'none';
+    document.getElementById('success').classList.add('on');
+    document.getElementById('top-fill').style.width = '100%';
+    window.scrollTo({top:0, behavior:'smooth'});
+  } catch {
+    btn.classList.remove('loading'); btn.textContent = 'שליחה ←';
+    alert('אירעה שגיאה. נסו שוב או פנו אלינו ב-WhatsApp.');
+  }
+}
+
+// ── KEYBOARD ──────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && cur < STEPS) next();
+});
+
+// ── INIT ──────────────────────────────────────────
+sync();
+</script>
+</body>
+</html>
