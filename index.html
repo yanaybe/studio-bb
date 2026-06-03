@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Studio BB – סוכנות דיגיטל פרמיום לבעלי עסקים בישראל. בונים אתרים ודפי נחיתה שמייצרים לקוחות, פניות ומכירות. ינאי ברדה ואלרואי ביטון.">
+<title>Studio BB | חוויות דיגיטליות שמייצרות תוצאות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05050D;
+  --bg2:#0A0A1A;
+  --bg3:#0F0F24;
+  --surface:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
+  --border-strong:rgba(255,255,255,0.14);
+  --text:#FFFFFF;
+  --text-2:rgba(255,255,255,0.65);
+  --text-3:rgba(255,255,255,0.38);
+  --accent:#6C63FF;
+  --accent-2:#00C9FF;
+  --accent-3:#FF6B8A;
+  --gold:#FFB800;
+  --green:#00E5A0;
+  --grad:linear-gradient(135deg,#6C63FF,#00C9FF);
+  --grad-warm:linear-gradient(135deg,#FF6B8A,#FFB800);
+  --r:20px;
+  --r-sm:12px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Heebo',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── CURSOR ── */
+#cursor{position:fixed;top:0;right:0;width:10px;height:10px;background:#fff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(50%,-50%);transition:transform .1s,width .2s,height .2s,background .2s}
+#cursor-ring{position:fixed;top:0;right:0;width:36px;height:36px;border:1.5px solid rgba(108,99,255,.6);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(50%,-50%);transition:transform .08s,width .25s,height .25s,border-color .25s;transition-timing-function:ease-out}
+
+/* ── SCROLL BAR ── */
+#scroll-bar{position:fixed;top:0;left:0;height:2px;background:var(--grad);z-index:10000;width:0%;transition:width .1s linear}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;right:0;left:0;z-index:1000;
+  padding:22px 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .4s ease;
+}
+nav.scrolled{
+  background:rgba(5,5,13,.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:14px 5%;
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-size:1.5rem;font-weight:900;letter-spacing:-.03em;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;
+}
+.nav-links{display:flex;gap:36px;list-style:none;align-items:center}
+.nav-links a{color:var(--text-2);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  background:var(--grad);
+  color:#fff;border:none;padding:11px 24px;border-radius:50px;
+  font-family:'Heebo',sans-serif;font-weight:700;font-size:.88rem;
+  cursor:none;transition:opacity .2s,transform .2s;text-decoration:none;
+}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:none;background:none;border:none;padding:6px}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:0;right:0;left:0;bottom:0;background:rgba(5,5,13,.98);backdrop-filter:blur(20px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:36px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:var(--text);text-decoration:none;font-size:1.8rem;font-weight:700}
+.mobile-menu .nav-cta{font-size:1.1rem;padding:16px 40px}
+
+/* ── HERO ── */
+#hero{
+  position:relative;min-height:100vh;display:flex;align-items:center;
+  overflow:hidden;padding:140px 5% 80px;
+}
+#hero-canvas{position:absolute;inset:0;z-index:0}
+.hero-content{position:relative;z-index:2;max-width:900px;margin:0 auto;text-align:center}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);
+  border-radius:50px;padding:8px 20px;margin-bottom:40px;
+  font-size:.82rem;font-weight:600;color:rgba(108,99,255,1);
+  animation:fadeInUp .8s ease both;
+}
+.hero-badge-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse-dot 2s infinite}
+.hero-h1{
+  font-size:clamp(2.8rem,7vw,5.2rem);
+  font-weight:900;line-height:1.1;
+  letter-spacing:-.04em;
+  margin-bottom:28px;
+  animation:fadeInUp .9s .1s ease both;
+}
+.hero-h1 .line{display:block;overflow:hidden}
+.hero-h1 .grad-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{
+  font-size:clamp(1rem,2.2vw,1.22rem);
+  color:var(--text-2);
+  max-width:580px;margin:0 auto 44px;line-height:1.7;
+  animation:fadeInUp 1s .2s ease both;
+}
+.hero-ctas{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  animation:fadeInUp 1s .3s ease both;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--grad);
+  color:#fff;text-decoration:none;border:none;
+  padding:16px 36px;border-radius:50px;
+  font-family:'Heebo',sans-serif;font-weight:700;font-size:1rem;
+  cursor:none;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 0 40px rgba(108,99,255,.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(108,99,255,.5)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--surface);
+  color:var(--text);text-decoration:none;border:1px solid var(--border-strong);
+  padding:16px 36px;border-radius:50px;
+  font-family:'Heebo',sans-serif;font-weight:600;font-size:1rem;
+  cursor:none;transition:all .2s;
+  backdrop-filter:blur(10px);
+}
+.btn-secondary:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+.hero-trust{
+  margin-top:68px;
+  animation:fadeInUp 1s .45s ease both;
+}
+.hero-trust-label{font-size:.78rem;color:var(--text-3);margin-bottom:20px;letter-spacing:.1em;text-transform:uppercase}
+.hero-industries{
+  display:flex;gap:24px;justify-content:center;flex-wrap:wrap;
+}
+.industry-pill{
+  padding:7px 18px;border-radius:50px;
+  border:1px solid var(--border);
+  font-size:.8rem;color:var(--text-2);
+  background:var(--surface);backdrop-filter:blur(10px);
+}
+.scroll-hint{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--text-3);font-size:.75rem;animation:fadeInUp 1s .7s ease both;
+}
+.scroll-mouse{
+  width:22px;height:36px;border:2px solid rgba(255,255,255,.2);
+  border-radius:11px;display:flex;align-items:flex-start;justify-content:center;
+  padding-top:6px;
+}
+.scroll-mouse-dot{
+  width:4px;height:6px;background:rgba(255,255,255,.5);border-radius:2px;
+  animation:scrollDot 2s infinite;
+}
+
+/* ── SECTIONS SHARED ── */
+section{padding:120px 5%}
+.section-label{
+  font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:18px;display:block;
+}
+.section-title{
+  font-size:clamp(2rem,5vw,3.4rem);font-weight:900;
+  line-height:1.12;letter-spacing:-.03em;margin-bottom:20px;
+}
+.section-sub{
+  font-size:clamp(.95rem,1.8vw,1.1rem);color:var(--text-2);
+  max-width:600px;line-height:1.7;
+}
+.text-center{text-align:center}
+.mx-auto{margin-left:auto;margin-right:auto}
+.grad-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+.reveal-delay-5{transition-delay:.5s}
+
+/* ── SECTION 2: PAIN ── */
+#pain{background:var(--bg);position:relative;overflow:hidden}
+#pain::before{
+  content:'';position:absolute;top:-40%;right:-20%;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(255,107,138,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.pain-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+  margin-top:70px;
+}
+.pain-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pain-stat{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:28px;
+  transition:border-color .3s,transform .3s;
+}
+.pain-stat:hover{border-color:rgba(255,107,138,.3);transform:translateY(-3px)}
+.pain-stat-num{
+  font-size:2.4rem;font-weight:900;
+  color:var(--accent-3);letter-spacing:-.04em;margin-bottom:8px;
+}
+.pain-stat-label{font-size:.85rem;color:var(--text-2);line-height:1.5}
+.pain-list{display:flex;flex-direction:column;gap:16px;margin-top:32px}
+.pain-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:20px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  transition:border-color .3s;
+}
+.pain-item:hover{border-color:rgba(255,107,138,.25)}
+.pain-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(255,107,138,.12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:1.1rem;
+}
+.pain-item-text h4{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.pain-item-text p{font-size:.83rem;color:var(--text-2);line-height:1.5}
+
+/* ── SECTION 3: TRANSFORMATION ── */
+#transform{background:var(--bg2);position:relative;overflow:hidden}
+.transform-header{text-align:center;margin-bottom:72px}
+.transform-visual{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;
+}
+.transform-side{
+  border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--border);position:relative;
+}
+.transform-before{background:rgba(255,107,138,.04);border-color:rgba(255,107,138,.15)}
+.transform-after{background:rgba(108,99,255,.04);border-color:rgba(108,99,255,.2)}
+.transform-label{
+  padding:14px 20px;font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;border-bottom:1px solid var(--border);
+}
+.transform-before .transform-label{color:var(--accent-3);border-color:rgba(255,107,138,.15)}
+.transform-after .transform-label{color:var(--accent);border-color:rgba(108,99,255,.2)}
+.transform-body{padding:28px}
+.transform-metric{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 0;border-bottom:1px solid var(--border);
+}
+.transform-metric:last-child{border:none}
+.transform-metric-label{font-size:.85rem;color:var(--text-2)}
+.transform-metric-val{font-size:1rem;font-weight:700}
+.val-bad{color:var(--accent-3)}
+.val-good{color:var(--green)}
+.transform-arrow{
+  display:flex;align-items:center;justify-content:center;
+  width:60px;
+}
+.arrow-circle{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  box-shadow:0 0 30px rgba(108,99,255,.4);
+  animation:arrowPulse 2s infinite;
+}
+.transform-metrics-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:52px;
+}
+.tm-card{
+  text-align:center;padding:28px 20px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);transition:transform .3s,border-color .3s;
+}
+.tm-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.tm-num{
+  font-size:2rem;font-weight:900;margin-bottom:8px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.tm-label{font-size:.83rem;color:var(--text-2)}
+
+/* ── SECTION 4: RESULTS ── */
+#results{background:var(--bg);overflow:hidden;position:relative}
+#results::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:800px;
+  background:radial-gradient(circle,rgba(108,99,255,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.results-header{text-align:center;margin-bottom:72px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.kpi-card{
+  border-radius:var(--r);padding:36px 28px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+}
+.kpi-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(108,99,255,.3);
+  box-shadow:0 20px 60px rgba(108,99,255,.12);
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle at top right,rgba(108,99,255,.15),transparent 70%);
+}
+.kpi-icon{font-size:1.8rem;margin-bottom:20px}
+.kpi-num{
+  font-size:2.6rem;font-weight:900;
+  letter-spacing:-.04em;margin-bottom:8px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.kpi-label{font-size:.88rem;color:var(--text-2);line-height:1.5}
+.kpi-card.warm .kpi-num{background:var(--grad-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.kpi-card.green .kpi-num{background:linear-gradient(135deg,#00E5A0,#00C9FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── SECTION 5: PORTFOLIO ── */
+#portfolio{background:var(--bg2)}
+.portfolio-header{text-align:center;margin-bottom:72px}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.portfolio-card{
+  border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--surface);
+  cursor:none;
+  transition:border-color .3s,box-shadow .3s;
+  transform-style:preserve-3d;
+}
+.portfolio-card:hover{
+  border-color:rgba(108,99,255,.3);
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+}
+.portfolio-thumb{
+  height:220px;
+  position:relative;overflow:hidden;
+}
+.portfolio-thumb-bg{
+  position:absolute;inset:0;
+  transition:transform .5s ease;
+}
+.portfolio-card:hover .portfolio-thumb-bg{transform:scale(1.05)}
+.pt-1{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);display:flex;align-items:center;justify-content:center}
+.pt-2{background:linear-gradient(135deg,#0d1117,#161b22,#21262d);display:flex;align-items:center;justify-content:center}
+.pt-3{background:linear-gradient(135deg,#1a0533,#2d1b69,#5b2d8e);display:flex;align-items:center;justify-content:center}
+.pt-4{background:linear-gradient(135deg,#0a1628,#102040,#1a3a5c);display:flex;align-items:center;justify-content:center}
+.pt-5{background:linear-gradient(135deg,#0f1923,#1a2b3c,#243b52);display:flex;align-items:center;justify-content:center}
+.pt-6{background:linear-gradient(135deg,#150c1e,#2a1840,#3d2060);display:flex;align-items:center;justify-content:center}
+.mock-browser{
+  width:80%;background:rgba(255,255,255,.06);border-radius:8px;
+  border:1px solid rgba(255,255,255,.1);overflow:hidden;
+}
+.mock-bar{
+  height:28px;background:rgba(0,0,0,.3);
+  display:flex;align-items:center;padding:0 10px;gap:5px;
+}
+.mock-dot{width:8px;height:8px;border-radius:50%}
+.mock-dot:nth-child(1){background:#FF5F57}
+.mock-dot:nth-child(2){background:#FEBC2E}
+.mock-dot:nth-child(3){background:#28C840}
+.mock-content{height:100px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.mock-line{border-radius:3px;background:rgba(255,255,255,.1)}
+.mock-line.wide{height:8px;width:70%}
+.mock-line.medium{height:6px;width:50%}
+.mock-line.short{height:6px;width:35%}
+.mock-blocks{display:flex;gap:6px;margin-top:4px}
+.mock-block{flex:1;height:32px;border-radius:4px;background:rgba(255,255,255,.07)}
+.portfolio-info{padding:24px}
+.portfolio-cat{
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.portfolio-title{font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.portfolio-outcome{
+  font-size:.83rem;color:var(--text-2);margin-bottom:16px;line-height:1.5;
+}
+.portfolio-metric{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);
+  border-radius:50px;padding:5px 14px;
+  font-size:.78rem;font-weight:700;color:var(--green);
+}
+
+/* ── SECTION 6: WHY US ── */
+#why{background:var(--bg)}
+.why-header{text-align:center;margin-bottom:72px}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.why-card{
+  padding:36px 30px;border-radius:var(--r);
+  background:var(--surface);border:1px solid var(--border);
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+  position:relative;overflow:hidden;
+}
+.why-card::after{
+  content:'';position:absolute;inset:0;
+  background:var(--grad);opacity:0;
+  transition:opacity .3s;border-radius:var(--r);
+}
+.why-card:hover{
+  transform:translateY(-4px);border-color:rgba(108,99,255,.3);
+  box-shadow:0 16px 48px rgba(108,99,255,.1);
+}
+.why-card:hover::after{opacity:.04}
+.why-icon-wrap{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(108,99,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:20px;
+  border:1px solid rgba(108,99,255,.2);
+}
+.why-card h3{font-size:1.05rem;font-weight:800;margin-bottom:10px}
+.why-card p{font-size:.88rem;color:var(--text-2);line-height:1.65}
+
+/* ── SECTION 7: PROCESS ── */
+#process{background:var(--bg2);overflow:hidden}
+.process-header{text-align:center;margin-bottom:80px}
+.process-steps{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:0;
+  position:relative;
+}
+.process-steps::before{
+  content:'';position:absolute;top:36px;right:5%;left:5%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border-strong),transparent);
+}
+.process-step{
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:0 12px;position:relative;
+}
+.step-num{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:20px;position:relative;z-index:2;
+  transition:border-color .3s,box-shadow .3s,background .3s;
+}
+.process-step:hover .step-num{
+  border-color:var(--accent);
+  box-shadow:0 0 20px rgba(108,99,255,.3);
+  background:rgba(108,99,255,.08);
+}
+.step-title{font-size:.9rem;font-weight:700;margin-bottom:8px}
+.step-desc{font-size:.78rem;color:var(--text-2);line-height:1.55}
+
+/* ── SECTION 8: FOUNDERS ── */
+#founders{background:var(--bg)}
+.founders-header{text-align:center;margin-bottom:72px}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;max-width:860px;margin:0 auto}
+.founder-card{
+  border-radius:var(--r);border:1px solid var(--border);
+  overflow:hidden;background:var(--surface);
+  transition:border-color .3s,transform .3s;
+}
+.founder-card:hover{transform:translateY(-4px);border-color:rgba(108,99,255,.3)}
+.founder-photo{
+  height:280px;
+  background:linear-gradient(145deg,#1a1a2e,#2d1b69,#1a1a2e);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.founder-initials{
+  width:96px;height:96px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:900;color:#fff;
+  position:relative;z-index:2;
+}
+.founder-photo-glow{
+  position:absolute;width:200px;height:200px;
+  border-radius:50%;background:radial-gradient(circle,rgba(108,99,255,.3),transparent 70%);
+  animation:foundersGlow 4s ease-in-out infinite;
+}
+.founder-info{padding:28px}
+.founder-name{font-size:1.3rem;font-weight:900;margin-bottom:4px}
+.founder-role{font-size:.82rem;color:var(--accent);font-weight:600;letter-spacing:.05em;margin-bottom:14px;text-transform:uppercase}
+.founder-bio{font-size:.88rem;color:var(--text-2);line-height:1.65;margin-bottom:18px}
+.founder-tags{display:flex;flex-wrap:wrap;gap:8px}
+.founder-tag{
+  padding:5px 14px;border-radius:50px;
+  background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);
+  font-size:.75rem;font-weight:600;color:var(--accent);
+}
+
+/* ── SECTION 9: TESTIMONIALS ── */
+#testimonials{background:var(--bg2);overflow:hidden}
+.testimonials-header{text-align:center;margin-bottom:72px}
+.marquee-wrapper{overflow:hidden;position:relative}
+.marquee-wrapper::before,.marquee-wrapper::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.marquee-wrapper::before{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
+.marquee-wrapper::after{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
+.marquee-track{
+  display:flex;gap:24px;width:max-content;
+  animation:marqueeScroll 40s linear infinite;
+}
+.marquee-track:hover{animation-play-state:paused}
+.testi-card{
+  width:340px;flex-shrink:0;
+  padding:28px;border-radius:var(--r);
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+}
+.testi-stars{color:var(--gold);font-size:1rem;margin-bottom:14px;letter-spacing:2px}
+.testi-quote{font-size:.9rem;color:var(--text-2);line-height:1.7;margin-bottom:20px}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.testi-name{font-size:.88rem;font-weight:700}
+.testi-biz{font-size:.77rem;color:var(--text-3)}
+
+/* ── SECTION 10: TRUST ── */
+#trust{background:var(--bg)}
+.trust-header{text-align:center;margin-bottom:72px}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.trust-card{
+  padding:32px;border-radius:var(--r);
+  background:var(--surface);border:1px solid var(--border);
+  text-align:center;transition:border-color .3s,transform .3s;
+}
+.trust-card:hover{border-color:rgba(0,229,160,.3);transform:translateY(-3px)}
+.trust-icon{font-size:2rem;margin-bottom:16px}
+.trust-card h3{font-size:1rem;font-weight:800;margin-bottom:10px}
+.trust-card p{font-size:.85rem;color:var(--text-2);line-height:1.6}
+
+/* ── SECTION 11: FAQ ── */
+#faq{background:var(--bg2)}
+.faq-header{text-align:center;margin-bottom:72px}
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  overflow:hidden;background:var(--surface);
+  transition:border-color .3s;
+}
+.faq-item.open{border-color:rgba(108,99,255,.3)}
+.faq-q{
+  width:100%;padding:22px 26px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:none;border:none;color:var(--text);
+  font-family:'Heebo',sans-serif;font-size:1rem;font-weight:700;
+  text-align:right;cursor:none;
+}
+.faq-q:hover{background:rgba(255,255,255,.02)}
+.faq-chevron{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(108,99,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-right:16px;
+  transition:transform .3s,background .3s;font-size:.75rem;
+}
+.faq-item.open .faq-chevron{transform:rotate(180deg);background:rgba(108,99,255,.25)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s ease,padding .3s ease;
+  padding:0 26px;
+}
+.faq-item.open .faq-a{padding:0 26px 22px}
+.faq-a p{font-size:.9rem;color:var(--text-2);line-height:1.7}
+
+/* ── CONTACT FORM SECTION ── */
+#contact{background:var(--bg);position:relative;overflow:hidden}
+#contact::before{
+  content:'';position:absolute;top:-30%;right:-10%;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(108,99,255,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.contact-inner{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start;max-width:1100px;margin:0 auto}
+.contact-left{}
+.contact-left .section-title{margin-bottom:20px}
+.contact-details{margin-top:40px;display:flex;flex-direction:column;gap:20px}
+.contact-detail{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;border-radius:var(--r-sm);
+  background:var(--surface);border:1px solid var(--border);
+  transition:border-color .3s;
+}
+.contact-detail:hover{border-color:rgba(108,99,255,.3)}
+.contact-detail-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;
+}
+.contact-detail-text a{
+  display:block;font-size:.95rem;font-weight:600;color:var(--text);text-decoration:none;
+  transition:color .2s;
+}
+.contact-detail-text a:hover{color:var(--accent)}
+.contact-detail-label{font-size:.75rem;color:var(--text-3);margin-top:2px}
+.form-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:44px 40px;
+  backdrop-filter:blur(10px);
+}
+.form-title{font-size:1.2rem;font-weight:800;margin-bottom:6px}
+.form-subtitle{font-size:.85rem;color:var(--text-2);margin-bottom:32px;line-height:1.55}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:.8rem;font-weight:700;color:var(--text-2);margin-bottom:8px;letter-spacing:.03em}
+.form-control{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:13px 16px;
+  color:var(--text);
+  font-family:'Heebo',sans-serif;font-size:.92rem;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  appearance:none;-webkit-appearance:none;
+}
+.form-control:focus{
+  border-color:rgba(108,99,255,.6);
+  box-shadow:0 0 0 3px rgba(108,99,255,.12);
+}
+.form-control::placeholder{color:var(--text-3)}
+textarea.form-control{resize:vertical;min-height:110px}
+select.form-control option{background:#1a1a2e;color:var(--text)}
+.btn-form{
+  width:100%;padding:15px;border-radius:50px;border:none;
+  background:var(--grad);
+  color:#fff;font-family:'Heebo',sans-serif;font-size:1rem;font-weight:800;
+  cursor:none;transition:opacity .2s,transform .2s,box-shadow .2s;
+  box-shadow:0 0 30px rgba(108,99,255,.3);margin-top:8px;
+}
+.btn-form:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 0 50px rgba(108,99,255,.45)}
+.btn-form:active{transform:translateY(0)}
+.form-note{font-size:.75rem;color:var(--text-3);text-align:center;margin-top:14px}
+.form-success{
+  display:none;text-align:center;padding:40px 20px;
+}
+.form-success-icon{font-size:3rem;margin-bottom:16px}
+.form-success h3{font-size:1.3rem;font-weight:800;margin-bottom:10px}
+.form-success p{font-size:.9rem;color:var(--text-2);line-height:1.6}
+@media(max-width:860px){
+  .contact-inner{grid-template-columns:1fr;gap:48px}
+  .form-card{padding:30px 24px}
+}
+@media(max-width:520px){
+  .form-row{grid-template-columns:1fr}
+}
+
+/* ── SECTION 12: FINAL CTA ── */
+#final-cta{
+  background:var(--bg);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding:100px 5%;
+}
+#final-canvas{position:absolute;inset:0;z-index:0}
+.final-content{position:relative;z-index:2;text-align:center;max-width:820px}
+.final-h2{
+  font-size:clamp(2.4rem,7vw,5rem);
+  font-weight:900;line-height:1.1;letter-spacing:-.04em;
+  margin-bottom:28px;
+}
+.final-sub{
+  font-size:clamp(1rem,2vw,1.2rem);
+  color:var(--text-2);margin-bottom:50px;line-height:1.7;
+}
+.final-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:20px}
+.btn-final{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--grad);color:#fff;text-decoration:none;
+  padding:20px 50px;border-radius:50px;border:none;
+  font-family:'Heebo',sans-serif;font-size:1.15rem;font-weight:800;
+  cursor:none;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 0 60px rgba(108,99,255,.4);
+  animation:btnPulse 3s ease-in-out infinite;
+}
+.btn-final:hover{transform:scale(1.04);box-shadow:0 0 80px rgba(108,99,255,.6)}
+.final-note{font-size:.82rem;color:var(--text-3)}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--bg);border-top:1px solid var(--border);
+  padding:60px 5% 40px;
+}
+.footer-inner{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;
+  margin-bottom:48px;
+}
+.footer-brand .nav-logo{font-size:1.6rem;margin-bottom:14px;display:block}
+.footer-brand p{font-size:.85rem;color:var(--text-2);line-height:1.65;max-width:260px}
+.footer-col h4{font-size:.85rem;font-weight:700;margin-bottom:16px;color:var(--text-2);letter-spacing:.05em}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col li a{font-size:.85rem;color:var(--text-2);text-decoration:none;transition:color .2s}
+.footer-col li a:hover{color:var(--text)}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:28px;border-top:1px solid var(--border);
+  font-size:.8rem;color:var(--text-3);flex-wrap:wrap;gap:12px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pulse-dot{
+  0%,100%{box-shadow:0 0 0 0 rgba(108,99,255,.5)}
+  50%{box-shadow:0 0 0 5px rgba(108,99,255,0)}
+}
+@keyframes scrollDot{
+  0%,100%{transform:translateY(0);opacity:1}
+  50%{transform:translateY(10px);opacity:.3}
+}
+@keyframes arrowPulse{
+  0%,100%{box-shadow:0 0 20px rgba(108,99,255,.3)}
+  50%{box-shadow:0 0 40px rgba(108,99,255,.6)}
+}
+@keyframes foundersGlow{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6}
+  50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
+}
+.founder-photo-glow{left:50%;top:50%;transform:translate(-50%,-50%);position:absolute}
+@keyframes marqueeScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+@keyframes btnPulse{
+  0%,100%{box-shadow:0 0 40px rgba(108,99,255,.35)}
+  50%{box-shadow:0 0 70px rgba(108,99,255,.55)}
+}
+@keyframes orb{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(60px,-40px) scale(1.1)}
+  66%{transform:translate(-40px,50px) scale(.9)}
+}
+@keyframes gradRotate{
+  from{background-position:0% 50%}
+  to{background-position:100% 50%}
+}
+
+/* ── DIVIDERS ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border-strong),transparent);margin:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .portfolio-grid{grid-template-columns:repeat(2,1fr)}
+  .process-steps{grid-template-columns:repeat(3,1fr);row-gap:48px}
+  .process-steps::before{display:none}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:800px){
+  nav{padding:18px 4%}
+  .nav-links,.nav-cta{display:none}
+  .nav-hamburger{display:flex}
+  section{padding:80px 5%}
+  .pain-grid{grid-template-columns:1fr}
+  .pain-stats{grid-template-columns:1fr 1fr}
+  .transform-visual{grid-template-columns:1fr;gap:20px}
+  .transform-arrow{display:none}
+  .transform-metrics-row{grid-template-columns:1fr 1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .portfolio-grid{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr 1fr}
+  .founders-grid{grid-template-columns:1fr}
+  .trust-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;text-align:center}
+}
+@media(max-width:480px){
+  .hero-h1{font-size:2.4rem}
+  .kpi-grid{grid-template-columns:1fr}
+  .transform-metrics-row{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr}
+  .pain-stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="scroll-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">BB</a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">עבודות</a></li>
+    <li><a href="#process">תהליך</a></li>
+    <li><a href="#results">תוצאות</a></li>
+    <li><a href="#founders">אודות</a></li>
+    <li><a href="#faq">שאלות</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">קבלו הצעת מחיר</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="תפריט">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#portfolio" onclick="closeMobile()">עבודות</a>
+  <a href="#process" onclick="closeMobile()">תהליך</a>
+  <a href="#results" onclick="closeMobile()">תוצאות</a>
+  <a href="#founders" onclick="closeMobile()">אודות</a>
+  <a href="#faq" onclick="closeMobile()">שאלות</a>
+  <a href="#contact" class="nav-cta" onclick="closeMobile()">קבלו הצעת מחיר</a>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 1: HERO -->
+<!-- ══════════════════════════════════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      ינאי ברדה &amp; אלרואי ביטון — Studio BB
+    </div>
+    <h1 class="hero-h1">
+      <span class="line">האתר שלכם צריך</span>
+      <span class="line">לעבוד קשה יותר</span>
+      <span class="line grad-text">מהעובד הכי טוב שלכם.</span>
+    </h1>
+    <p class="hero-sub">
+      אנחנו לא בונים עוד אתר. אנחנו בונים מכונה דיגיטלית שמייצרת לקוחות, בונה אמון, וסוגרת עסקאות — גם כשאתם ישנים.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">
+        קבלו הצעת מחיר ←
+      </a>
+      <a href="#portfolio" class="btn-secondary">
+        צפו בעבודות
+      </a>
+    </div>
+    <div class="hero-trust">
+      <p class="hero-trust-label">בונים עבור</p>
+      <div class="hero-industries">
+        <span class="industry-pill">עורכי דין</span>
+        <span class="industry-pill">רופאים</span>
+        <span class="industry-pill">רואי חשבון</span>
+        <span class="industry-pill">מתווכים</span>
+        <span class="industry-pill">קליניקות</span>
+        <span class="industry-pill">חברות B2B</span>
+        <span class="industry-pill">יועצים</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-mouse"><div class="scroll-mouse-dot"></div></div>
+    <span>גללו למטה</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 2: PAIN — THE COST OF A BAD WEBSITE -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="pain">
+  <span class="section-label reveal">המצב הנוכחי שלכם</span>
+  <div class="pain-grid">
+    <div>
+      <h2 class="section-title reveal">כל יום שהאתר שלכם לא ממיר,<br><span class="grad-text" style="background:var(--grad-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">אתם מפסידים כסף.</span></h2>
+      <p class="section-sub reveal">המתחרים שלכם עם האתר המהיר והמקצועי — הם לא טובים יותר מכם. הם פשוט נראים ככה. ולקוחות שהיו יכולים לפנות אליכם — הולכים אליהם.</p>
+      <div class="pain-list">
+        <div class="pain-item reveal">
+          <div class="pain-icon">⚡</div>
+          <div class="pain-item-text">
+            <h4>אתר איטי = לקוחות שברחו</h4>
+            <p>53% מהמבקרים עוזבים אם האתר לוקח יותר מ-3 שניות לטעון. כל שנייה של עיכוב = 7% פחות המרות.</p>
+          </div>
+        </div>
+        <div class="pain-item reveal reveal-delay-1">
+          <div class="pain-icon">📱</div>
+          <div class="pain-item-text">
+            <h4>לא מותאם למובייל = פספסתם את רוב הלקוחות</h4>
+            <p>78% מהגלישה בישראל היא ממובייל. אתר שלא עובד טוב בטלפון מאבד את רוב הפניות.</p>
+          </div>
+        </div>
+        <div class="pain-item reveal reveal-delay-2">
+          <div class="pain-icon">🎯</div>
+          <div class="pain-item-text">
+            <h4>עיצוב ישן = לקוחות שלא סומכים עליכם</h4>
+            <p>94% מהאנשים שופטים אתר תוך שלוש שניות — ועל בסיס עיצוב בלבד. לקוח שלא סומך על האתר — לא יסמוך על השירות.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-stats reveal">
+      <div class="pain-stat">
+        <div class="pain-stat-num counter" data-target="88">0</div>
+        <div class="pain-stat-label">% מהלקוחות בודקים אתר לפני שהם מתקשרים</div>
+      </div>
+      <div class="pain-stat">
+        <div class="pain-stat-num counter" data-target="75">0</div>
+        <div class="pain-stat-label">% מהאנשים קובעים אם לסמוך על עסק — לפי מראה האתר שלו</div>
+      </div>
+      <div class="pain-stat">
+        <div class="pain-stat-num counter" data-target="3" data-suffix="X">0</div>
+        <div class="pain-stat-label">יותר סגירות לעסקים עם נוכחות דיגיטלית חזקה</div>
+      </div>
+      <div class="pain-stat">
+        <div class="pain-stat-num counter" data-target="68">0</div>
+        <div class="pain-stat-label">% מהעסקים קטנים מפסידים לידים בגלל אתר גרוע</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 3: TRANSFORMATION -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="transform">
+  <div class="transform-header">
+    <span class="section-label reveal">הטרנספורמציה</span>
+    <h2 class="section-title reveal">מה קורה כשמשדרגים</h2>
+    <p class="section-sub mx-auto reveal">אנחנו לא רק משפרים את המראה. אנחנו בונים מחדש את הדרך שבה העסק שלכם מייצר לקוחות.</p>
+  </div>
+  <div class="transform-visual reveal">
+    <div class="transform-side transform-before">
+      <div class="transform-label">← לפני</div>
+      <div class="transform-body">
+        <div class="transform-metric">
+          <span class="transform-metric-label">אחוז המרה</span>
+          <span class="transform-metric-val val-bad">0.8%</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">פניות בחודש</span>
+          <span class="transform-metric-val val-bad">3–5</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">זמן טעינה</span>
+          <span class="transform-metric-val val-bad">6.2 שנ׳</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">שיעור נטישה</span>
+          <span class="transform-metric-val val-bad">78%</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">מובייל ידידותי</span>
+          <span class="transform-metric-val val-bad">❌</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">עמדה בגוגל</span>
+          <span class="transform-metric-val val-bad">עמוד 4+</span>
+        </div>
+      </div>
+    </div>
+    <div class="transform-arrow">
+      <div class="arrow-circle">←</div>
+    </div>
+    <div class="transform-side transform-after">
+      <div class="transform-label">אחרי ←</div>
+      <div class="transform-body">
+        <div class="transform-metric">
+          <span class="transform-metric-label">אחוז המרה</span>
+          <span class="transform-metric-val val-good">4.2%</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">פניות בחודש</span>
+          <span class="transform-metric-val val-good">40–60</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">זמן טעינה</span>
+          <span class="transform-metric-val val-good">1.1 שנ׳</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">שיעור נטישה</span>
+          <span class="transform-metric-val val-good">28%</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">מובייל ידידותי</span>
+          <span class="transform-metric-val val-good">✅</span>
+        </div>
+        <div class="transform-metric">
+          <span class="transform-metric-label">עמדה בגוגל</span>
+          <span class="transform-metric-val val-good">עמוד 1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="transform-metrics-row">
+    <div class="tm-card reveal">
+      <div class="tm-num">+320%</div>
+      <div class="tm-label">יותר פניות</div>
+    </div>
+    <div class="tm-card reveal reveal-delay-1">
+      <div class="tm-num">+180%</div>
+      <div class="tm-label">יותר שיחות נכנסות</div>
+    </div>
+    <div class="tm-card reveal reveal-delay-2">
+      <div class="tm-num">+240%</div>
+      <div class="tm-label">יותר פגישות</div>
+    </div>
+    <div class="tm-card reveal reveal-delay-3">
+      <div class="tm-num">+195%</div>
+      <div class="tm-label">יותר מכירות</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 4: RESULTS / KPIs -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="results">
+  <div class="results-header">
+    <span class="section-label reveal">מספרים אמיתיים</span>
+    <h2 class="section-title reveal">תוצאות שמדברות<br><span class="grad-text">בעד עצמן.</span></h2>
+    <p class="section-sub mx-auto reveal">ממוצע מדיד על פני הפרויקטים שלנו. לא הבטחות — עובדות.</p>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card reveal">
+      <div class="kpi-icon">📈</div>
+      <div class="kpi-num"><span class="counter" data-target="214" data-prefix="+">0</span>%</div>
+      <div class="kpi-label">גידול ממוצע בפניות אורגניות תוך 90 יום</div>
+    </div>
+    <div class="kpi-card reveal reveal-delay-1">
+      <div class="kpi-icon">🎯</div>
+      <div class="kpi-num"><span class="counter" data-target="168" data-prefix="+">0</span>%</div>
+      <div class="kpi-label">שיפור ממוצע באחוז ההמרה של דפי הנחיתה</div>
+    </div>
+    <div class="kpi-card warm reveal reveal-delay-2">
+      <div class="kpi-icon">⚡</div>
+      <div class="kpi-num"><span class="counter" data-target="31" data-prefix="">0</span>X</div>
+      <div class="kpi-label">יותר לידים בממוצע לאחר שדרוג האתר</div>
+    </div>
+    <div class="kpi-card green reveal reveal-delay-3">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-num">-<span class="counter" data-target="47">0</span>%</div>
+      <div class="kpi-label">ירידה בעלות לליד בקמפיינים הממומנים לאחר שדרוג</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 5: PORTFOLIO -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="portfolio">
+  <div class="portfolio-header">
+    <span class="section-label reveal">הפרויקטים שלנו</span>
+    <h2 class="section-title reveal">עבודות שמייצרות<br><span class="grad-text">תוצאות עסקיות.</span></h2>
+    <p class="section-sub mx-auto reveal">כל פרויקט הוא סיפור הצלחה. כל עיצוב — מחושב כדי להמיר.</p>
+  </div>
+  <div class="portfolio-grid">
+
+    <div class="portfolio-card reveal">
+      <div class="portfolio-thumb">
+        <div class="portfolio-thumb-bg pt-1">
+          <div class="mock-browser">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-content">
+              <div class="mock-line wide"></div>
+              <div class="mock-line medium"></div>
+              <div class="mock-blocks"><div class="mock-block"></div><div class="mock-block"></div><div class="mock-block"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">משרד עורכי דין</div>
+        <div class="portfolio-title">כהן &amp; שות׳ — משרד עורכי דין</div>
+        <div class="portfolio-outcome">אתר ממוקד המרות עם מערכת ניהול לידים מובנית. דף נחיתה ייעודי לכל תחום משפטי.</div>
+        <div class="portfolio-metric">↑ 312% גידול בפניות</div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal reveal-delay-1">
+      <div class="portfolio-thumb">
+        <div class="portfolio-thumb-bg pt-2">
+          <div class="mock-browser">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-content">
+              <div class="mock-line wide"></div>
+              <div class="mock-line short"></div>
+              <div class="mock-blocks"><div class="mock-block"></div><div class="mock-block"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">מרפאה פרטית</div>
+        <div class="portfolio-title">מרפאת ד"ר לוי — רפואה אסתטית</div>
+        <div class="portfolio-outcome">אתר יוקרתי עם מערכת תורים אוטומטית. עיצוב קליני-פרמיום שבונה אמון מהרגע הראשון.</div>
+        <div class="portfolio-metric">↑ 4X יותר תורים חודשיים</div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal reveal-delay-2">
+      <div class="portfolio-thumb">
+        <div class="portfolio-thumb-bg pt-3">
+          <div class="mock-browser">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-content">
+              <div class="mock-line wide"></div>
+              <div class="mock-line medium"></div>
+              <div class="mock-blocks"><div class="mock-block"></div><div class="mock-block"></div><div class="mock-block"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">נדל"ן פרמיום</div>
+        <div class="portfolio-title">כרמי נדל"ן — תיווך יוקרה</div>
+        <div class="portfolio-outcome">פלטפורמה עם קטלוג נכסים, טיולים וירטואליים וטופס יצירת קשר חכם לפי תקציב.</div>
+        <div class="portfolio-metric">↑ 240% יצירות קשר</div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal">
+      <div class="portfolio-thumb">
+        <div class="portfolio-thumb-bg pt-4">
+          <div class="mock-browser">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-content">
+              <div class="mock-line wide"></div>
+              <div class="mock-line short"></div>
+              <div class="mock-blocks"><div class="mock-block"></div><div class="mock-block"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">ראיית חשבון</div>
+        <div class="portfolio-title">גרינברג &amp; שות׳ — רו"ח</div>
+        <div class="portfolio-outcome">אתר מקצועי עם מחשבוני מס ומדריכים שמושכים לידים אורגניים. ממוצב כסמכות בתחום.</div>
+        <div class="portfolio-metric">↑ 180% לידים אורגניים</div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal reveal-delay-1">
+      <div class="portfolio-thumb">
+        <div class="portfolio-thumb-bg pt-5">
+          <div class="mock-browser">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-content">
+              <div class="mock-line wide"></div>
+              <div class="mock-line medium"></div>
+              <div class="mock-blocks"><div class="mock-block"></div><div class="mock-block"></div><div class="mock-block"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">קליניקת יופי</div>
+        <div class="portfolio-title">Studio Glow — יופי &amp; אסתטיקה</div>
+        <div class="portfolio-outcome">חנות אונליין + מערכת הזמנות. עיצוב רך ופרמיום שהפך גולשים ללקוחות חוזרים.</div>
+        <div class="portfolio-metric">↑ 290% הזמנות אונליין</div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal reveal-delay-2">
+      <div class="portfolio-thumb">
+        <div class="portfolio-thumb-bg pt-6">
+          <div class="mock-browser">
+            <div class="mock-bar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+            <div class="mock-content">
+              <div class="mock-line wide"></div>
+              <div class="mock-line short"></div>
+              <div class="mock-blocks"><div class="mock-block"></div><div class="mock-block"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">ייעוץ עסקי</div>
+        <div class="portfolio-title">Apex Consulting — B2B</div>
+        <div class="portfolio-outcome">פלטפורמת תוכן + דפי נחיתה לקמפיינים. מיצוב כסמכות עם מגנטי לידים ומשפך מכירה מלא.</div>
+        <div class="portfolio-metric">↑ 3.5X יותר פגישות</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 6: WHY US -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="why">
+  <div class="why-header">
+    <span class="section-label reveal">למה Studio BB</span>
+    <h2 class="section-title reveal">הסיבות שלקוחות<br><span class="grad-text">בוחרים בנו.</span></h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon-wrap">🧠</div>
+      <h3>חשיבה עסקית לפני עיצוב</h3>
+      <p>אנחנו לא מתחילים עם עיצוב — מתחילים עם שאלות. מה היעד העסקי? מי הלקוח? מה יגרום לו לפנות? רק אז בונים.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-icon-wrap">📊</div>
+      <h3>חוויית משתמש שמייצרת המרות</h3>
+      <p>כל כפתור, כל כותרת, כל תמונה — ממוקמים בכוונה. לא כדי להיראות יפה — אלא כדי לגרום ללקוח לפנות.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-icon-wrap">⚡</div>
+      <h3>פיתוח מהיר ומדויק</h3>
+      <p>אתרים שנבנים אצלנו עובדים. על iOS, על Android, בכל דפדפן ובכל מכשיר. ללא תירוצים, ללא "נבדוק מחר".</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon-wrap">📱</div>
+      <h3>מותאם לכל מכשיר — בלי פשרות</h3>
+      <p>78% מהגלישה בישראל — ממובייל. כל פרויקט שלנו מתחיל מהטלפון — ומשם מתרחב לדסקטופ.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-icon-wrap">🚀</div>
+      <h3>מהירות שמשפיעה על תוצאות</h3>
+      <p>ציוני ביצועים מעל 95 בגוגל PageSpeed. אתרים שטוענים תוך 1-2 שניות — כי לכל שנייה יש מחיר.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-icon-wrap">🤝</div>
+      <h3>ליווי אישי לאורך כל הדרך</h3>
+      <p>לא נעלמים אחרי ההשקה. תמיד זמינים, תמיד מעודכנים, ותמיד מחפשים איך לשפר את התוצאות שלכם.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 7: PROCESS -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="process">
+  <div class="process-header">
+    <span class="section-label reveal">איך אנחנו עובדים</span>
+    <h2 class="section-title reveal">תהליך שמוכיח את<br><span class="grad-text">עצמו שוב ושוב.</span></h2>
+    <p class="section-sub mx-auto reveal">שישה שלבים מוכחים מהרעיון ועד ללידים הראשונים.</p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-num">🔍</div>
+      <div class="step-title">אפיון</div>
+      <div class="step-desc">מבינים את העסק, הקהל, המתחרים והמטרות העסקיות לפני שמגיעים לעיצוב</div>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-num">🗺️</div>
+      <div class="step-title">אסטרטגיה</div>
+      <div class="step-desc">בונים מפת דרכים להמרות — מה הלקוח יראה, מה ירגיש, ואיפה יפנה</div>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-num">🎨</div>
+      <div class="step-title">עיצוב</div>
+      <div class="step-desc">עיצוב ייחודי ופרמיום שמשקף את המותג ומייצר אמון מהרגע הראשון</div>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-num">💻</div>
+      <div class="step-title">פיתוח</div>
+      <div class="step-desc">בנייה מדויקת, קוד נקי, ביצועים גבוהים ועמידות לטווח ארוך</div>
+    </div>
+    <div class="process-step reveal reveal-delay-4">
+      <div class="step-num">🚀</div>
+      <div class="step-title">השקה</div>
+      <div class="step-desc">השקה מסודרת, בדיקות מקיפות, SEO טכני, ולא עוזבים עד שהכל עובד</div>
+    </div>
+    <div class="process-step reveal reveal-delay-5">
+      <div class="step-num">📈</div>
+      <div class="step-title">אופטימיזציה</div>
+      <div class="step-desc">מודדים, בוחנים ומשפרים. A/B טסטים, שיפורי המרות, ליווי שוטף</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 8: FOUNDERS -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="founders">
+  <div class="founders-header">
+    <span class="section-label reveal">מאחורי Studio BB</span>
+    <h2 class="section-title reveal">שני בונים. תוצאה<br><span class="grad-text">אחת: הצלחה שלכם.</span></h2>
+    <p class="section-sub mx-auto reveal">לא קבוצת שיווק גדולה ואנונימית. שני אנשים שרוצים לראות את העסק שלכם גדל.</p>
+  </div>
+  <div class="founders-grid">
+    <div class="founder-card reveal">
+      <div class="founder-photo">
+        <div class="founder-photo-glow"></div>
+        <div class="founder-initials">יב</div>
+      </div>
+      <div class="founder-info">
+        <div class="founder-name">ינאי ברדה</div>
+        <div class="founder-role">מייסד · Dev &amp; Systems</div>
+        <p class="founder-bio">בונה את מה שאחרים רק מדמיינים. ינאי הוא המנוע הטכני מאחורי כל פרויקט — מהביצועים, דרך ה-SEO ועד לאינטגרציות שהופכות אתר ממקטלוג לכלי מכירה שעובד 24/7.</p>
+        <div class="founder-tags">
+          <span class="founder-tag">Frontend Dev</span>
+          <span class="founder-tag">Performance</span>
+          <span class="founder-tag">SEO Technical</span>
+          <span class="founder-tag">Systems</span>
+        </div>
+      </div>
+    </div>
+    <div class="founder-card reveal reveal-delay-1">
+      <div class="founder-photo" style="background:linear-gradient(145deg,#0f1923,#1a3a5c,#0f1923)">
+        <div class="founder-photo-glow"></div>
+        <div class="founder-initials" style="background:linear-gradient(135deg,#00C9FF,#6C63FF)">אב</div>
+      </div>
+      <div class="founder-info">
+        <div class="founder-name">אלרואי ביטון</div>
+        <div class="founder-role">מייסד · Design &amp; Strategy</div>
+        <p class="founder-bio">חושב בלקוחות, מדבר בעיצוב. אלרואי הוא הגשר בין האסטרטגיה העסקית לבין חוויית המשתמש. כל פרויקט מתחיל בהבנת המטרה העסקית — ורק אז נוגעים בעיצוב.</p>
+        <div class="founder-tags">
+          <span class="founder-tag">UX/UI Design</span>
+          <span class="founder-tag">Brand Strategy</span>
+          <span class="founder-tag">CRO</span>
+          <span class="founder-tag">Growth</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 9: TESTIMONIALS -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="testimonials" style="padding-bottom:120px">
+  <div class="testimonials-header">
+    <span class="section-label reveal">לקוחות מדברים</span>
+    <h2 class="section-title reveal">לא אנחנו אומרים את זה —<br><span class="grad-text">הם אומרים.</span></h2>
+  </div>
+  <div class="marquee-wrapper reveal">
+    <div class="marquee-track" id="marquee-track">
+      <!-- ROW 1 -->
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"מהיום שהשקנו את האתר החדש, הפניות שלנו עלו פי ארבעה. אנשים מתקשרים ואומרים 'ראיתי את האתר שלכם וחייבתי להתקשר'. זו הסיבה שהשקענו."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">מכ</div>
+          <div><div class="testi-name">עו"ד מיכאל כץ</div><div class="testi-biz">משרד עורכי דין, תל אביב</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"הייתי סקפטי בהתחלה — כבר הייתה לי חוויה גרועה עם חברת בניית אתרים אחרת. ינאי ואלרואי שינו לי לגמרי את התמונה. מקצועיים, מהירים, ותוצאות אמיתיות."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00C9FF,#6C63FF)">דל</div>
+          <div><div class="testi-name">ד"ר דוד לוי</div><div class="testi-biz">רפואה אסתטית, רמת גן</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"בתחום הנדל"ן, הרושם הראשון הוא הכל. האתר החדש גרם לי להיראות כמו חברה גדולה — וזה פתח דלתות שלא ידעתי שקיימות. שווה כל שקל."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF6B8A,#FFB800)">רכ</div>
+          <div><div class="testi-name">רון כרמי</div><div class="testi-biz">מתווך נדל"ן, ירושלים</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"הפרויקט הושלם בזמן, בתקציב, ומעבר לציפיות. הדבר שהכי הפתיע אותי — הם הבינו את הלקוחות שלי יותר טוב ממה שחשבתי שיקרה. ממליץ בחום."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00E5A0,#00C9FF)">אג</div>
+          <div><div class="testi-name">אבי גרינברג</div><div class="testi-biz">רואה חשבון, חיפה</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"ניהלתי 3 ספקים שונים לפני שמצאתי את Studio BB. כאן מקבלים הכל תחת קורת גג אחת — עיצוב, פיתוח, אסטרטגיה. זה חוסך זמן, כסף, ועצבים."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#6C63FF,#FF6B8A)">נש</div>
+          <div><div class="testi-name">נועה שמיר</div><div class="testi-biz">מנכ"לית Apex Consulting, תל אביב</div></div>
+        </div>
+      </div>
+      <!-- DUPLICATE for infinite loop -->
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"מהיום שהשקנו את האתר החדש, הפניות שלנו עלו פי ארבעה. אנשים מתקשרים ואומרים 'ראיתי את האתר שלכם וחייבתי להתקשר'. זו הסיבה שהשקענו."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">מכ</div>
+          <div><div class="testi-name">עו"ד מיכאל כץ</div><div class="testi-biz">משרד עורכי דין, תל אביב</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"הייתי סקפטי בהתחלה — כבר הייתה לי חוויה גרועה עם חברת בניית אתרים אחרת. ינאי ואלרואי שינו לי לגמרי את התמונה. מקצועיים, מהירים, ותוצאות אמיתיות."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00C9FF,#6C63FF)">דל</div>
+          <div><div class="testi-name">ד"ר דוד לוי</div><div class="testi-biz">רפואה אסתטית, רמת גן</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"בתחום הנדל"ן, הרושם הראשון הוא הכל. האתר החדש גרם לי להיראות כמו חברה גדולה — וזה פתח דלתות שלא ידעתי שקיימות. שווה כל שקל."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF6B8A,#FFB800)">רכ</div>
+          <div><div class="testi-name">רון כרמי</div><div class="testi-biz">מתווך נדל"ן, ירושלים</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"הפרויקט הושלם בזמן, בתקציב, ומעבר לציפיות. הדבר שהכי הפתיע אותי — הם הבינו את הלקוחות שלי יותר טוב ממה שחשבתי שיקרה. ממליץ בחום."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00E5A0,#00C9FF)">אג</div>
+          <div><div class="testi-name">אבי גרינברג</div><div class="testi-biz">רואה חשבון, חיפה</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"ניהלתי 3 ספקים שונים לפני שמצאתי את Studio BB. כאן מקבלים הכל תחת קורת גג אחת — עיצוב, פיתוח, אסטרטגיה. זה חוסך זמן, כסף, ועצבים."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#6C63FF,#FF6B8A)">נש</div>
+          <div><div class="testi-name">נועה שמיר</div><div class="testi-biz">מנכ"לית Apex Consulting, תל אביב</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 10: TRUST & AUTHORITY -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="trust">
+  <div class="trust-header">
+    <span class="section-label reveal">הבטחות שאנחנו עומדים בהן</span>
+    <h2 class="section-title reveal">למה לבחור בנו<br><span class="grad-text">לעסק שלכם.</span></h2>
+  </div>
+  <div class="trust-grid">
+    <div class="trust-card reveal">
+      <div class="trust-icon">📅</div>
+      <h3>מועד מסירה בכתב</h3>
+      <p>כל פרויקט מגיע עם לוח זמנים מפורט וחוזה שמגן עליכם. אנחנו עומדים בתאריכים — אחרת מחזירים תשלום.</p>
+    </div>
+    <div class="trust-card reveal reveal-delay-1">
+      <div class="trust-icon">🔄</div>
+      <h3>תיקונים ללא הגבלה בשלב העיצוב</h3>
+      <p>עד שתהיו מרוצים מאה אחוז מהעיצוב — לא עוברים לפיתוח. אנחנו לא נמדדים בשעות, נמדדים בתוצאה.</p>
+    </div>
+    <div class="trust-card reveal reveal-delay-2">
+      <div class="trust-icon">📱</div>
+      <h3>זמינות אמיתית, לא "אנחנו בדרך"</h3>
+      <p>כשאתם שולחים הודעה — אנחנו מגיבים תוך שעות, לא ימים. כל לקוח מקבל ליווי ישיר מאיתנו, ולא מועבר לאסיסטנט.</p>
+    </div>
+    <div class="trust-card reveal">
+      <div class="trust-icon">🏆</div>
+      <h3>אחריות 90 יום לאחר השקה</h3>
+      <p>אחרי ההשקה, כל באג שנמצא — אנחנו מתקנים ללא עלות נוספת. האחריות שלנו לא מסתיימת כשאנחנו מקבלים את הצ'ק.</p>
+    </div>
+    <div class="trust-card reveal reveal-delay-1">
+      <div class="trust-icon">🔐</div>
+      <h3>הקוד שייך לכם לחלוטין</h3>
+      <p>בניגוד לפלטפורמות שכולאות אתכם, כל הקוד, הדומיין והתכנים — שייכים לכם. לצמיתות. ללא תנאים.</p>
+    </div>
+    <div class="trust-card reveal reveal-delay-2">
+      <div class="trust-icon">📊</div>
+      <h3>שקיפות מלאה לאורך הדרך</h3>
+      <p>גישה לכל הכלים, דוחות התקדמות שבועיים, ופגישת סיכום בכל שלב. תמיד תדעו בדיוק איפה הפרויקט עומד.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 11: FAQ -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="faq">
+  <div class="faq-header">
+    <span class="section-label reveal">שאלות ותשובות</span>
+    <h2 class="section-title reveal">כל מה שרציתם<br><span class="grad-text">לדעת ולא הספקתם.</span></h2>
+  </div>
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q">
+        <span>כמה זמן לוקח לבנות אתר?</span>
+        <div class="faq-chevron">▼</div>
+      </button>
+      <div class="faq-a">
+        <p>דף נחיתה — 7–14 ימי עבודה. אתר תדמית מלא — 3–5 שבועות. פלטפורמה עם פיצ'רים מורכבים — 6–10 שבועות. הכל תלוי בהיקף ובמהירות שבה אתם מאשרים תוכן. נגדיר יחד ציפיות ריאליות ולוח זמנים מדויק לפני שמתחילים.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        <span>כמה זה עולה?</span>
+        <div class="faq-chevron">▼</div>
+      </button>
+      <div class="faq-a">
+        <p>כל פרויקט מתומחר בהתאמה אישית לפי ההיקף, המורכבות והמטרות שלכם. אנחנו לא מאמינים בתעריפים קבועים — אנחנו מאמינים בפתרון הנכון למחיר הנכון. השאירו פרטים ונחזור אליכם עם הצעה מפורטת ושקופה, ללא התחייבות.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        <span>מה אם אין לי תוכן? טקסטים, תמונות?</span>
+        <div class="faq-chevron">▼</div>
+      </button>
+      <div class="faq-a">
+        <p>אנחנו מטפלים בזה. כחלק מהתהליך שלנו, אנחנו כותבים קופירייטינג ממוקד המרות, מתאמים צילום מקצועי אם צריך, ומשתמשים בתמונות פרמיום. אתם לא צריכים להגיע עם שום דבר — רק עם הרצון לגדול.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        <span>האם אתם מתחזקים את האתר לאחר ההשקה?</span>
+        <div class="faq-chevron">▼</div>
+      </button>
+      <div class="faq-a">
+        <p>כן. יש לנו חבילות תחזוקה חודשיות הכוללות עדכוני תוכן, אבטחה, גיבויים, ניטור ביצועים, ודוח חודשי. לפרטים על עלויות — צרו קשר ונתאים חבילה שמתאימה לכם. גם אם לא לוקחים חבילה — 90 הימים הראשונים כלולים בכל פרויקט.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        <span>האם האתר יהיה מותאם למובייל?</span>
+        <div class="faq-chevron">▼</div>
+      </button>
+      <div class="faq-a">
+        <p>בהחלט — ולא רק "יעבוד על מובייל". אנחנו בונים Mobile-First, כלומר מתחילים מהחוויה במובייל ומשפרים לדסקטופ. 78% מהגולשים הישראלים גולשים מהטלפון — אנחנו לא מפשרים על זה.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        <span>יש לי כבר אתר. האם שווה לשדרג?</span>
+        <div class="faq-chevron">▼</div>
+      </button>
+      <div class="faq-a">
+        <p>תלוי. שלחו לנו את הקישור לאתר שלכם ואנחנו נעשה לכם אבחון חינם — מה עובד, מה לא, ומה אפשר לשפר. אם האתר הנוכחי עובד טוב — נגיד לכם. אם הוא מפסיד לכם לידים — גם נגיד לכם בדיוק כמה ולמה.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECTION 12: FINAL CTA -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="final-cta">
+  <canvas id="final-canvas"></canvas>
+  <div class="final-content">
+    <span class="section-label" style="margin-bottom:28px;display:block">מוכנים להתחיל?</span>
+    <h2 class="final-h2 reveal">
+      העסק שלכם לא צריך<br>
+      עוד אתר.<br>
+      <span class="grad-text">הוא צריך חוויה שאנשים זוכרים.</span>
+    </h2>
+    <p class="final-sub reveal">
+      האתר הבא שיביא לכם לקוחות יכול להתחיל היום.<br>
+      שיחת ייעוץ ראשונית — ללא עלות, ללא התחייבות.
+    </p>
+    <div class="final-cta-wrap reveal">
+      <a href="#contact" class="btn-final">
+        בואו נבנה משהו יוצא דופן ←
+      </a>
+      <p class="final-note">או שלחו לנו הודעה ישירה: <strong style="color:var(--text-2)">yanayberdah@gmail.com</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CONTACT FORM -->
+<!-- ══════════════════════════════════════ -->
+<div class="divider"></div>
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-left">
+      <span class="section-label reveal">צרו קשר</span>
+      <h2 class="section-title reveal">נשמח לשמוע<br><span class="grad-text">עליכם ועל העסק.</span></h2>
+      <p class="section-sub reveal">השאירו פרטים ונחזור אליכם תוך 24 שעות עם הצעה מותאמת אישית — ללא עלות וללא התחייבות.</p>
+      <div class="contact-details">
+        <div class="contact-detail reveal">
+          <div class="contact-detail-icon">📧</div>
+          <div class="contact-detail-text">
+            <a href="mailto:yanayberdah@gmail.com">yanayberdah@gmail.com</a>
+            <div class="contact-detail-label">מייל — נענה תוך שעות</div>
+          </div>
+        </div>
+        <div class="contact-detail reveal reveal-delay-1">
+          <div class="contact-detail-icon">📱</div>
+          <div class="contact-detail-text">
+            <a href="tel:+972545404192">054-540-4192</a>
+            <div class="contact-detail-label">טלפון / WhatsApp — ינאי ברדה</div>
+          </div>
+        </div>
+        <div class="contact-detail reveal reveal-delay-2">
+          <div class="contact-detail-icon">⚡</div>
+          <div class="contact-detail-text">
+            <a href="#">זמין לשיחה עכשיו</a>
+            <div class="contact-detail-label">זמן תגובה ממוצע: פחות מ-2 שעות</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-1">
+      <div class="form-card" id="form-card">
+        <div id="form-body">
+          <div class="form-title">השאירו פרטים — נחזור אליכם</div>
+          <div class="form-subtitle">מלאו את הטופס ונשלח לכם הצעת מחיר מפורטת ומותאמת אישית לעסק שלכם.</div>
+          <form id="contact-form" action="https://formsubmit.co/yanayberdah@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="פנייה חדשה מהאתר — Studio BB">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="fname">שם מלא *</label>
+                <input class="form-control" type="text" id="fname" name="שם מלא" placeholder="ישראל ישראלי" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="fphone">טלפון *</label>
+                <input class="form-control" type="tel" id="fphone" name="טלפון" placeholder="050-000-0000" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fbiz">סוג העסק</label>
+              <select class="form-control" id="fbiz" name="סוג עסק">
+                <option value="" disabled selected>בחרו קטגוריה</option>
+                <option>משרד עורכי דין</option>
+                <option>מרפאה / רופא</option>
+                <option>רואה חשבון</option>
+                <option>מתווך נדל"ן</option>
+                <option>קליניקה / יופי</option>
+                <option>יועץ / מאמן</option>
+                <option>חברת שירותים</option>
+                <option>עסק מקומי</option>
+                <option>אחר</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fservice">מה אתם מחפשים?</label>
+              <select class="form-control" id="fservice" name="שירות מבוקש">
+                <option value="" disabled selected>בחרו שירות</option>
+                <option>דף נחיתה</option>
+                <option>אתר תדמית</option>
+                <option>מערכת ווב / פורטל</option>
+                <option>שדרוג אתר קיים</option>
+                <option>לא בטוח — רוצה לשמוע אפשרויות</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fmsg">ספרו לנו קצת על העסק</label>
+              <textarea class="form-control" id="fmsg" name="הודעה" placeholder="מה העסק עושה? מה האתגר הכי גדול שלכם כרגע? כל פרט יעזור לנו לתת לכם הצעה מדויקת..."></textarea>
+            </div>
+            <button type="submit" class="btn-form">שלחו — נחזור אליכם בקרוב ←</button>
+            <p class="form-note">✓ ללא ספאם ✓ ללא התחייבות ✓ תגובה תוך 24 שעות</p>
+          </form>
+        </div>
+        <div class="form-success" id="form-success">
+          <div class="form-success-icon">✅</div>
+          <h3>ההודעה נשלחה בהצלחה!</h3>
+          <p>תודה שפניתם אלינו.<br>ינאי או אלרואי יחזרו אליכם תוך 24 שעות עם הצעה מפורטת.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ══════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">BB</a>
+      <p>בונים חוויות דיגיטליות שמייצרות לקוחות. Studio BB — ינאי ברדה ואלרואי ביטון.</p>
+    </div>
+    <div class="footer-col">
+      <h4>שירותים</h4>
+      <ul>
+        <li><a href="#">דפי נחיתה</a></li>
+        <li><a href="#">אתרי תדמית</a></li>
+        <li><a href="#">מערכות ווב</a></li>
+        <li><a href="#">אופטימיזציה</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>ניווט</h4>
+      <ul>
+        <li><a href="#portfolio">עבודות</a></li>
+        <li><a href="#process">תהליך</a></li>
+        <li><a href="#founders">אודות</a></li>
+        <li><a href="#faq">שאלות</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>צרו קשר</h4>
+      <ul>
+        <li><a href="mailto:yanayberdah@gmail.com">yanayberdah@gmail.com</a></li>
+        <li><a href="tel:+972545404192">054-540-4192</a></li>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">LinkedIn</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Studio BB. ינאי ברדה ואלרואי ביטון. כל הזכויות שמורות.</span>
+    <span>בנוי עם אהבה 🖤 ומטרה אחת: תוצאות.</span>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ══════════════════════════════════════ -->
+<script>
+// ── CURSOR ──────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.right = 'auto';
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.right = 'auto';
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a,button,.faq-q,.portfolio-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '6px'; cursor.style.height = '6px';
+    ring.style.width = '52px'; ring.style.height = '52px';
+    ring.style.borderColor = 'rgba(108,99,255,.9)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '10px'; cursor.style.height = '10px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(108,99,255,.6)';
+  });
+});
+
+// ── SCROLL PROGRESS ──────────────────────
+const scrollBar = document.getElementById('scroll-bar');
+window.addEventListener('scroll', () => {
+  const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+  scrollBar.style.width = (p * 100) + '%';
+}, { passive: true });
+
+// ── NAV ──────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// Mobile menu
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+function closeMobile() { mobileMenu.classList.remove('open'); }
+mobileMenu.addEventListener('click', e => { if (e.target === mobileMenu) closeMobile(); });
+
+// ── REVEAL ON SCROLL ─────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── COUNTERS ─────────────────────────────
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(eased * target);
+    el.textContent = prefix + val + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = prefix + target + suffix;
+  }
+  requestAnimationFrame(update);
+}
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+// ── FAQ ───────────────────────────────────
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const answer = item.querySelector('.faq-a');
+    const isOpen = item.classList.contains('open');
+    // close all
+    document.querySelectorAll('.faq-item.open').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-a').style.maxHeight = '0';
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
+    }
+  });
+});
+
+// ── PORTFOLIO 3D HOVER ────────────────────
+document.querySelectorAll('.portfolio-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    card.style.transform = `perspective(600px) rotateY(${dx * 6}deg) rotateX(${-dy * 4}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// ── HERO CANVAS ───────────────────────────
+(function initHeroCanvas() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const orbs = [
+    { x: 0.2, y: 0.3, r: 300, color: '108,99,255', speed: 0.0003, phase: 0 },
+    { x: 0.8, y: 0.2, r: 250, color: '0,201,255', speed: 0.0004, phase: 2 },
+    { x: 0.5, y: 0.8, r: 280, color: '255,107,138', speed: 0.00025, phase: 4 },
+    { x: 0.1, y: 0.7, r: 200, color: '108,99,255', speed: 0.0005, phase: 1 },
+  ];
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    orbs.forEach(o => {
+      const x = (o.x + Math.sin(t * o.speed + o.phase) * 0.1) * W;
+      const y = (o.y + Math.cos(t * o.speed * 0.7 + o.phase) * 0.1) * H;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, o.r);
+      grad.addColorStop(0, `rgba(${o.color},0.18)`);
+      grad.addColorStop(1, `rgba(${o.color},0)`);
+      ctx.beginPath();
+      ctx.arc(x, y, o.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    });
+  }
+  let start;
+  function loop(ts) {
+    if (!start) start = ts;
+    draw(ts - start);
+    requestAnimationFrame(loop);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(loop);
+})();
+
+// ── FINAL CANVAS ──────────────────────────
+(function initFinalCanvas() {
+  const canvas = document.getElementById('final-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const orbs = [
+    { x: 0.5, y: 0.5, r: 400, color: '108,99,255', speed: 0.0002, phase: 0 },
+    { x: 0.3, y: 0.3, r: 250, color: '0,201,255', speed: 0.0003, phase: 1 },
+    { x: 0.7, y: 0.7, r: 250, color: '255,107,138', speed: 0.00025, phase: 3 },
+  ];
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    orbs.forEach(o => {
+      const x = (o.x + Math.sin(t * o.speed + o.phase) * 0.15) * W;
+      const y = (o.y + Math.cos(t * o.speed * 0.8 + o.phase) * 0.12) * H;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, o.r);
+      grad.addColorStop(0, `rgba(${o.color},0.14)`);
+      grad.addColorStop(1, `rgba(${o.color},0)`);
+      ctx.beginPath();
+      ctx.arc(x, y, o.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    });
+  }
+  let start;
+  function loop(ts) {
+    if (!start) start = ts;
+    draw(ts - start);
+    requestAnimationFrame(loop);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(loop);
+})();
+
+// ── CONTACT FORM ──────────────────────────
+(function() {
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    const btn = form.querySelector('.btn-form');
+    btn.textContent = 'שולח...';
+    btn.style.opacity = '.7';
+    // FormSubmit handles the POST; on return, URL has ?submitted=true
+    // For same-page success: intercept with fetch
+    e.preventDefault();
+    const data = new FormData(form);
+    fetch('https://formsubmit.co/ajax/yanayberdah@gmail.com', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: data
+    })
+    .then(r => r.json())
+    .then(res => {
+      document.getElementById('form-body').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    })
+    .catch(() => {
+      // fallback: just submit normally
+      form.removeEventListener('submit', arguments.callee);
+      form.submit();
+    });
+  });
+})();
+
+// ── SMOOTH ANCHOR LINKS ───────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id === '#') return;
+    const target = document.querySelector(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>
