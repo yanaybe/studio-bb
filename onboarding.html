@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'; form-action 'self' https://formsubmit.co;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
 <title>שאלון לקוח — Studio BB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -446,6 +450,7 @@ body{
 <!-- FORM -->
 <div class="form-outer">
   <form id="onboarding-form" novalidate>
+    <input type="text" name="_gotcha" style="display:none!important" tabindex="-1" autocomplete="off" aria-hidden="true">
 
     <!-- ═══════════════════════════════ STEP 1 ═══ -->
     <div class="step active" id="step-1">
@@ -622,7 +627,7 @@ body{
           <span class="req">*</span>לוגו
         </label>
         <div class="upload-zone" id="zone-logo">
-          <input type="file" id="logo" name="logo" accept=".png,.svg,.jpg,.jpeg,.pdf,.ai,.eps">
+          <input type="file" id="logo" name="logo" accept=".png,.jpg,.jpeg,.webp,.pdf">
           <span class="upload-icon">🖼️</span>
           <p class="upload-title">גררו את הלוגו לכאן</p>
           <p class="upload-sub">או לחצו לבחירת קובץ</p>
@@ -848,9 +853,29 @@ body{
 
 <script>
 // ─── CONFIG ───────────────────────────────────────────────
-// Replace with your Make.com webhook / Formspree URL / n8n endpoint
 const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
 const TOTAL_STEPS = 6;
+
+// ─── FILE UPLOAD RULES ────────────────────────────────────
+const UPLOAD_RULES = {
+  logo:    { maxMB: 10,  allowed: ['image/png','image/jpeg','image/webp','application/pdf'] },
+  images:  { maxMB: 20,  allowed: ['image/png','image/jpeg','image/webp','image/heic','image/heif'] },
+  video:   { maxMB: 300, allowed: ['video/mp4','video/quicktime','video/avi'] },
+  reviews: { maxMB: 20,  allowed: ['image/png','image/jpeg','image/webp'] },
+};
+
+function validateFiles(files, rules) {
+  const errors = [];
+  Array.from(files).forEach(file => {
+    if (rules.allowed.length && !rules.allowed.includes(file.type)) {
+      errors.push(`סוג קובץ לא מותר: ${file.name}`);
+    }
+    if (file.size > rules.maxMB * 1024 * 1024) {
+      errors.push(`${file.name} גדול מדי (מקס׳ ${rules.maxMB}MB)`);
+    }
+  });
+  return errors;
+}
 
 // ─── STATE ────────────────────────────────────────────────
 let currentStep = 1;
@@ -1028,9 +1053,25 @@ function setupUploadZone(zoneId, inputId, previewId, opts = {}) {
 function renderPreviews(files, previewEl, opts = {}) {
   previewEl.innerHTML = '';
   if (!files || !files.length) return;
+
+  // Server-side MIME + size validation (client-side enforcement)
+  if (opts.rules) {
+    const errors = validateFiles(files, opts.rules);
+    if (errors.length) {
+      errors.forEach(msg => {
+        const p = document.createElement('p');
+        p.style.cssText = 'color:#EF4444;font-size:.78rem;margin-top:6px';
+        p.textContent = msg;
+        previewEl.appendChild(p);
+      });
+      return;
+    }
+  }
+
   const limit = opts.maxFiles || 20;
   Array.from(files).slice(0, limit).forEach(file => {
-    if (file.type.startsWith('image/')) {
+    // Never render SVG as image — it can contain scripts
+    if (file.type.startsWith('image/') && file.type !== 'image/svg+xml') {
       const reader = new FileReader();
       reader.onload = e => {
         const wrap = document.createElement('div');
@@ -1038,26 +1079,41 @@ function renderPreviews(files, previewEl, opts = {}) {
         const img = document.createElement('img');
         img.src = e.target.result;
         img.className = 'preview-thumb';
+        img.alt = '';
         wrap.appendChild(img);
         previewEl.appendChild(wrap);
       };
       reader.readAsDataURL(file);
     } else {
+      // Safe DOM construction — no innerHTML with user data
       const wrap = document.createElement('div');
       wrap.className = 'preview-file';
-      wrap.innerHTML = `<span class="preview-file-icon">${getFileIcon(file.name)}</span>
-                        <span class="preview-file-name">${file.name}</span>`;
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'preview-file-icon';
+      iconSpan.textContent = getFileIcon(file.name);
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'preview-file-name';
+      nameSpan.textContent = file.name; // textContent never executes HTML
+      wrap.appendChild(iconSpan);
+      wrap.appendChild(nameSpan);
       previewEl.appendChild(wrap);
     }
   });
+
   if (files.length > limit) {
     const more = document.createElement('div');
     more.className = 'preview-file';
-    more.innerHTML = `<span class="preview-file-icon">📦</span>
-                      <span class="preview-file-name">+${files.length - limit} קבצים נוספים</span>`;
+    const moreIcon = document.createElement('span');
+    moreIcon.className = 'preview-file-icon';
+    moreIcon.textContent = '📦';
+    const moreText = document.createElement('span');
+    moreText.className = 'preview-file-name';
+    moreText.textContent = `+${files.length - limit} קבצים נוספים`;
+    more.appendChild(moreIcon);
+    more.appendChild(moreText);
     previewEl.appendChild(more);
   }
-  // clear logo error if file selected
+
   if (previewEl.id === 'preview-logo') {
     document.getElementById('err-logo').classList.remove('show');
     document.getElementById('logo').classList.remove('error');
@@ -1071,14 +1127,27 @@ function getFileIcon(name) {
   return map[ext] || '📎';
 }
 
-setupUploadZone('zone-logo',    'logo',               'preview-logo');
-setupUploadZone('zone-images',  'images',             'preview-images', {maxFiles:20});
-setupUploadZone('zone-video',   'video_file',         'preview-video');
-setupUploadZone('zone-reviews', 'review_screenshots', 'preview-reviews', {maxFiles:10});
+setupUploadZone('zone-logo',    'logo',               'preview-logo',    { rules: UPLOAD_RULES.logo });
+setupUploadZone('zone-images',  'images',             'preview-images',  { rules: UPLOAD_RULES.images,  maxFiles: 20 });
+setupUploadZone('zone-video',   'video_file',         'preview-video',   { rules: UPLOAD_RULES.video });
+setupUploadZone('zone-reviews', 'review_screenshots', 'preview-reviews', { rules: UPLOAD_RULES.reviews, maxFiles: 10 });
 
 // ─── FORM SUBMISSION ──────────────────────────────────────
+let _lastSubmit = 0;
+
 async function handleSubmit() {
+  // Honeypot — bots fill hidden fields, humans don't
+  if (document.querySelector('input[name="_gotcha"]').value) return;
+
+  // Rate limit — max one submission per 60 seconds
+  const now = Date.now();
+  if (now - _lastSubmit < 60000 && _lastSubmit !== 0) {
+    alert('נא להמתין דקה לפני שליחה נוספת.');
+    return;
+  }
+
   if (!validateStep(6)) return;
+  _lastSubmit = now;
 
   const submitBtn = document.getElementById('btn-submit');
   const submitText = document.getElementById('submit-text');
