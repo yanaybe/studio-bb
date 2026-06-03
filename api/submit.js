@@ -29,9 +29,9 @@ const V = {
     if(!v)          return 'שדה חובה';
     if(v.length<2)  return 'מינימום 2 תווים';
     if(v.length>100) return 'מקסימום 100 תווים';
-    if(/^\d+$/.test(v)) return 'שם לא יכול להכיל ספרות בלבד';
+    if(/^\d+$/.test(v))  return 'שם לא יכול להכיל ספרות בלבד';
+    if(/^[!@#$%^&*]+$/.test(v)) return 'תווים לא חוקיים';
     if(this.hasInjection(v)) return 'תוכן לא חוקי';
-    if(!/^[֐-׿‏‎a-zA-ZÀ-ÿ\s\-'.]+$/.test(v)) return 'תווים לא חוקיים';
     return null;
   },
 

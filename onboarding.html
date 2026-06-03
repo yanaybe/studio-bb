@@ -898,11 +898,9 @@ const V = {
     if(!v) return 'שדה חובה';
     if(v.length < 2)  return 'מינימום 2 תווים';
     if(v.length > 100) return 'מקסימום 100 תווים';
-    if(/^\d+$/.test(v)) return 'שם לא יכול להכיל ספרות בלבד';
+    if(/^\d+$/.test(v))  return 'שם לא יכול להכיל ספרות בלבד';
+    if(/^[!@#$%^&*]+$/.test(v)) return 'תווים לא חוקיים';
     if(this.hasInjection(v)) return 'תוכן לא חוקי';
-    // Hebrew letters, Latin letters, spaces, hyphens, apostrophes, dots
-    if(!/^[֐-׿‏‎a-zA-ZÀ-ÿ\s\-'.]+$/.test(v))
-      return 'אותיות, רווחים ומקפים בלבד';
     return null;
   },
 
@@ -1221,133 +1219,6 @@ const UPLOAD_RULES = {
   reviews: { maxMB:20,  required:false, allowed:['image/png','image/jpeg','image/webp'] },
 };
 
-// ─── FILE UPLOAD RULES ────────────────────────────────────
-const UPLOAD_RULES = {
-  logo:    { maxMB: 10,  allowed: ['image/png','image/jpeg','image/webp','application/pdf'] },
-  images:  { maxMB: 20,  allowed: ['image/png','image/jpeg','image/webp','image/heic','image/heif'] },
-  video:   { maxMB: 300, allowed: ['video/mp4','video/quicktime','video/avi'] },
-  reviews: { maxMB: 20,  allowed: ['image/png','image/jpeg','image/webp'] },
-};
-
-function validateFiles(files, rules) {
-  const errors = [];
-  Array.from(files).forEach(file => {
-    if (rules.allowed.length && !rules.allowed.includes(file.type)) {
-      errors.push(`סוג קובץ לא מותר: ${file.name}`);
-    }
-    if (file.size > rules.maxMB * 1024 * 1024) {
-      errors.push(`${file.name} גדול מדי (מקס׳ ${rules.maxMB}MB)`);
-    }
-  });
-  return errors;
-}
-
-// ─── STATE ────────────────────────────────────────────────
-let currentStep = 1;
-
-// ─── STEP NAVIGATION ──────────────────────────────────────
-function goToStep(n) {
-  document.getElementById(`step-${currentStep}`).classList.remove('active');
-  currentStep = n;
-  document.getElementById(`step-${currentStep}`).classList.add('active');
-  updateProgress();
-  updateNavButtons();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function nextStep() {
-  if (!validateStep(currentStep)) return;
-  if (currentStep < TOTAL_STEPS) goToStep(currentStep + 1);
-}
-
-function prevStep() {
-  if (currentStep > 1) goToStep(currentStep - 1);
-}
-
-function updateProgress() {
-  document.querySelectorAll('.progress-step').forEach(el => {
-    const s = parseInt(el.dataset.step);
-    el.classList.toggle('done', s < currentStep);
-    el.classList.toggle('active', s === currentStep);
-  });
-  document.getElementById('step-counter').textContent =
-    `שלב ${currentStep} מתוך ${TOTAL_STEPS}`;
-}
-
-function updateNavButtons() {
-  const back = document.getElementById('btn-back');
-  const next = document.getElementById('btn-next');
-  const submit = document.getElementById('btn-submit');
-  back.disabled = currentStep === 1;
-  if (currentStep === TOTAL_STEPS) {
-    next.style.display = 'none';
-    submit.style.display = 'flex';
-  } else {
-    next.style.display = 'flex';
-    submit.style.display = 'none';
-  }
-}
-
-// ─── VALIDATION ───────────────────────────────────────────
-function validateStep(step) {
-  let valid = true;
-
-  function showErr(id) {
-    const el = document.getElementById('err-' + id);
-    const input = document.getElementById(id);
-    if (el) { el.classList.add('show'); }
-    if (input) { input.classList.add('error'); }
-    valid = false;
-  }
-  function clearErr(id) {
-    const el = document.getElementById('err-' + id);
-    const input = document.getElementById(id);
-    if (el) el.classList.remove('show');
-    if (input) input.classList.remove('error');
-  }
-
-  if (step === 1) {
-    ['business_name','contact_name','phone','email'].forEach(id => {
-      const el = document.getElementById(id);
-      const val = el ? el.value.trim() : '';
-      if (!val) { showErr(id); }
-      else {
-        if (id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { showErr(id); }
-        else clearErr(id);
-      }
-    });
-  }
-
-  if (step === 2) {
-    const goal = document.querySelector('input[name="goal"]:checked');
-    if (!goal) showErr('goal'); else clearErr('goal');
-    const svc = document.getElementById('promoted_service');
-    if (!svc.value.trim()) showErr('promoted_service'); else clearErr('promoted_service');
-  }
-
-  if (step === 3) {
-    const desc = document.getElementById('business_description');
-    if (!desc.value.trim()) showErr('business_description'); else clearErr('business_description');
-    const contact = document.getElementById('page_contact');
-    if (!contact.value.trim()) showErr('page_contact'); else clearErr('page_contact');
-  }
-
-  if (step === 4) {
-    const logo = document.getElementById('logo');
-    if (!logo.files || !logo.files.length) showErr('logo'); else clearErr('logo');
-    const style = document.querySelector('input[name="design_style"]:checked');
-    if (!style) showErr('design_style'); else clearErr('design_style');
-    const sites = document.getElementById('example_sites');
-    if (!sites.value.trim()) showErr('example_sites'); else clearErr('example_sites');
-  }
-
-  if (step === 6) {
-    const terms = document.getElementById('terms_agreed');
-    if (!terms.checked) showErr('terms'); else clearErr('terms');
-  }
-
-  return valid;
-}
 
 // ════════════════════════════════════════════════
 // CLICK HANDLERS
