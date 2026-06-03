@@ -394,6 +394,17 @@ body{
   vertical-align:middle;
 }
 
+/* ── STEP ERROR BANNER ── */
+.step-error-banner{
+  display:none;
+  background:#FEF2F2;border:1.5px solid #FECACA;border-radius:var(--r-sm);
+  padding:14px 18px;margin-bottom:24px;
+  font-size:.88rem;font-weight:700;color:#DC2626;
+  align-items:center;gap:10px;
+}
+.step-error-banner.show{display:flex}
+.step-error-banner svg{width:18px;height:18px;flex-shrink:0;stroke:#DC2626;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
 /* ── VALIDATION STATES ── */
 .input.v-valid,.textarea.v-valid{border-color:var(--green)!important;background:#F0FDF4}
 .input.v-valid:focus,.textarea.v-valid:focus{border-color:var(--green)!important;box-shadow:0 0 0 3px rgba(16,185,129,.1)!important}
@@ -463,6 +474,7 @@ body{
 
     <!-- ═══════════════════════════════ STEP 1 ═══ -->
     <div class="step active" id="step-1">
+      <div class="step-error-banner" id="banner-1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span></span></div>
       <div class="step-header">
         <span class="step-eyebrow">01 / 06 — פרטי העסק</span>
         <h1 class="step-title">נתחיל בהיכרות קצרה</h1>
@@ -520,6 +532,7 @@ body{
 
     <!-- ═══════════════════════════════ STEP 2 ═══ -->
     <div class="step" id="step-2">
+      <div class="step-error-banner" id="banner-2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span></span></div>
       <div class="step-header">
         <span class="step-eyebrow">02 / 06 — מטרת הדף</span>
         <h1 class="step-title">מה הדף הזה צריך להשיג?</h1>
@@ -575,6 +588,7 @@ body{
 
     <!-- ═══════════════════════════════ STEP 3 ═══ -->
     <div class="step" id="step-3">
+      <div class="step-error-banner" id="banner-3"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span></span></div>
       <div class="step-header">
         <span class="step-eyebrow">03 / 06 — תוכן הדף</span>
         <h1 class="step-title">החומר שממנו נבנה הדף</h1>
@@ -627,6 +641,7 @@ body{
 
     <!-- ═══════════════════════════════ STEP 4 ═══ -->
     <div class="step" id="step-4">
+      <div class="step-error-banner" id="banner-4"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span></span></div>
       <div class="step-header">
         <span class="step-eyebrow">04 / 06 — מיתוג ועיצוב</span>
         <h1 class="step-title">איך הדף יראה?</h1>
@@ -718,6 +733,7 @@ body{
 
     <!-- ═══════════════════════════════ STEP 5 ═══ -->
     <div class="step" id="step-5">
+      <div class="step-error-banner" id="banner-5"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span></span></div>
       <div class="step-header">
         <span class="step-eyebrow">05 / 06 — קבצים ונכסים</span>
         <h1 class="step-title">כל מה שיש לכם</h1>
@@ -787,6 +803,7 @@ body{
 
     <!-- ═══════════════════════════════ STEP 6 ═══ -->
     <div class="step" id="step-6">
+      <div class="step-error-banner" id="banner-6"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span></span></div>
       <div class="step-header">
         <span class="step-eyebrow">06 / 06 — סיום</span>
         <h1 class="step-title">כמעט סיימנו 🎉</h1>
@@ -1070,6 +1087,9 @@ function goToStep(n){
   document.getElementById(`step-${currentStep}`).classList.remove('active');
   currentStep = n;
   document.getElementById(`step-${currentStep}`).classList.add('active');
+  // Clear banner on the new step
+  const b = document.getElementById(`banner-${currentStep}`);
+  if(b) b.classList.remove('show');
   updateProgress(); updateNavButtons();
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -1174,10 +1194,19 @@ function validateStep(step){
     if(!setGroupState('err-terms', terms.checked ? null : 'נא לאשר לפני שליחה')) ok = false;
   }
 
-  // Focus first invalid field for accessibility
-  if(!ok){
-    const firstErr = document.querySelector(`#step-${step} .v-error`);
-    if(firstErr) setTimeout(()=>firstErr.focus(), 50);
+  // Show / hide the step error banner
+  const banner = document.getElementById(`banner-${step}`);
+  if(banner){
+    if(!ok){
+      const errCount = document.querySelectorAll(`#step-${step} .field-error.show`).length;
+      banner.querySelector('span').textContent =
+        `יש ${errCount} ${errCount === 1 ? 'שגיאה' : 'שגיאות'} — אנא תקנו לפני המשך`;
+      banner.classList.add('show');
+      // Scroll banner into view so user sees it
+      setTimeout(()=>banner.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+    } else {
+      banner.classList.remove('show');
+    }
   }
   return ok;
 }
