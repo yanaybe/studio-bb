@@ -427,29 +427,63 @@ nav.light .nav-ham span{background:var(--text)}
 .tbiz{font-size:.73rem;color:var(--text-3)}
 
 /* ── FAQ ── */
-#faq{background:var(--bg);padding:96px 5%}
-.faq-head{text-align:center;margin-bottom:56px}
-.faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-.faq-item{border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;background:var(--bg);transition:border-color .2s,box-shadow .2s}
-.faq-item.open{border-color:var(--border-strong, #CBD5E1);box-shadow:var(--sh)}
-.faq-q{
-  width:100%;padding:20px 22px;
-  display:flex;justify-content:space-between;align-items:center;
-  background:none;border:none;color:var(--text);
-  font-family:'Heebo',sans-serif;font-size:.97rem;font-weight:700;
-  text-align:right;cursor:pointer;gap:14px;
+#faq{background:var(--dark);padding:96px 5%;position:relative;overflow:hidden}
+.faq-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);background:rgba(37,99,235,.1);top:-100px;left:-100px;pointer-events:none}
+.faq-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1000px;margin:0 auto;align-items:start}
+.faq-questions{display:flex;flex-direction:column;gap:0;border-left:1px solid rgba(255,255,255,.08)}
+.faq-head-dark{margin-bottom:48px}
+.faq-head-dark .section-label{color:rgba(255,255,255,.4)}
+.faq-head-dark h2{color:#fff}
+.fq-btn{
+  width:100%;padding:22px 0 22px 32px;
+  display:flex;align-items:center;gap:16px;
+  background:none;border:none;cursor:pointer;
+  font-family:'Heebo',sans-serif;text-align:right;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  transition:all .2s;position:relative;
 }
-.faq-q:hover{background:var(--bg2)}
-.faq-chevron{
-  width:28px;height:28px;border-radius:50%;background:var(--bg2);
+.fq-btn::before{
+  content:'';position:absolute;right:0;top:0;bottom:0;
+  width:2px;background:var(--blue);
+  transform:scaleY(0);transition:transform .25s var(--spring);
+  transform-origin:bottom;
+}
+.fq-btn.active::before{transform:scaleY(1)}
+.fq-btn:hover .fq-text,.fq-btn.active .fq-text{color:#fff}
+.fq-num{
+  font-size:.72rem;font-weight:700;color:rgba(255,255,255,.2);
+  letter-spacing:.08em;width:24px;flex-shrink:0;transition:color .2s;
+  font-variant-numeric:tabular-nums;
+}
+.fq-btn.active .fq-num{color:var(--blue)}
+.fq-text{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.5);line-height:1.4;transition:color .2s;text-align:right}
+.fq-arrow{
+  margin-right:auto;width:20px;height:20px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.1);
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  transition:transform .3s,background .2s;
+  transition:all .2s;
 }
-.faq-chevron svg{width:13px;height:13px;stroke:var(--text-2);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.faq-item.open .faq-chevron{transform:rotate(180deg);background:var(--blue-l)}
-.faq-item.open .faq-chevron svg{stroke:var(--blue)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .22s ease-out;padding:0 22px}
-.faq-a p{font-size:.9rem;color:var(--text-2);line-height:1.75;padding-bottom:20px}
+.fq-arrow svg{width:9px;height:9px;stroke:rgba(255,255,255,.3);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+.fq-btn.active .fq-arrow{background:var(--blue);border-color:var(--blue)}
+.fq-btn.active .fq-arrow svg{stroke:#fff}
+
+.faq-answer-panel{padding-right:48px;position:sticky;top:120px}
+.faq-answer{display:none;animation:fadeSlideUp .3s var(--spring) both}
+.faq-answer.active{display:block}
+@keyframes fadeSlideUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.fa-num{font-size:6rem;font-weight:900;color:rgba(37,99,235,.15);letter-spacing:-.06em;line-height:1;margin-bottom:16px;font-variant-numeric:tabular-nums}
+.fa-q{font-size:1.3rem;font-weight:800;color:#fff;line-height:1.25;margin-bottom:20px;letter-spacing:-.02em}
+.fa-a{font-size:.95rem;color:rgba(255,255,255,.6);line-height:1.8}
+
+@media(max-width:768px){
+  .faq-inner{grid-template-columns:1fr}
+  .faq-answer-panel{padding-right:0;padding-bottom:32px;position:static;order:-1}
+  .fq-btn{padding:18px 0 18px 0}
+  .faq-questions{border-left:none;border-top:1px solid rgba(255,255,255,.08)}
+}
 
 /* ── CONTACT ── */
 #contact{
@@ -1042,58 +1076,79 @@ footer{background:#070D1A;padding:48px 5% 28px;border-top:1px solid rgba(255,255
 <!-- FAQ -->
 <!-- ══════════════════════════════════════ -->
 <section id="faq">
-  <div class="faq-head">
-    <div class="section-label reveal">שאלות ותשובות</div>
-    <h2 class="section-h2 reveal">כל מה שרציתם לדעת.</h2>
-  </div>
-  <div class="faq-list">
+  <div class="faq-orb"></div>
+  <div class="faq-inner">
 
-    <div class="faq-item">
-      <button class="faq-q">
-        <span>כמה זמן לוקח לבנות אתר?</span>
-        <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </button>
-      <div class="faq-a"><p>דף נחיתה — 7 עד 14 ימי עבודה. אתר תדמית מלא — 3 עד 5 שבועות. פלטפורמה עם פיצ'רים מורכבים — 6 עד 10 שבועות. לפני שמתחילים נגדיר יחד לוח זמנים מדויק ונעמוד בו.</p></div>
+    <!-- Answer Panel (right in RTL = left visually) -->
+    <div class="faq-answer-panel">
+      <div class="faq-answer active" id="fa-1">
+        <div class="fa-num">01</div>
+        <div class="fa-q">כמה זמן לוקח לבנות אתר?</div>
+        <div class="fa-a">דף נחיתה — 7 עד 14 ימי עבודה. אתר תדמית מלא — 3 עד 5 שבועות. פלטפורמה עם פיצ׳רים מורכבים — 6 עד 10 שבועות. לפני שמתחילים נגדיר יחד לוח זמנים מדויק, ונעמוד בו.</div>
+      </div>
+      <div class="faq-answer" id="fa-2">
+        <div class="fa-num">02</div>
+        <div class="fa-q">כמה זה עולה?</div>
+        <div class="fa-a">כל פרויקט מתומחר לפי ההיקף והמטרות שלכם. דפי נחיתה מתחילים מ-1,500₪, אתרי תדמית מ-3,000₪. נשלח הצעת מחיר מפורטת ושקופה — ללא כל התחייבות.</div>
+      </div>
+      <div class="faq-answer" id="fa-3">
+        <div class="fa-num">03</div>
+        <div class="fa-q">מה אם אין לי תוכן?</div>
+        <div class="fa-a">אנחנו מטפלים בזה. כותבים קופירייטינג ממוקד המרות, מתאמים צילום במידת הצורך, ומשתמשים בתמונות מאגר פרמיום. לא צריכים להגיע עם כלום — רק עם הרצון לגדול.</div>
+      </div>
+      <div class="faq-answer" id="fa-4">
+        <div class="fa-num">04</div>
+        <div class="fa-q">האם אתם מתחזקים את האתר לאחר ההשקה?</div>
+        <div class="fa-a">כן. 90 הימים הראשונים כלולים בכל פרויקט — כל באג מתוקן ללא עלות נוספת. מעבר לכך קיימות חבילות תחזוקה חודשיות הכוללות עדכונים, אבטחה וגיבויים שוטפים.</div>
+      </div>
+      <div class="faq-answer" id="fa-5">
+        <div class="fa-num">05</div>
+        <div class="fa-q">האם האתר יהיה מותאם למובייל?</div>
+        <div class="fa-a">תמיד. כל אתר בנוי Mobile-First — מתחילים מהטלפון ומשכללים לדסקטופ. 78% מהגולשים בישראל גולשים מהמובייל, ואנחנו לא מפשרים על כך.</div>
+      </div>
+      <div class="faq-answer" id="fa-6">
+        <div class="fa-num">06</div>
+        <div class="fa-q">יש לי כבר אתר — שווה לשדרג?</div>
+        <div class="fa-a">שלחו לנו את הקישור ונבצע אבחון חינם — מה עובד, מה לא, ומה ניתן לשפר. אם האתר תקין — נאמר לכם. אם הוא מפסיד לידים — נאמר בדיוק כמה ולמה.</div>
+      </div>
     </div>
 
-    <div class="faq-item">
-      <button class="faq-q">
-        <span>כמה זה עולה?</span>
-        <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <!-- Question List -->
+    <div class="faq-questions">
+      <div class="faq-head-dark" style="padding-right:32px">
+        <div class="section-label reveal">שאלות ותשובות</div>
+        <h2 class="section-h2 reveal" style="color:#fff">כל מה<br>שרציתם לדעת.</h2>
+      </div>
+      <button class="fq-btn active" data-target="fa-1">
+        <span class="fq-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="fq-text">כמה זמן לוקח לבנות אתר?</span>
+        <span class="fq-num">01</span>
       </button>
-      <div class="faq-a"><p>כל פרויקט מתומחר לפי ההיקף והמטרות שלכם. דפי נחיתה מתחילים מ-1,500₪, אתרי תדמית מ-3,000₪. נשלח לכם הצעת מחיר מפורטת ושקופה — ללא התחייבות.</p></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q">
-        <span>מה אם אין לי תוכן — טקסטים ותמונות?</span>
-        <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <button class="fq-btn" data-target="fa-2">
+        <span class="fq-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="fq-text">כמה זה עולה?</span>
+        <span class="fq-num">02</span>
       </button>
-      <div class="faq-a"><p>אנחנו מטפלים בזה. כותבים קופירייטינג ממוקד המרות, מתאמים צילום אם צריך, ומשתמשים בתמונות פרמיום. לא צריכים להגיע עם כלום — רק עם הרצון לגדול.</p></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q">
-        <span>האם אתם מתחזקים את האתר לאחר ההשקה?</span>
-        <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <button class="fq-btn" data-target="fa-3">
+        <span class="fq-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="fq-text">מה אם אין לי תוכן?</span>
+        <span class="fq-num">03</span>
       </button>
-      <div class="faq-a"><p>כן. 90 הימים הראשונים כלולים בכל פרויקט — אם יש באג, מתקנים ללא עלות נוספת. מעבר לזה יש חבילות תחזוקה חודשיות הכוללות עדכונים, אבטחה וגיבויים.</p></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q">
-        <span>האם האתר יהיה מותאם למובייל?</span>
-        <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <button class="fq-btn" data-target="fa-4">
+        <span class="fq-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="fq-text">האם אתם מתחזקים לאחר ההשקה?</span>
+        <span class="fq-num">04</span>
       </button>
-      <div class="faq-a"><p>תמיד. בונים Mobile-First — מתחילים מהטלפון ומשפרים לדסקטופ. 78% מהגולשים בישראל גולשים מהטלפון, ולא מפשרים על זה.</p></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q">
-        <span>יש לי כבר אתר. האם שווה לשדרג?</span>
-        <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <button class="fq-btn" data-target="fa-5">
+        <span class="fq-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="fq-text">האם האתר מותאם למובייל?</span>
+        <span class="fq-num">05</span>
       </button>
-      <div class="faq-a"><p>שלחו לנו את הקישור ונעשה אבחון חינם — מה עובד, מה לא, ומה אפשר לשפר. אם האתר עובד טוב — נגיד לכם. אם הוא מפסיד לידים — גם נגיד בדיוק כמה ולמה.</p></div>
+      <button class="fq-btn" data-target="fa-6">
+        <span class="fq-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="fq-text">יש לי כבר אתר — שווה לשדרג?</span>
+        <span class="fq-num">06</span>
+      </button>
     </div>
 
   </div>
@@ -1292,24 +1347,13 @@ document.querySelectorAll('.wcard').forEach(c => {
   });
 });
 
-// ── FAQ accordion ────────────────────────
-// Pre-calculate exact heights at load — zero reflow on click
-document.querySelectorAll('.faq-a').forEach(el => {
-  el.dataset.h = el.scrollHeight + 'px';
-});
-document.querySelectorAll('.faq-q').forEach(btn => {
+// ── FAQ split-screen ─────────────────────
+document.querySelectorAll('.fq-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const item   = btn.parentElement;
-    const answer = item.querySelector('.faq-a');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.faq-a').style.maxHeight = '0';
-    });
-    if(!isOpen){
-      item.classList.add('open');
-      answer.style.maxHeight = answer.dataset.h;
-    }
+    document.querySelectorAll('.fq-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
   });
 });
 
