@@ -1300,23 +1300,19 @@ document.querySelectorAll('.counter').forEach(el => co.observe(el));
 // ── Infinite drag portfolio ───────────────
 const track = document.getElementById('work-track');
 
-// Clone original cards 5 more times → 6 total sets, truly endless
-(function(){
-  const origCards = Array.from(track.children);
-  for(let i = 0; i < 5; i++){
-    origCards.forEach(c => track.appendChild(c.cloneNode(true)));
-  }
-})();
+// 4 identical sets via innerHTML — reliable layout timing
+const _orig = track.innerHTML;
+track.innerHTML = _orig + _orig + _orig + _orig;
 
-// Start in the middle so scrolling left also works
-const setW = () => track.scrollWidth / 6;
-track.scrollLeft = setW();
-
-function loopReset(){
-  const w = setW();
-  if(track.scrollLeft >= w * 5) track.scrollLeft -= w * 4;
-  if(track.scrollLeft <  w)     track.scrollLeft += w * 4;
+function _set(){ return track.scrollWidth / 4; }
+function _loop(){
+  const w = _set();
+  if(w <= 0) return;
+  if(track.scrollLeft >= w * 3) track.scrollLeft -= w * 2;
 }
+
+// Defer initial position so browser has finished layout
+setTimeout(() => { track.scrollLeft = _set(); }, 0);
 
 let isDrag = false, sx2, sl2;
 
@@ -1330,9 +1326,9 @@ track.addEventListener('mousedown', e => {
 track.addEventListener('mousemove', e => {
   if(!isDrag) return; e.preventDefault();
   track.scrollLeft = sl2 - (e.pageX - track.offsetLeft - sx2) * 1.5;
-  loopReset();
+  _loop();
 });
-track.addEventListener('scroll', loopReset, {passive:true});
+track.addEventListener('scroll', _loop, {passive:true});
 
 // ── Testimonials: duplicate for seamless CSS loop ─
 const testiTrack = document.getElementById('testi-track');
