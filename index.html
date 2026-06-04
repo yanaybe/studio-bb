@@ -429,13 +429,13 @@ nav.light .nav-ham span{background:var(--text)}
 /* ── FAQ ── */
 #faq{background:var(--dark);padding:96px 5%;position:relative;overflow:hidden}
 .faq-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);background:rgba(37,99,235,.1);top:-100px;left:-100px;pointer-events:none}
-.faq-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1000px;margin:0 auto;align-items:start}
-.faq-questions{display:flex;flex-direction:column;gap:0;border-right:1px solid rgba(255,255,255,.08)}
+.faq-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1060px;margin:0 auto;align-items:start}
+.faq-questions{display:flex;flex-direction:column;gap:0;border-right:1px solid rgba(255,255,255,.08);padding-left:56px}
 .faq-head-dark{margin-bottom:48px}
 .faq-head-dark .section-label{color:rgba(255,255,255,.4)}
 .faq-head-dark h2{color:#fff}
 .fq-btn{
-  width:100%;padding:22px 0 22px 32px;
+  width:100%;padding:22px 0;
   display:flex;align-items:center;gap:16px;
   background:none;border:none;cursor:pointer;
   font-family:'Heebo',sans-serif;text-align:right;
@@ -453,15 +453,15 @@ nav.light .nav-ham span{background:var(--text)}
 .fq-num{
   font-size:.72rem;font-weight:700;color:rgba(255,255,255,.2);
   letter-spacing:.08em;width:24px;flex-shrink:0;transition:color .2s;
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric:tabular-nums;order:1;
 }
 .fq-btn.active .fq-num{color:var(--blue)}
-.fq-text{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.5);line-height:1.4;transition:color .2s;text-align:right}
+.fq-text{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.5);line-height:1.4;transition:color .2s;text-align:right;flex:1;order:2}
 .fq-arrow{
-  margin-right:auto;width:20px;height:20px;border-radius:50%;
+  width:20px;height:20px;border-radius:50%;
   border:1px solid rgba(255,255,255,.1);
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  transition:all .2s;
+  transition:all .2s;order:3;
 }
 .fq-arrow svg{width:9px;height:9px;stroke:rgba(255,255,255,.3);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
 .fq-btn.active .fq-arrow{background:var(--blue);border-color:var(--blue)}
