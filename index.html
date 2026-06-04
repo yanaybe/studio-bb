@@ -1297,17 +1297,29 @@ const co = new IntersectionObserver(es => es.forEach(e => {
 }), {threshold:.5});
 document.querySelectorAll('.counter').forEach(el => co.observe(el));
 
-// ── Infinite drag portfolio (no auto-scroll) ─
+// ── Infinite drag portfolio ───────────────
 const track = document.getElementById('work-track');
 
-// Duplicate cards for seamless infinite loop on drag
-track.innerHTML += track.innerHTML;
+// Clone original cards 5 more times → 6 total sets, truly endless
+(function(){
+  const origCards = Array.from(track.children);
+  for(let i = 0; i < 5; i++){
+    origCards.forEach(c => track.appendChild(c.cloneNode(true)));
+  }
+})();
+
+// Start in the middle so scrolling left also works
+const setW = () => track.scrollWidth / 6;
+track.scrollLeft = setW();
+
+function loopReset(){
+  const w = setW();
+  if(track.scrollLeft >= w * 5) track.scrollLeft -= w * 4;
+  if(track.scrollLeft <  w)     track.scrollLeft += w * 4;
+}
 
 let isDrag = false, sx2, sl2;
 
-function getHalf(){ return track.scrollWidth / 2; }
-
-// Drag scrub
 track.addEventListener('mousedown', e => {
   isDrag = true; track.classList.add('grab');
   sx2 = e.pageX - track.offsetLeft; sl2 = track.scrollLeft;
@@ -1318,22 +1330,15 @@ track.addEventListener('mousedown', e => {
 track.addEventListener('mousemove', e => {
   if(!isDrag) return; e.preventDefault();
   track.scrollLeft = sl2 - (e.pageX - track.offsetLeft - sx2) * 1.5;
-  const h = getHalf();
-  if(track.scrollLeft >= h) track.scrollLeft -= h;
-  if(track.scrollLeft < 0) track.scrollLeft += h;
+  loopReset();
 });
-
-// Touch + mouse-wheel loop reset
-track.addEventListener('scroll', () => {
-  const h = getHalf();
-  if(track.scrollLeft >= h) track.scrollLeft -= h;
-}, {passive:true});
+track.addEventListener('scroll', loopReset, {passive:true});
 
 // ── Testimonials: duplicate for seamless CSS loop ─
 const testiTrack = document.getElementById('testi-track');
 if(testiTrack) testiTrack.innerHTML += testiTrack.innerHTML;
 
-// ── 3D card tilt ─────────────────────────
+// ── 3D card tilt (applied after cloning) ─
 document.querySelectorAll('.wcard').forEach(c => {
   c.addEventListener('mousemove', e => {
     const r = c.getBoundingClientRect();
