@@ -430,7 +430,7 @@ nav.light .nav-ham span{background:var(--text)}
 #faq{background:var(--dark);padding:96px 5%;position:relative;overflow:hidden}
 .faq-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);background:rgba(37,99,235,.1);top:-100px;left:-100px;pointer-events:none}
 .faq-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1000px;margin:0 auto;align-items:start}
-.faq-questions{display:flex;flex-direction:column;gap:0;border-left:1px solid rgba(255,255,255,.08)}
+.faq-questions{display:flex;flex-direction:column;gap:0;border-right:1px solid rgba(255,255,255,.08)}
 .faq-head-dark{margin-bottom:48px}
 .faq-head-dark .section-label{color:rgba(255,255,255,.4)}
 .faq-head-dark h2{color:#fff}
@@ -443,7 +443,7 @@ nav.light .nav-ham span{background:var(--text)}
   transition:all .2s;position:relative;
 }
 .fq-btn::before{
-  content:'';position:absolute;right:0;top:0;bottom:0;
+  content:'';position:absolute;left:0;top:0;bottom:0;
   width:2px;background:var(--blue);
   transform:scaleY(0);transition:transform .25s var(--spring);
   transform-origin:bottom;
@@ -467,7 +467,7 @@ nav.light .nav-ham span{background:var(--text)}
 .fq-btn.active .fq-arrow{background:var(--blue);border-color:var(--blue)}
 .fq-btn.active .fq-arrow svg{stroke:#fff}
 
-.faq-answer-panel{padding-right:48px;position:sticky;top:120px}
+.faq-answer-panel{padding-left:48px;position:sticky;top:120px}
 .faq-answer{display:none;animation:fadeSlideUp .3s var(--spring) both}
 .faq-answer.active{display:block}
 @keyframes fadeSlideUp{
@@ -1079,41 +1079,7 @@ footer{background:#070D1A;padding:48px 5% 28px;border-top:1px solid rgba(255,255
   <div class="faq-orb"></div>
   <div class="faq-inner">
 
-    <!-- Answer Panel (right in RTL = left visually) -->
-    <div class="faq-answer-panel">
-      <div class="faq-answer active" id="fa-1">
-        <div class="fa-num">01</div>
-        <div class="fa-q">כמה זמן לוקח לבנות אתר?</div>
-        <div class="fa-a">דף נחיתה — 7 עד 14 ימי עבודה. אתר תדמית מלא — 3 עד 5 שבועות. פלטפורמה עם פיצ׳רים מורכבים — 6 עד 10 שבועות. לפני שמתחילים נגדיר יחד לוח זמנים מדויק, ונעמוד בו.</div>
-      </div>
-      <div class="faq-answer" id="fa-2">
-        <div class="fa-num">02</div>
-        <div class="fa-q">כמה זה עולה?</div>
-        <div class="fa-a">כל פרויקט מתומחר לפי ההיקף והמטרות שלכם. דפי נחיתה מתחילים מ-1,500₪, אתרי תדמית מ-3,000₪. נשלח הצעת מחיר מפורטת ושקופה — ללא כל התחייבות.</div>
-      </div>
-      <div class="faq-answer" id="fa-3">
-        <div class="fa-num">03</div>
-        <div class="fa-q">מה אם אין לי תוכן?</div>
-        <div class="fa-a">אנחנו מטפלים בזה. כותבים קופירייטינג ממוקד המרות, מתאמים צילום במידת הצורך, ומשתמשים בתמונות מאגר פרמיום. לא צריכים להגיע עם כלום — רק עם הרצון לגדול.</div>
-      </div>
-      <div class="faq-answer" id="fa-4">
-        <div class="fa-num">04</div>
-        <div class="fa-q">האם אתם מתחזקים את האתר לאחר ההשקה?</div>
-        <div class="fa-a">כן. 90 הימים הראשונים כלולים בכל פרויקט — כל באג מתוקן ללא עלות נוספת. מעבר לכך קיימות חבילות תחזוקה חודשיות הכוללות עדכונים, אבטחה וגיבויים שוטפים.</div>
-      </div>
-      <div class="faq-answer" id="fa-5">
-        <div class="fa-num">05</div>
-        <div class="fa-q">האם האתר יהיה מותאם למובייל?</div>
-        <div class="fa-a">תמיד. כל אתר בנוי Mobile-First — מתחילים מהטלפון ומשכללים לדסקטופ. 78% מהגולשים בישראל גולשים מהמובייל, ואנחנו לא מפשרים על כך.</div>
-      </div>
-      <div class="faq-answer" id="fa-6">
-        <div class="fa-num">06</div>
-        <div class="fa-q">יש לי כבר אתר — שווה לשדרג?</div>
-        <div class="fa-a">שלחו לנו את הקישור ונבצע אבחון חינם — מה עובד, מה לא, ומה ניתן לשפר. אם האתר תקין — נאמר לכם. אם הוא מפסיד לידים — נאמר בדיוק כמה ולמה.</div>
-      </div>
-    </div>
-
-    <!-- Question List -->
+    <!-- Question List (first in RTL = right visually) -->
     <div class="faq-questions">
       <div class="faq-head-dark" style="padding-right:32px">
         <div class="section-label reveal">שאלות ותשובות</div>
@@ -1150,6 +1116,41 @@ footer{background:#070D1A;padding:48px 5% 28px;border-top:1px solid rgba(255,255
         <span class="fq-num">06</span>
       </button>
     </div>
+
+    <!-- Answer Panel (second in RTL = left visually) -->
+    <div class="faq-answer-panel">
+      <div class="faq-answer active" id="fa-1">
+        <div class="fa-num">01</div>
+        <div class="fa-q">כמה זמן לוקח לבנות אתר?</div>
+        <div class="fa-a">דף נחיתה — 7 עד 14 ימי עבודה. אתר תדמית מלא — 3 עד 5 שבועות. פלטפורמה עם פיצ׳רים מורכבים — 6 עד 10 שבועות. לפני שמתחילים נגדיר יחד לוח זמנים מדויק, ונעמוד בו.</div>
+      </div>
+      <div class="faq-answer" id="fa-2">
+        <div class="fa-num">02</div>
+        <div class="fa-q">כמה זה עולה?</div>
+        <div class="fa-a">כל פרויקט מתומחר לפי ההיקף והמטרות שלכם. דפי נחיתה מתחילים מ-1,500₪, אתרי תדמית מ-3,000₪. נשלח הצעת מחיר מפורטת ושקופה — ללא כל התחייבות.</div>
+      </div>
+      <div class="faq-answer" id="fa-3">
+        <div class="fa-num">03</div>
+        <div class="fa-q">מה אם אין לי תוכן?</div>
+        <div class="fa-a">אנחנו מטפלים בזה. כותבים קופירייטינג ממוקד המרות, מתאמים צילום במידת הצורך, ומשתמשים בתמונות מאגר פרמיום. לא צריכים להגיע עם כלום — רק עם הרצון לגדול.</div>
+      </div>
+      <div class="faq-answer" id="fa-4">
+        <div class="fa-num">04</div>
+        <div class="fa-q">האם אתם מתחזקים את האתר לאחר ההשקה?</div>
+        <div class="fa-a">כן. 90 הימים הראשונים כלולים בכל פרויקט — כל באג מתוקן ללא עלות נוספת. מעבר לכך קיימות חבילות תחזוקה חודשיות הכוללות עדכונים, אבטחה וגיבויים שוטפים.</div>
+      </div>
+      <div class="faq-answer" id="fa-5">
+        <div class="fa-num">05</div>
+        <div class="fa-q">האם האתר יהיה מותאם למובייל?</div>
+        <div class="fa-a">תמיד. כל אתר בנוי Mobile-First — מתחילים מהטלפון ומשכללים לדסקטופ. 78% מהגולשים בישראל גולשים מהמובייל, ואנחנו לא מפשרים על כך.</div>
+      </div>
+      <div class="faq-answer" id="fa-6">
+        <div class="fa-num">06</div>
+        <div class="fa-q">יש לי כבר אתר — שווה לשדרג?</div>
+        <div class="fa-a">שלחו לנו את הקישור ונבצע אבחון חינם — מה עובד, מה לא, ומה ניתן לשפר. אם האתר תקין — נאמר לכם. אם הוא מפסיד לידים — נאמר בדיוק כמה ולמה.</div>
+      </div>
+    </div>
+
 
   </div>
 </section>
