@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דני כהן | מאמן כושר אישי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--dark:#0A0F0A;--dark2:#0F1A0F;--green:#22C55E;--green-d:#16A34A;--green-l:#F0FDF4;--text:#fff;--text2:rgba(255,255,255,.65);--border:rgba(34,197,94,.15);--r:16px}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:'Heebo',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+nav{position:fixed;top:0;inset-inline:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 6%;background:rgba(10,15,10,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-size:1.15rem;font-weight:900;letter-spacing:.04em;color:var(--text);text-decoration:none;text-transform:uppercase}
+.logo span{color:var(--green)}
+.nav-cta{background:var(--green);color:#0A0F0A;padding:10px 22px;border-radius:50px;font-weight:800;font-size:.85rem;text-decoration:none;transition:all .2s}
+.nav-cta:hover{background:var(--green-d);transform:translateY(-1px)}
+
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:100px 6% 60px;gap:60px;position:relative;overflow:hidden}
+.hero-orb{position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(34,197,94,.07);filter:blur(80px);top:-100px;left:-100px;pointer-events:none}
+.hero-left{position:relative;z-index:2}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.1);border:1px solid var(--border);border-radius:50px;padding:6px 16px;margin-bottom:28px;font-size:.78rem;font-weight:700;color:var(--green);letter-spacing:.06em;text-transform:uppercase}
+h1{font-size:clamp(2.8rem,5vw,4.8rem);font-weight:900;line-height:1.02;letter-spacing:-.04em;margin-bottom:18px}
+h1 em{color:var(--green);font-style:normal;display:block}
+.hero-sub{font-size:1rem;color:var(--text2);line-height:1.75;margin-bottom:36px;max-width:440px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.btn-g{background:var(--green);color:#0A0F0A;padding:15px 34px;border-radius:50px;font-weight:800;font-size:.95rem;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 24px rgba(34,197,94,.35)}
+.btn-g:hover{background:var(--green-d);transform:translateY(-2px);box-shadow:0 8px 40px rgba(34,197,94,.45)}
+.btn-outline{border:1.5px solid rgba(255,255,255,.2);color:var(--text);padding:15px 28px;border-radius:50px;font-weight:600;font-size:.95rem;text-decoration:none;transition:all .2s}
+.btn-outline:hover{border-color:var(--green);color:var(--green)}
+.hero-proof{display:flex;gap:28px}
+.hp{text-align:center}
+.hp-num{font-size:2rem;font-weight:900;color:var(--green);letter-spacing:-.04em;line-height:1}
+.hp-label{font-size:.72rem;color:var(--text2);margin-top:3px}
+.hero-right{position:relative;z-index:2}
+.hero-img-wrap{border-radius:24px;overflow:hidden;height:600px;position:relative}
+.hero-img{width:100%;height:100%;object-fit:cover;object-position:center 10%}
+.hero-card{position:absolute;bottom:24px;right:24px;background:rgba(10,15,10,.85);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;backdrop-filter:blur(10px)}
+.hc-label{font-size:.72rem;color:var(--text2);margin-bottom:4px}
+.hc-val{font-size:1rem;font-weight:800;color:var(--green)}
+
+#programs{padding:96px 6%;background:var(--dark2)}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+.section-label::before{content:'';width:20px;height:2px;background:var(--green);border-radius:1px}
+h2{font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-.035em;margin-bottom:12px}
+.section-sub{font-size:.92rem;color:var(--text2);line-height:1.7;margin-bottom:52px}
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.progcard{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:32px 24px;transition:all .3s;position:relative;overflow:hidden}
+.progcard::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--green);opacity:0;transition:opacity .3s}
+.progcard:hover{background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.3);transform:translateY(-4px)}
+.progcard:hover::before{opacity:1}
+.progcard-icon{font-size:2rem;margin-bottom:16px}
+.progcard-title{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.progcard-price{font-size:.95rem;color:var(--green);font-weight:700;margin-bottom:12px}
+.progcard-features{list-style:none;display:flex;flex-direction:column;gap:6px}
+.progcard-features li{font-size:.83rem;color:var(--text2);display:flex;align-items:center;gap:8px}
+.progcard-features li::before{content:'✓';color:var(--green);font-weight:700;font-size:.75rem}
+.progcard-cta{display:block;text-align:center;background:var(--green);color:#0A0F0A;padding:11px;border-radius:50px;font-weight:800;font-size:.85rem;text-decoration:none;margin-top:24px;transition:all .2s}
+.progcard-cta:hover{background:var(--green-d)}
+
+#transformation{padding:96px 6%;text-align:center}
+.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
+.tcard{border-radius:var(--r);overflow:hidden;position:relative}
+.tcard img{width:100%;height:280px;object-fit:cover;display:block}
+.tcard-info{position:absolute;bottom:0;right:0;left:0;background:linear-gradient(to top,rgba(10,15,10,.95),transparent);padding:20px 18px 16px}
+.tcard-result{font-size:.95rem;font-weight:800;color:var(--green)}
+.tcard-period{font-size:.78rem;color:var(--text2)}
+
+#contact{padding:96px 6%;background:var(--dark2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.contact-left h2{margin-bottom:16px}
+.contact-left p{color:var(--text2);font-size:.95rem;line-height:1.75;margin-bottom:32px}
+.guarantee{background:rgba(34,197,94,.07);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:32px}
+.guarantee-title{font-size:.95rem;font-weight:800;color:var(--green);margin-bottom:6px}
+.guarantee-text{font-size:.83rem;color:var(--text2);line-height:1.55}
+.contact-form{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:32px}
+.contact-form h3{font-size:1rem;font-weight:800;margin-bottom:20px}
+input[type=text],input[type=tel],select{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Heebo',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:12px}
+input:focus,select:focus{border-color:rgba(34,197,94,.5)}
+input::placeholder{color:rgba(255,255,255,.3)}
+select{color:rgba(255,255,255,.5)}
+select option{background:var(--dark);color:#fff}
+.form-btn{width:100%;background:var(--green);color:#0A0F0A;border:none;padding:14px;border-radius:50px;font-family:'Heebo',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(34,197,94,.3)}
+.form-btn:hover{background:var(--green-d)}
+
+.wa{position:fixed;bottom:28px;left:28px;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;z-index:500;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,.45)}
+.wa svg{width:28px;height:28px;fill:#fff}
+footer{padding:28px 6%;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.78rem;color:var(--text2)}
+
+@media(max-width:900px){#hero{grid-template-columns:1fr}.hero-right{display:none}.contact-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.prog-grid{grid-template-columns:1fr}.t-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<a href="#" class="wa">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<nav>
+  <a href="#" class="logo">DANNY <span>FIT</span></a>
+  <a href="#contact" class="nav-cta">התחילו היום</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-left">
+    <div class="hero-tag">מאמן כושר אישי מוסמך · תל אביב</div>
+    <h1>הגוף שרצית.<br><em>מגיע לך.</em></h1>
+    <p class="hero-sub">לא עוד תוכניות גנריות. אימון אישי שמותאם לגוף שלך, לאורח החיים שלך ולמטרות שלך — עם תוצאות שרואים.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-g">אימון ניסיון חינם ←</a>
+      <a href="#programs" class="btn-outline">התוכניות שלנו</a>
+    </div>
+    <div class="hero-proof">
+      <div class="hp"><div class="hp-num">200+</div><div class="hp-label">מתאמנים</div></div>
+      <div class="hp"><div class="hp-num">8+</div><div class="hp-label">שנות ניסיון</div></div>
+      <div class="hp"><div class="hp-num">97%</div><div class="hp-label">עמדו ביעדים</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-wrap">
+      <img class="hero-img" src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=1000&fit=crop&q=80" alt="מאמן כושר">
+      <div class="hero-card"><div class="hc-label">מתאמן הפסיד</div><div class="hc-val">-22 ק"ג ב-4 חודשים</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="programs">
+  <div class="section-label">התוכניות שלנו</div>
+  <h2>בחרו את התוכנית שלכם</h2>
+  <p class="section-sub">כל תוכנית כוללת מעקב שבועי, תזונה מותאמת ותמיכה מלאה.</p>
+  <div class="prog-grid">
+    <div class="progcard">
+      <div class="progcard-icon">⚡</div>
+      <div class="progcard-title">Starter</div>
+      <div class="progcard-price">₪800 / חודש</div>
+      <ul class="progcard-features">
+        <li>8 אימונים קבוצתיים חודשיים</li>
+        <li>תוכנית תזונה בסיסית</li>
+        <li>גישה לאפליקציה</li>
+        <li>מעקב שבועי</li>
+      </ul>
+      <a href="#contact" class="progcard-cta">להתחיל עכשיו ←</a>
+    </div>
+    <div class="progcard" style="border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.05)">
+      <div style="position:absolute;top:20px;left:20px;background:var(--green);color:#0A0F0A;padding:3px 12px;border-radius:50px;font-size:.72rem;font-weight:700">הכי פופולרי</div>
+      <div class="progcard-icon">🔥</div>
+      <div class="progcard-title">Elite</div>
+      <div class="progcard-price">₪1,600 / חודש</div>
+      <ul class="progcard-features">
+        <li>12 אימונים אישיים חודשיים</li>
+        <li>תוכנית תזונה מלאה</li>
+        <li>מעקב יומיומי</li>
+        <li>צ׳אט ישיר עם המאמן</li>
+        <li>ניתוח גוף חודשי</li>
+      </ul>
+      <a href="#contact" class="progcard-cta">להתחיל עכשיו ←</a>
+    </div>
+    <div class="progcard">
+      <div class="progcard-icon">🏆</div>
+      <div class="progcard-title">Champion</div>
+      <div class="progcard-price">₪2,800 / חודש</div>
+      <ul class="progcard-features">
+        <li>אימונים אישיים ללא הגבלה</li>
+        <li>תזונאית פרטית בצוות</li>
+        <li>תמיכה 24/7</li>
+        <li>ציוד אימון מותאם</li>
+        <li>ניתוח ביצועים מתקדם</li>
+      </ul>
+      <a href="#contact" class="progcard-cta">להתחיל עכשיו ←</a>
+    </div>
+  </div>
+</section>
+
+<section id="transformation">
+  <div class="section-label" style="justify-content:center">תוצאות אמיתיות</div>
+  <h2>לפני ואחרי</h2>
+  <div class="t-grid">
+    <div class="tcard"><img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=600&fit=crop&q=80" alt="תמורה"><div class="tcard-info"><div class="tcard-result">-18 ק"ג</div><div class="tcard-period">3 חודשים · תוכנית Elite</div></div></div>
+    <div class="tcard"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=600&fit=crop&q=80" alt="תמורה"><div class="tcard-info"><div class="tcard-result">+12 ק"ג שריר</div><div class="tcard-period">6 חודשים · תוכנית Champion</div></div></div>
+    <div class="tcard"><img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&h=600&fit=crop&q=80" alt="תמורה"><div class="tcard-info"><div class="tcard-result">-25 ק"ג</div><div class="tcard-period">5 חודשים · תוכנית Elite</div></div></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-left">
+      <div class="section-label">בואו נתחיל</div>
+      <h2>אימון ניסיון<br>חינם.</h2>
+      <p>בלי התחייבות. בלי חוזים. רק אתם, אני, ושעה שתשנה לכם את הפרספקטיבה על כושר.</p>
+      <div class="guarantee">
+        <div class="guarantee-title">🏅 ערובה לתוצאות</div>
+        <div class="guarantee-text">אם לא ראיתם תוצאות אחרי חודש — מחזיר לכם את הכסף במלואו. ללא שאלות.</div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>השאירו פרטים — נחזור תוך שעה</h3>
+      <input type="text" placeholder="שם מלא *">
+      <input type="tel" placeholder="טלפון *">
+      <select><option value="" disabled selected>המטרה שלי</option><option>ירידה במשקל</option><option>עלייה במסת שריר</option><option>שיפור כושר כללי</option><option>הכנה לאירוע</option><option>אחר</option></select>
+      <button class="form-btn">רוצה אימון ניסיון חינם ←</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Danny Fit — מאמן כושר אישי</span>
+  <span>מוסמך IFPA Level 3</span>
+</footer>
+
+</body>
+</html>

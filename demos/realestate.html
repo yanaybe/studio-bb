@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>כרמי נדל"ן | נכסי יוקרה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0D1B2E;--navy2:#132338;--blue:#1E4FBF;--blue-l:#EEF3FC;--text:#0D1B2E;--text2:#4A5568;--text3:#94A3B8;--border:#E2E8F0;--r:16px;--sh:0 4px 24px rgba(13,27,46,.08)}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--text);font-family:'Heebo',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+nav{position:fixed;top:0;inset-inline:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 6%;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 1px 0 rgba(13,27,46,.04)}
+.logo{font-size:1.3rem;font-weight:900;letter-spacing:-.03em;color:var(--navy);text-decoration:none}
+.logo span{color:var(--blue)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--navy)}
+.nav-cta{background:var(--navy);color:#fff;padding:10px 22px;border-radius:50px;font-weight:700;font-size:.85rem;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--blue)}
+
+#hero{min-height:100vh;display:flex;align-items:center;padding:100px 6% 80px;background:var(--navy);position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1800&q=80') center/cover;opacity:.12}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:7px 18px 7px 8px;margin-bottom:32px;font-size:.8rem;color:rgba(255,255,255,.7);font-weight:600}
+.tag-badge{background:var(--blue);color:#fff;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700}
+h1{font-size:clamp(2.8rem,6vw,5.2rem);font-weight:900;line-height:1.04;letter-spacing:-.04em;color:#fff;margin-bottom:20px}
+h1 em{color:#7BA4E8;font-style:normal}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:40px;max-width:500px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-p{background:#fff;color:var(--navy);padding:14px 32px;border-radius:50px;font-weight:800;font-size:.95rem;text-decoration:none;transition:all .2s}
+.btn-p:hover{background:#EEF3FC;transform:translateY(-2px)}
+.btn-s{border:1.5px solid rgba(255,255,255,.25);color:#fff;padding:14px 28px;border-radius:50px;font-weight:600;font-size:.95rem;text-decoration:none;transition:all .2s}
+.btn-s:hover{border-color:rgba(255,255,255,.6)}
+.hero-strip{display:flex;gap:0;margin-top:60px;border:1px solid rgba(255,255,255,.1);border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.04)}
+.hs{flex:1;padding:20px 24px;border-left:1px solid rgba(255,255,255,.08);text-align:center}
+.hs:last-child{border-left:none}
+.hs-num{font-size:1.7rem;font-weight:900;color:#fff;letter-spacing:-.04em}
+.hs-label{font-size:.72rem;color:rgba(255,255,255,.45);margin-top:4px}
+
+#listings{padding:96px 6%;background:#F8FAFC}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+.section-label::before{content:'';width:16px;height:2px;background:var(--blue);border-radius:1px}
+h2{font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-.035em;margin-bottom:12px}
+.section-sub{font-size:.95rem;color:var(--text2);line-height:1.7;margin-bottom:48px}
+.props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.pcard{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);transition:transform .3s,box-shadow .3s}
+.pcard:hover{transform:translateY(-6px);box-shadow:0 24px 64px rgba(13,27,46,.15)}
+.pcard-img{height:220px;overflow:hidden;position:relative}
+.pcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.pcard:hover .pcard-img img{transform:scale(1.06)}
+.pcard-badge{position:absolute;top:14px;right:14px;background:var(--blue);color:#fff;padding:4px 12px;border-radius:50px;font-size:.72rem;font-weight:700}
+.pcard-body{padding:20px}
+.pcard-price{font-size:1.3rem;font-weight:900;color:var(--navy);letter-spacing:-.02em;margin-bottom:4px}
+.pcard-title{font-size:.9rem;font-weight:700;color:var(--text2);margin-bottom:12px}
+.pcard-details{display:flex;gap:16px;font-size:.78rem;color:var(--text3)}
+.pcard-detail{display:flex;align-items:center;gap:4px}
+
+#services{padding:96px 6%;background:#fff}
+.services-2col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.service-img{border-radius:var(--r);overflow:hidden;height:480px}
+.service-img img{width:100%;height:100%;object-fit:cover}
+.service-list{display:flex;flex-direction:column;gap:20px;margin-top:36px}
+.sitem{display:flex;gap:16px;padding:20px;background:#F8FAFC;border-radius:var(--r);border:1px solid var(--border);transition:all .25s}
+.sitem:hover{border-color:#BFDBFE;background:var(--blue-l)}
+.sitem-icon{width:44px;height:44px;border-radius:10px;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.sitem-title{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.sitem-desc{font-size:.82rem;color:var(--text2);line-height:1.55}
+
+#contact{padding:96px 6%;background:var(--navy);position:relative;overflow:hidden}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:2}
+.contact-left h2{color:#fff;margin-bottom:16px}
+.contact-left p{color:rgba(255,255,255,.65);font-size:.95rem;line-height:1.75;margin-bottom:32px}
+.clinks{display:flex;flex-direction:column;gap:12px}
+.clink{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;text-decoration:none;transition:all .2s}
+.clink:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2)}
+.clink-icon{width:34px;height:34px;border-radius:8px;background:rgba(30,79,191,.3);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.clink-val{font-size:.88rem;font-weight:600}
+.clink-sub{font-size:.7rem;color:rgba(255,255,255,.4)}
+.form-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:36px}
+.form-title{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=text],input[type=tel],input[type=email],select,textarea{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Heebo',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:12px}
+input:focus,select:focus,textarea:focus{border-color:rgba(30,79,191,.6)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.3)}
+select{color:rgba(255,255,255,.5)}
+select option{background:var(--navy);color:#fff}
+textarea{resize:vertical;min-height:80px;margin-bottom:0}
+.form-btn{width:100%;background:var(--blue);color:#fff;border:none;padding:13px;border-radius:50px;font-family:'Heebo',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:background .2s;margin-top:12px}
+.form-btn:hover{background:#1A44A8}
+
+.wa{position:fixed;bottom:28px;left:28px;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;z-index:500;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,.45)}
+.wa svg{width:28px;height:28px;fill:#fff}
+footer{background:#080F1A;padding:28px 6%;display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.3)}
+
+@media(max-width:1000px){.props-grid{grid-template-columns:1fr 1fr}.services-2col,.contact-inner{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+@media(max-width:600px){.props-grid{grid-template-columns:1fr}.nav-links{display:none}.hero-strip{flex-wrap:wrap}.hs{flex:1 1 50%}}
+</style>
+</head>
+<body>
+
+<a href="#" class="wa">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<nav>
+  <a href="#" class="logo">כרמי <span>נדל"ן</span></a>
+  <ul class="nav-links">
+    <li><a href="#listings">נכסים</a></li>
+    <li><a href="#services">שירותים</a></li>
+    <li><a href="#contact">צרו קשר</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">קבעו פגישה</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div style="position:relative;z-index:2;max-width:680px">
+    <div class="hero-tag"><span class="tag-badge">חדש</span>נדל"ן יוקרה · תל אביב והמרכז</div>
+    <h1>הבית שחלמת עליו<br><em>מחכה לך.</em></h1>
+    <p class="hero-sub">כרמי נדל"ן מתמחה בנכסי יוקרה בתל אביב והמרכז. ליווי אישי מהחיפוש עד החתימה, עם ניסיון של 15 שנה בשוק.</p>
+    <div class="hero-btns">
+      <a href="#listings" class="btn-p">ראו נכסים ←</a>
+      <a href="#contact" class="btn-s">דברו איתנו</a>
+    </div>
+    <div class="hero-strip">
+      <div class="hs"><div class="hs-num">15+</div><div class="hs-label">שנות ניסיון</div></div>
+      <div class="hs"><div class="hs-num">800+</div><div class="hs-label">עסקאות סגורות</div></div>
+      <div class="hs"><div class="hs-num">₪2.4B</div><div class="hs-label">נפח עסקאות</div></div>
+      <div class="hs"><div class="hs-num">98%</div><div class="hs-label">שביעות רצון</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="listings">
+  <div class="section-label">נכסים נבחרים</div>
+  <h2>הזדמנויות השקעה</h2>
+  <p class="section-sub">נכסים פרמיום בלוקיישנים המבוקשים ביותר — לפני שיוצאים לשוק.</p>
+  <div class="props-grid">
+    <div class="pcard">
+      <div class="pcard-img">
+        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop&q=80" alt="פנטהאוז תל אביב">
+        <div class="pcard-badge">חדש</div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-price">₪8,500,000</div>
+        <div class="pcard-title">פנטהאוז · הצפון הישן, תל אביב</div>
+        <div class="pcard-details">
+          <div class="pcard-detail">🛏 4 חדרות</div>
+          <div class="pcard-detail">🚿 3 מקלחות</div>
+          <div class="pcard-detail">📐 220 מ"ר</div>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-img">
+        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop&q=80" alt="דירת יוקרה">
+        <div class="pcard-badge">בלעדי</div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-price">₪4,200,000</div>
+        <div class="pcard-title">דירת גן · רמת אביב, תל אביב</div>
+        <div class="pcard-details">
+          <div class="pcard-detail">🛏 3 חדרות</div>
+          <div class="pcard-detail">🚿 2 מקלחות</div>
+          <div class="pcard-detail">📐 140 מ"ר</div>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-img">
+        <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&h=400&fit=crop&q=80" alt="וילה">
+        <div class="pcard-badge">מוזל</div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-price">₪12,800,000</div>
+        <div class="pcard-title">וילה פרטית · הרצליה פיתוח</div>
+        <div class="pcard-details">
+          <div class="pcard-detail">🛏 6 חדרות</div>
+          <div class="pcard-detail">🚿 4 מקלחות</div>
+          <div class="pcard-detail">📐 450 מ"ר</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="services-2col">
+    <div>
+      <div class="section-label">מה אנחנו עושים</div>
+      <h2>ליווי מלא<br>מקצה לקצה</h2>
+      <p style="color:var(--text2);font-size:.95rem;line-height:1.7;margin-bottom:8px">לא רק מציאת נכס — אנחנו מלווים אתכם בכל שלב: חיפוש, ניהול משא ומתן, עו"ד, משכנתא ועד לחתימה.</p>
+      <div class="service-list">
+        <div class="sitem"><div class="sitem-icon">🔍</div><div><div class="sitem-title">חיפוש נכסים מותאם אישית</div><div class="sitem-desc">גישה לנכסים לפני שיוצאים לשוק, כולל נכסים פרטיים שאינם ברשימות הציבוריות.</div></div></div>
+        <div class="sitem"><div class="sitem-icon">🤝</div><div><div class="sitem-title">ניהול משא ומתן</div><div class="sitem-desc">15 שנה של ניסיון בסגירת עסקאות בתנאים הטובים ביותר עבור הלקוח.</div></div></div>
+        <div class="sitem"><div class="sitem-icon">📋</div><div><div class="sitem-title">ליווי משפטי ומשכנתא</div><div class="sitem-desc">קשרים עם עורכי הדין ויועצי המשכנתאות הטובים בישראל לתהליך חלק.</div></div></div>
+      </div>
+    </div>
+    <div class="service-img">
+      <img src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=800&h=960&fit=crop&q=80" alt="נדל"ן יוקרה">
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-left">
+      <div class="section-label" style="color:rgba(255,255,255,.4)">צרו קשר</div>
+      <h2>בואו<br>נדבר.</h2>
+      <p>שיחה ראשונה חינם. נבין מה אתם מחפשים ונתחיל לעבוד עבורכם.</p>
+      <div class="clinks">
+        <a href="tel:+972509000000" class="clink"><div class="clink-icon">📞</div><div><div class="clink-val">050-900-0000</div><div class="clink-sub">זמין 7 ימים בשבוע</div></div></a>
+        <a href="#" class="clink"><div class="clink-icon">💬</div><div><div class="clink-val">WhatsApp</div><div class="clink-sub">מענה תוך שעה</div></div></a>
+        <a href="#" class="clink"><div class="clink-icon">📍</div><div><div class="clink-val">שד׳ רוטשילד 22, תל אביב</div><div class="clink-sub">משרד ראשי</div></div></a>
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-title">השאירו פרטים</div>
+      <div class="form-row">
+        <input type="text" placeholder="שם מלא *">
+        <input type="tel" placeholder="טלפון *">
+      </div>
+      <select><option value="" disabled selected>סוג נכס מבוקש</option><option>דירה</option><option>פנטהאוז</option><option>וילה</option><option>נכס להשקעה</option></select>
+      <textarea placeholder="תקציב, אזור, דרישות מיוחדות..."></textarea>
+      <button class="form-btn">שלחו — נחזור אליכם תוך שעה ←</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 כרמי נדל"ן — נכסי יוקרה</span>
+  <span>רישיון תיווך מס׳ 12345</span>
+</footer>
+
+</body>
+</html>
