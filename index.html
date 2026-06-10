@@ -64,7 +64,7 @@ nav{
   transition:background .4s,border-color .4s,padding .3s;
 }
 nav.light{
-  background:rgba(255,255,255,.96);
+  background:rgba(255,255,255,.98);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   padding:14px 5%;
   border-bottom:1px solid var(--border);
@@ -645,6 +645,16 @@ footer{background:#070D1A;padding:48px 5% 28px;border-top:1px solid rgba(255,255
   .why-grid{grid-template-columns:1fr;gap:16px}
   #testimonials{padding:72px 5%}
   .why-card{padding:24px 20px}
+}
+/* ── Mobile performance: kill expensive GPU ops ── */
+@media(max-width:768px){
+  nav.light{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
+  .mob-menu{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
+  .form-card{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .finit{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .wcard{transform-style:flat;will-change:auto}
+  .orb-1,.orb-2,.orb-3{animation:none;opacity:.15}
+  .results-orb-1,.results-orb-2,.faq-orb{animation:none;opacity:.12}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -1321,15 +1331,15 @@ document.querySelectorAll('.counter').forEach(el => co.observe(el));
 // ── Infinite drag portfolio ───────────────
 const track = document.getElementById('work-track');
 
-// 4 identical sets via innerHTML — reliable layout timing
+// 2 sets for seamless loop (mobile-friendly DOM size)
 const _orig = track.innerHTML;
-track.innerHTML = _orig + _orig + _orig + _orig;
+track.innerHTML = _orig + _orig;
 
-function _set(){ return track.scrollWidth / 4; }
+function _set(){ return track.scrollWidth / 2; }
 function _loop(){
   const w = _set();
   if(w <= 0) return;
-  if(track.scrollLeft >= w * 3) track.scrollLeft -= w * 2;
+  if(track.scrollLeft >= w) track.scrollLeft -= w;
 }
 
 // Defer initial position so browser has finished layout
@@ -1355,8 +1365,9 @@ track.addEventListener('scroll', _loop, {passive:true});
 const testiTrack = document.getElementById('testi-track');
 if(testiTrack) testiTrack.innerHTML += testiTrack.innerHTML;
 
-// ── 3D card tilt (applied after cloning) ─
-document.querySelectorAll('.wcard').forEach(c => {
+// ── 3D card tilt — desktop only ─
+const isMobile = window.matchMedia('(max-width:768px)').matches;
+if(!isMobile) document.querySelectorAll('.wcard').forEach(c => {
   c.addEventListener('mousemove', e => {
     const r = c.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - .5;
@@ -1368,7 +1379,7 @@ document.querySelectorAll('.wcard').forEach(c => {
     c.style.transition = 'transform .45s var(--spring),box-shadow .45s var(--spring)';
     c.style.transform = '';
   });
-});
+});  // end if(!isMobile)
 
 // ── FAQ split-screen ─────────────────────
 document.querySelectorAll('.fq-btn').forEach(btn => {
