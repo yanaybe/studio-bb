@@ -690,8 +690,8 @@ footer{background:#070D1A;padding:48px 5% 28px;border-top:1px solid rgba(255,255
 <!-- HERO -->
 <!-- ══════════════════════════════════════ -->
 <section id="hero">
-  <video class="hero-video" autoplay muted loop playsinline preload="none" aria-hidden="true">
-    <source src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4">
+  <video class="hero-video" muted loop playsinline preload="none" aria-hidden="true">
+    <source data-src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4" type="video/mp4">
   </video>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
@@ -1488,6 +1488,20 @@ document.querySelectorAll('.fq-btn').forEach(btn => {
     });
   });
 })();
+
+// ── Lazy-load hero video after page is interactive ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const vid = document.querySelector('.hero-video');
+    if (!vid) return;
+    const src = vid.querySelector('source[data-src]');
+    if (src) {
+      src.setAttribute('src', src.getAttribute('data-src'));
+      vid.load();
+      vid.play().catch(() => {});
+    }
+  }, 1000);
+});
 
 // ── Smooth anchors ───────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a => {
