@@ -99,6 +99,93 @@ function san(v, max = 1000){
   return String(v||'').trim().slice(0, max);
 }
 
+// ── CLAUDE PROMPT BUILDER ─────────────────────────────────
+function buildClaudePrompt(p, GOAL_MAP, STYLE_MAP, TIMELINE_MAP) {
+  const GOAL_CTA = {
+    whatsapp: 'a floating WhatsApp button + a prominent "Send WhatsApp" CTA button that opens wa.me link',
+    phone: 'a click-to-call CTA button and the phone number displayed prominently',
+    lead_form: 'a lead capture form with name, phone, and email fields',
+    booking: 'a booking CTA button that links to their scheduling system',
+    purchase: 'a strong buy/order CTA with urgency elements',
+    signup: 'a newsletter/course signup form with email field',
+  };
+
+  const STYLE_GUIDE = {
+    dark: 'dark background (#0B1120 or similar deep navy/black), gold or blue accents, premium feel, high contrast white text',
+    light: 'clean white background, minimal design, soft shadows, professional typography',
+    warm: 'warm earthy tones (beige, terracotta, sage green), organic feel, rounded elements',
+    bold: 'vibrant gradients, bold typography, energetic color palette, high visual impact',
+    formal: 'navy/charcoal professional palette, structured layout, corporate feel, trust signals prominent',
+  };
+
+  const lines = [
+`Build me a complete, production-ready landing page as a single HTML file.`,
+``,
+`━━━ CLIENT BRIEF ━━━`,
+``,
+`Business: ${p.business_name}`,
+`Contact: ${p.contact_name} | ${p.phone} | ${p.email}`,
+${p.social_links ? `\`Social/Web: ${p.social_links}\`,` : ''}
+``,
+`━━━ GOAL ━━━`,
+``,
+`Primary CTA: ${GOAL_MAP[p.goal] || p.goal}`,
+`Implementation: Include ${GOAL_CTA[p.goal] || p.goal}. This is the #1 conversion action — make it impossible to miss.`,
+`Service/Product being promoted: ${p.promoted_service}`,
+``,
+`━━━ ABOUT THE BUSINESS ━━━`,
+``,
+`${p.business_description}`,
+``,
+`━━━ CONTACT INFO TO DISPLAY ON PAGE ━━━`,
+``,
+`${p.page_contact}`,
+${p.booking_link ? `\`Booking/Scheduling link: ${p.booking_link}\`,` : ''}
+``,
+`━━━ DESIGN ━━━`,
+``,
+`Style: ${STYLE_MAP[p.design_style] || p.design_style || 'modern and clean'}`,
+`Visual direction: ${STYLE_GUIDE[p.design_style] || 'clean modern design with strong hierarchy'}`,
+${p.brand_colors ? `\`Brand colors: ${p.brand_colors}\`,` : ''}
+`Reference sites the client likes:`,
+`${p.example_sites}`,
+``,
+`━━━ CONTENT TO INCLUDE ━━━`,
+${p.testimonials_text ? `\`\`,\`Testimonials/Social proof:\`,\`${p.testimonials_text}\`,` : ''}
+${p.video_link ? `\`\`,\`Video to embed: ${p.video_link}\`,` : ''}
+${p.special_notes ? `\`\`,\`⚠️ Special notes from client:\`,\`${p.special_notes}\`,` : ''}
+``,
+`━━━ TECHNICAL REQUIREMENTS ━━━`,
+``,
+`- Single HTML file with all CSS and JS inline (no external dependencies except Google Fonts)`,
+`- Mobile-first, fully responsive (looks perfect on iPhone)`,
+`- RTL layout (Hebrew/Arabic direction)`,
+`- Fast loading — no heavy libraries`,
+`- WhatsApp float button bottom-left (number: ${p.phone})`,
+`- Smooth scroll animations (IntersectionObserver reveal on scroll)`,
+`- All CTAs must link to real contact info provided above`,
+`- Timeline: ${TIMELINE_MAP[p.timeline] || p.timeline || 'ASAP'}`,
+``,
+`━━━ PAGE SECTIONS (in order) ━━━`,
+``,
+`1. Hero — bold headline, subheadline, primary CTA button, trust signals`,
+`2. About / What we do — business description, key benefits`,
+`3. Services / What you get — 3-4 key service cards with icons`,
+`4. Social proof — testimonials${p.testimonials_text ? ' (use the testimonials provided above)' : ' (create 3 believable placeholder testimonials)'}`,
+`5. CTA section — strong conversion block with the primary CTA`,
+`6. Contact / Footer — all contact details provided above`,
+``,
+`Make it stunning. Every section should have a clear purpose and push the visitor toward the CTA.`,
+`The design should feel like it cost ₪10,000. Use creative layout, micro-animations, and visual hierarchy.`,
+`Do not use placeholder text — use the real business information provided above throughout.`,
+  ];
+
+  return lines
+    .filter(l => l !== undefined && l !== null)
+    .join('\n')
+    .replace(/`/g, '');
+}
+
 // ── HANDLER ───────────────────────────────────────────────
 module.exports = async function handler(req, res){
   if(req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
@@ -247,7 +334,19 @@ module.exports = async function handler(req, res){
     ${payload.brand_colors ? `<p style="margin:0 0 8px"><strong>צבעי מותג:</strong> ${payload.brand_colors}</p>` : ''}
     ${payload.booking_link ? `<p style="margin:0 0 8px"><strong>קישור הזמנות:</strong> <a href="${payload.booking_link}" style="color:#2563EB">${payload.booking_link}</a></p>` : ''}
     ${payload.video_link ? `<p style="margin:0 0 8px"><strong>סרטון:</strong> <a href="${payload.video_link}" style="color:#2563EB">${payload.video_link}</a></p>` : ''}
-    ${payload.special_notes ? `<h2 style="font-size:1rem;color:#64748b;margin:24px 0 12px;text-transform:uppercase;letter-spacing:.05em">הערות מיוחדות</h2><p style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:0;line-height:1.7">${payload.special_notes}</p>` : ''}
+    ${payload.special_notes ? `<h2 style="font-size:1rem;color:#64748b;margin:24px 0 12px;text-transform:uppercase;letter-spacing:.05em">הערות מיוחדות</h2><p style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:0 0 28px;line-height:1.7">${payload.special_notes}</p>` : ''}
+
+    <!-- CLAUDE PROMPT -->
+    <div style="margin-top:36px;border-top:2px solid #e2e8f0;padding-top:32px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <span style="font-size:1.4rem">🤖</span>
+        <h2 style="font-size:1.1rem;font-weight:800;color:#1e293b;margin:0">פרומפט מוכן ל-Claude</h2>
+      </div>
+      <p style="font-size:.85rem;color:#64748b;margin:0 0 12px">העתק את הפרומפט הזה ישירות ל-Claude Code כדי להתחיל לבנות:</p>
+      <div style="background:#0f172a;border-radius:10px;padding:24px;direction:ltr;text-align:left">
+        <pre style="margin:0;color:#e2e8f0;font-family:'Courier New',monospace;font-size:.78rem;line-height:1.8;white-space:pre-wrap;word-break:break-word">${buildClaudePrompt(payload, GOAL_MAP, STYLE_MAP, TIMELINE_MAP)}</pre>
+      </div>
+    </div>
 
   </div>
 </div>`;
