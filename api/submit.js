@@ -194,19 +194,82 @@ module.exports = async function handler(req, res){
     submitted_at:         new Date().toISOString(),
   };
 
-  // ── Forward to webhook ────────────────────────────────
-  const webhookUrl = process.env.WEBHOOK_URL;
-  if(!webhookUrl) return res.status(200).json({ok:true}); // demo mode
+  // ── Send email via Resend ─────────────────────────────
+  const resendKey = process.env.RESEND_API_KEY;
+  if(!resendKey) return res.status(200).json({ok:true}); // no key = demo mode
+
+  const GOAL_MAP = {
+    whatsapp:'WhatsApp',phone:'טלפון',lead_form:'טופס ליד',
+    booking:'קביעת תור',purchase:'רכישה',signup:'הרשמה',
+  };
+  const STYLE_MAP = {
+    dark:'כהה ומודרני',light:'בהיר ונקי',warm:'חם ואורגני',
+    bold:'צבעוני ועז',formal:'פורמלי ומקצועי',
+  };
+  const TIMELINE_MAP = {
+    asap:'בהקדם האפשרי',month:'תוך חודש',
+    two_months:'תוך חודשיים',flexible:'אין דחיפות',
+  };
+
+  const emailHtml = `
+<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1e293b">
+  <div style="background:#2563EB;padding:24px 32px;border-radius:12px 12px 0 0">
+    <h1 style="color:#fff;margin:0;font-size:1.3rem">📋 שאלון לקוח חדש — Studio BB</h1>
+    <p style="color:rgba(255,255,255,.75);margin:6px 0 0;font-size:.9rem">${new Date().toLocaleString('he-IL')}</p>
+  </div>
+  <div style="background:#f8fafc;padding:32px;border-radius:0 0 12px 12px;border:1px solid #e2e8f0;border-top:none">
+
+    <h2 style="font-size:1rem;color:#64748b;margin:0 0 16px;text-transform:uppercase;letter-spacing:.05em">פרטי העסק</h2>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:28px">
+      <tr><td style="padding:8px 0;color:#64748b;width:40%">שם העסק</td><td style="padding:8px 0;font-weight:700">${payload.business_name}</td></tr>
+      <tr><td style="padding:8px 0;color:#64748b">איש קשר</td><td style="padding:8px 0;font-weight:700">${payload.contact_name}</td></tr>
+      <tr><td style="padding:8px 0;color:#64748b">טלפון</td><td style="padding:8px 0"><a href="tel:${payload.phone}" style="color:#2563EB">${payload.phone}</a></td></tr>
+      <tr><td style="padding:8px 0;color:#64748b">מייל</td><td style="padding:8px 0"><a href="mailto:${payload.email}" style="color:#2563EB">${payload.email}</a></td></tr>
+      ${payload.social_links ? `<tr><td style="padding:8px 0;color:#64748b">סושיאל</td><td style="padding:8px 0;word-break:break-all">${payload.social_links}</td></tr>` : ''}
+    </table>
+
+    <h2 style="font-size:1rem;color:#64748b;margin:0 0 16px;text-transform:uppercase;letter-spacing:.05em">הפרויקט</h2>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:28px">
+      <tr><td style="padding:8px 0;color:#64748b;width:40%">מטרה</td><td style="padding:8px 0;font-weight:700">${GOAL_MAP[payload.goal]||payload.goal}</td></tr>
+      <tr><td style="padding:8px 0;color:#64748b">שירות</td><td style="padding:8px 0">${payload.promoted_service}</td></tr>
+      <tr><td style="padding:8px 0;color:#64748b">לוח זמנים</td><td style="padding:8px 0">${TIMELINE_MAP[payload.timeline]||payload.timeline||'לא צוין'}</td></tr>
+      <tr><td style="padding:8px 0;color:#64748b">סגנון עיצוב</td><td style="padding:8px 0">${STYLE_MAP[payload.design_style]||payload.design_style||'לא צוין'}</td></tr>
+    </table>
+
+    <h2 style="font-size:1rem;color:#64748b;margin:0 0 12px;text-transform:uppercase;letter-spacing:.05em">תיאור העסק</h2>
+    <p style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin:0 0 28px;line-height:1.7">${payload.business_description}</p>
+
+    <h2 style="font-size:1rem;color:#64748b;margin:0 0 12px;text-transform:uppercase;letter-spacing:.05em">פרטי קשר לדף</h2>
+    <p style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin:0 0 28px;line-height:1.7;white-space:pre-line">${payload.page_contact}</p>
+
+    ${payload.example_sites ? `<h2 style="font-size:1rem;color:#64748b;margin:0 0 12px;text-transform:uppercase;letter-spacing:.05em">אתרים לדוגמה</h2><p style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin:0 0 28px;line-height:1.7;word-break:break-all">${payload.example_sites}</p>` : ''}
+    ${payload.testimonials_text ? `<h2 style="font-size:1rem;color:#64748b;margin:0 0 12px;text-transform:uppercase;letter-spacing:.05em">עדויות לקוחות</h2><p style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin:0 0 28px;line-height:1.7">${payload.testimonials_text}</p>` : ''}
+    ${payload.brand_colors ? `<p style="margin:0 0 8px"><strong>צבעי מותג:</strong> ${payload.brand_colors}</p>` : ''}
+    ${payload.booking_link ? `<p style="margin:0 0 8px"><strong>קישור הזמנות:</strong> <a href="${payload.booking_link}" style="color:#2563EB">${payload.booking_link}</a></p>` : ''}
+    ${payload.video_link ? `<p style="margin:0 0 8px"><strong>סרטון:</strong> <a href="${payload.video_link}" style="color:#2563EB">${payload.video_link}</a></p>` : ''}
+    ${payload.special_notes ? `<h2 style="font-size:1rem;color:#64748b;margin:24px 0 12px;text-transform:uppercase;letter-spacing:.05em">הערות מיוחדות</h2><p style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin:0;line-height:1.7">${payload.special_notes}</p>` : ''}
+
+  </div>
+</div>`;
 
   try {
-    const r = await fetch(webhookUrl,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload),
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${resendKey}`,
+      },
+      body: JSON.stringify({
+        from: 'Studio BB <onboarding@resend.dev>',
+        to: ['yanayberdah@gmail.com'],
+        subject: `📋 שאלון חדש — ${payload.business_name}`,
+        html: emailHtml,
+      }),
     });
-    if(!r.ok) throw new Error('webhook');
+    if(!r.ok){ const e = await r.json().catch(()=>{}); throw new Error(e?.message||'resend error'); }
     return res.status(200).json({ok:true});
-  } catch {
+  } catch(e) {
+    console.error('Resend error:', e.message);
     return res.status(502).json({error:'שגיאת שרת. נסה שנית או פנה אלינו ב-WhatsApp.'});
   }
 };
