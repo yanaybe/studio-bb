@@ -102,88 +102,84 @@ function san(v, max = 1000){
 // ── CLAUDE PROMPT BUILDER ─────────────────────────────────
 function buildClaudePrompt(p, GOAL_MAP, STYLE_MAP, TIMELINE_MAP) {
   const GOAL_CTA = {
-    whatsapp: 'a floating WhatsApp button + a prominent "Send WhatsApp" CTA button that opens wa.me link',
-    phone: 'a click-to-call CTA button and the phone number displayed prominently',
-    lead_form: 'a lead capture form with name, phone, and email fields',
-    booking: 'a booking CTA button that links to their scheduling system',
-    purchase: 'a strong buy/order CTA with urgency elements',
-    signup: 'a newsletter/course signup form with email field',
+    whatsapp: 'a floating WhatsApp button + a prominent "Send WhatsApp" CTA that opens wa.me link',
+    phone:    'a click-to-call CTA button with the phone number displayed prominently',
+    lead_form:'a lead capture form with name, phone, and email fields',
+    booking:  'a booking CTA button that links to their scheduling system',
+    purchase: 'a strong buy/order CTA with urgency and scarcity elements',
+    signup:   'a newsletter/course signup form with email field',
   };
-
   const STYLE_GUIDE = {
-    dark: 'dark background (#0B1120 or similar deep navy/black), gold or blue accents, premium feel, high contrast white text',
-    light: 'clean white background, minimal design, soft shadows, professional typography',
-    warm: 'warm earthy tones (beige, terracotta, sage green), organic feel, rounded elements',
-    bold: 'vibrant gradients, bold typography, energetic color palette, high visual impact',
-    formal: 'navy/charcoal professional palette, structured layout, corporate feel, trust signals prominent',
+    dark:   'dark background (#0B1120 or deep navy), gold or blue accents, premium feel, high-contrast white text',
+    light:  'clean white background, minimal design, soft shadows, professional typography',
+    warm:   'warm earthy tones (beige, terracotta, sage green), organic feel, rounded elements',
+    bold:   'vibrant gradients, bold typography, energetic color palette, high visual impact',
+    formal: 'navy/charcoal palette, structured layout, corporate feel, trust signals prominent',
   };
 
-  const lines = [
-`Build me a complete, production-ready landing page as a single HTML file.`,
-``,
-`━━━ CLIENT BRIEF ━━━`,
-``,
-`Business: ${p.business_name}`,
-`Contact: ${p.contact_name} | ${p.phone} | ${p.email}`,
-${p.social_links ? `\`Social/Web: ${p.social_links}\`,` : ''}
-``,
-`━━━ GOAL ━━━`,
-``,
-`Primary CTA: ${GOAL_MAP[p.goal] || p.goal}`,
-`Implementation: Include ${GOAL_CTA[p.goal] || p.goal}. This is the #1 conversion action — make it impossible to miss.`,
-`Service/Product being promoted: ${p.promoted_service}`,
-``,
-`━━━ ABOUT THE BUSINESS ━━━`,
-``,
-`${p.business_description}`,
-``,
-`━━━ CONTACT INFO TO DISPLAY ON PAGE ━━━`,
-``,
-`${p.page_contact}`,
-${p.booking_link ? `\`Booking/Scheduling link: ${p.booking_link}\`,` : ''}
-``,
-`━━━ DESIGN ━━━`,
-``,
-`Style: ${STYLE_MAP[p.design_style] || p.design_style || 'modern and clean'}`,
-`Visual direction: ${STYLE_GUIDE[p.design_style] || 'clean modern design with strong hierarchy'}`,
-${p.brand_colors ? `\`Brand colors: ${p.brand_colors}\`,` : ''}
-`Reference sites the client likes:`,
-`${p.example_sites}`,
-``,
-`━━━ CONTENT TO INCLUDE ━━━`,
-${p.testimonials_text ? `\`\`,\`Testimonials/Social proof:\`,\`${p.testimonials_text}\`,` : ''}
-${p.video_link ? `\`\`,\`Video to embed: ${p.video_link}\`,` : ''}
-${p.special_notes ? `\`\`,\`⚠️ Special notes from client:\`,\`${p.special_notes}\`,` : ''}
-``,
-`━━━ TECHNICAL REQUIREMENTS ━━━`,
-``,
-`- Single HTML file with all CSS and JS inline (no external dependencies except Google Fonts)`,
-`- Mobile-first, fully responsive (looks perfect on iPhone)`,
-`- RTL layout (Hebrew/Arabic direction)`,
-`- Fast loading — no heavy libraries`,
-`- WhatsApp float button bottom-left (number: ${p.phone})`,
-`- Smooth scroll animations (IntersectionObserver reveal on scroll)`,
-`- All CTAs must link to real contact info provided above`,
-`- Timeline: ${TIMELINE_MAP[p.timeline] || p.timeline || 'ASAP'}`,
-``,
-`━━━ PAGE SECTIONS (in order) ━━━`,
-``,
-`1. Hero — bold headline, subheadline, primary CTA button, trust signals`,
-`2. About / What we do — business description, key benefits`,
-`3. Services / What you get — 3-4 key service cards with icons`,
-`4. Social proof — testimonials${p.testimonials_text ? ' (use the testimonials provided above)' : ' (create 3 believable placeholder testimonials)'}`,
-`5. CTA section — strong conversion block with the primary CTA`,
-`6. Contact / Footer — all contact details provided above`,
-``,
-`Make it stunning. Every section should have a clear purpose and push the visitor toward the CTA.`,
-`The design should feel like it cost ₪10,000. Use creative layout, micro-animations, and visual hierarchy.`,
-`Do not use placeholder text — use the real business information provided above throughout.`,
-  ];
+  let prompt = '';
+  prompt += 'Build me a complete, production-ready landing page as a single HTML file.\n';
+  prompt += '\n';
+  prompt += '━━━ CLIENT BRIEF ━━━\n';
+  prompt += '\n';
+  prompt += 'Business: ' + p.business_name + '\n';
+  prompt += 'Contact: ' + p.contact_name + ' | ' + p.phone + ' | ' + p.email + '\n';
+  if (p.social_links) prompt += 'Social/Web: ' + p.social_links + '\n';
+  prompt += '\n';
+  prompt += '━━━ GOAL ━━━\n';
+  prompt += '\n';
+  prompt += 'Primary CTA: ' + (GOAL_MAP[p.goal] || p.goal) + '\n';
+  prompt += 'Implementation: Include ' + (GOAL_CTA[p.goal] || p.goal) + '. This is the #1 conversion action — make it impossible to miss.\n';
+  prompt += 'Service/Product being promoted: ' + p.promoted_service + '\n';
+  prompt += '\n';
+  prompt += '━━━ ABOUT THE BUSINESS ━━━\n';
+  prompt += '\n';
+  prompt += p.business_description + '\n';
+  prompt += '\n';
+  prompt += '━━━ CONTACT INFO TO DISPLAY ON PAGE ━━━\n';
+  prompt += '\n';
+  prompt += p.page_contact + '\n';
+  if (p.booking_link) prompt += 'Booking/Scheduling link: ' + p.booking_link + '\n';
+  prompt += '\n';
+  prompt += '━━━ DESIGN ━━━\n';
+  prompt += '\n';
+  prompt += 'Style: ' + (STYLE_MAP[p.design_style] || p.design_style || 'modern and clean') + '\n';
+  prompt += 'Visual direction: ' + (STYLE_GUIDE[p.design_style] || 'clean modern design with strong visual hierarchy') + '\n';
+  if (p.brand_colors) prompt += 'Brand colors: ' + p.brand_colors + '\n';
+  prompt += 'Reference sites the client likes:\n' + p.example_sites + '\n';
+  prompt += '\n';
+  prompt += '━━━ CONTENT TO INCLUDE ━━━\n';
+  if (p.testimonials_text) {
+    prompt += '\nTestimonials/Social proof:\n' + p.testimonials_text + '\n';
+  }
+  if (p.video_link) prompt += '\nVideo to embed: ' + p.video_link + '\n';
+  if (p.special_notes) prompt += '\n⚠️ Special notes from client:\n' + p.special_notes + '\n';
+  prompt += '\n';
+  prompt += '━━━ TECHNICAL REQUIREMENTS ━━━\n';
+  prompt += '\n';
+  prompt += '- Single HTML file, all CSS and JS inline (only Google Fonts external)\n';
+  prompt += '- Mobile-first, fully responsive — perfect on iPhone\n';
+  prompt += '- RTL layout (Hebrew direction)\n';
+  prompt += '- Fast loading, no heavy libraries\n';
+  prompt += '- Floating WhatsApp button bottom-left linking to wa.me/' + p.phone.replace(/\D/g,'') + '\n';
+  prompt += '- Smooth scroll-reveal animations (IntersectionObserver)\n';
+  prompt += '- All CTAs use the real contact info provided above\n';
+  prompt += '- Timeline: ' + (TIMELINE_MAP[p.timeline] || p.timeline || 'ASAP') + '\n';
+  prompt += '\n';
+  prompt += '━━━ PAGE SECTIONS (in this order) ━━━\n';
+  prompt += '\n';
+  prompt += '1. Hero — powerful headline, subheadline, primary CTA, trust signals\n';
+  prompt += '2. About / What we do — business story, key differentiators\n';
+  prompt += '3. Services — 3-4 service cards with icons and short descriptions\n';
+  prompt += '4. Social proof — ' + (p.testimonials_text ? 'use the testimonials provided above' : 'create 3 believable placeholder testimonials') + '\n';
+  prompt += '5. CTA section — strong conversion block with urgency\n';
+  prompt += '6. Contact / Footer — all contact details from above\n';
+  prompt += '\n';
+  prompt += 'Make it stunning. Every section should push the visitor toward the CTA.\n';
+  prompt += 'The design should feel like it cost ₪10,000 — creative layout, micro-animations, strong visual hierarchy.\n';
+  prompt += 'Use the real business information throughout. Zero placeholder text.\n';
 
-  return lines
-    .filter(l => l !== undefined && l !== null)
-    .join('\n')
-    .replace(/`/g, '');
+  return prompt;
 }
 
 // ── HANDLER ───────────────────────────────────────────────
